@@ -1,4 +1,4 @@
--module(libsniffle_app).
+-module(libsnarl_app).
 
 -behaviour(application).
 
@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    libsniffle_sup:start_link().
+    libsnarl_sup:start_link().
 
 stop(_State) ->
     ok.

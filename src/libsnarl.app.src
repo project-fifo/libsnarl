@@ -1,4 +1,4 @@
-{application, libsniffle,
+{application, libsnarl,
  [
   {description, ""},
   {vsn, "1"},
@@ -7,6 +7,6 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, { libsniffle_app, []}},
+  {mod, { libsnarl_app, []}},
   {env, []}
  ]}.

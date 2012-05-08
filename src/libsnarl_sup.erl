@@ -1,5 +1,5 @@
 
--module(libsniffle_sup).
+-module(libsnarl_sup).
 
 -behaviour(supervisor).
 
