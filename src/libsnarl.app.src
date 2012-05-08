@@ -1,11 +1,12 @@
 {application, libsnarl,
- [
-  {description, ""},
-  {vsn, "1"},
-  {registered, []},
+ [{description, "API for calling the snarl RBAC server."},
+  {vsn, "0.1.0"},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+		  alog,
+		  redgrid,
+		  gproc
                  ]},
   {mod, { libsnarl_app, []}},
   {env, []}
