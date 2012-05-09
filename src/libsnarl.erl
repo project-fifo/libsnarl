@@ -8,7 +8,9 @@
 %%%-------------------------------------------------------------------
 -module(libsnarl).
 
--export([auth/2]).
+-export([auth/2,
+	 allowed/3]).
+
 -export([user_add/3,
 	 user_passwd/3,
 	 user_delete/2,
@@ -16,7 +18,6 @@
 	 user_name/2,
 	 user_permissions/2,
 	 user_cache/2,
-	 user_allowed/3,
 	 user_add_to_group/3,
 	 user_delete_from_group/3,
 	 user_grant/3,
@@ -75,16 +76,19 @@ user_cache(Auth, UUID) ->
 	    E
     end.
 
-user_allowed(_Auth, system, _Perm) ->
+allowed(Auth, {Target, _Perms}, _Perm) ->
+    allowed(Auth, Target);
+
+allowed(_Auth, system, _Perm) ->
     true;
 
-user_allowed(_Auth, {system, _}, _Perm) ->
+allowed(_Auth, {system, _}, _Perm) ->
     true;
 
-user_allowed(_Auth, {_Auth, Perms}, Perm) ->
+allowed(_Auth, {_Auth, Perms}, Perm) ->
     test_perms(Perm, Perms);
 
-user_allowed(Auth, UUID, Perm) ->
+allowed(Auth, UUID, Perm) ->
     snarl_call(Auth, {user, allowed, UUID, Perm}).
 
 user_add_to_group(Auth, UUUID, GUUID) ->
