@@ -48,21 +48,32 @@ auth(Name, Pass) ->
 user_add(Auth, Name, Pass) ->
     snarl_call(Auth, {user, add, Name, Pass}).
 
+user_passwd(Auth, {UUID, _}, Pass) ->
+    user_passwd(Auth, UUID, Pass);
 user_passwd(Auth, UUID, Pass) ->
     snarl_call(Auth, {user, passwd, UUID, Pass}).
 
+user_delete(Auth, {UUID, _}) ->
+    user_delete(Auth, UUID);
 user_delete(Auth, UUID) ->
     snarl_call(Auth, {user, delete, UUID}).
 
 user_get(Auth, Name) ->
     snarl_call(Auth, {user, get, Name}).
 
+
+user_name(Auth, {UUID, _}) ->
+    user_name(Auth, UUID);
 user_name(Auth, UUID) ->
     snarl_call(Auth, {user, name, UUID}).
 
+user_permissions(Auth, {UUID, _}) ->
+    user_permissions(Auth, UUID);
 user_permissions(Auth, UUID) ->
     snarl_call(Auth, {user, permissions, UUID}).
 
+user_cache(Auth, {UUID, _}) ->
+    user_cache(Auth, UUID);
 user_cache(Auth, UUID) ->
     case snarl_call(Auth, {user, allowed, UUID, [user, UUID, allowed]}) of
 	true ->
@@ -88,15 +99,24 @@ allowed(_Auth, {_Auth, Perms}, Perm) ->
 allowed(Auth, UUID, Perm) ->
     snarl_call(Auth, {user, allowed, UUID, Perm}).
 
+
+user_add_to_group(Auth, {UUUID, _}, GUUID) ->
+    user_add_to_group(Auth, UUUID, GUUID);
 user_add_to_group(Auth, UUUID, GUUID) ->
     snarl_call(Auth, {user, groups, add, UUUID, GUUID}).
 
+user_delete_from_group(Auth, {UUUID, _}, GUUID) ->
+    user_delete_from_group(Auth, UUUID, GUUID);
 user_delete_from_group(Auth, UUUID, GUUID) ->
     snarl_call(Auth, {user, groups, delete, UUUID, GUUID}).
 
+user_grant(Auth, {UUID, _}, Perm) ->
+    user_grant(Auth, UUID, Perm);
 user_grant(Auth, UUID, Perm) ->
     snarl_call(Auth, {user, grant, UUID, Perm}).
 
+user_revoke(Auth, {UUID, _}, Perm) ->
+    user_revoke(Auth, UUID, Perm);
 user_revoke(Auth, UUID, Perm) ->
     snarl_call(Auth, {user, revoke, UUID, Perm}).
 
@@ -121,9 +141,14 @@ group_grant(Auth, UUID, Perm) ->
 group_revoke(Auth, UUID, Perm) ->
     snarl_call(Auth, {group, revoke, UUID, Perm}).
 
+
+group_add_user(Auth, GUUID, {UUUID, _}) ->
+    group_add_user(Auth, GUUID, UUUID);
 group_add_user(Auth, GUUID, UUUID) ->
     snarl_call(Auth, {group, users, add, GUUID, UUUID}).
 
+group_delete_user(Auth, GUUID, {UUUID, _}) ->
+    group_delete_user(Auth, GUUID, UUUID);
 group_delete_user(Auth, GUUID, UUUID) ->
     snarl_call(Auth, {group, users, delete, GUUID, UUUID}).
 
