@@ -76,9 +76,6 @@ user_cache(Auth, UUID) ->
 	    E
     end.
 
-allowed(Auth, {Target, _Perms}, _Perm) ->
-    allowed(Auth, Target);
-
 allowed(_Auth, system, _Perm) ->
     true;
 
