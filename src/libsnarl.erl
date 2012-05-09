@@ -68,7 +68,7 @@ user_cache(Auth, UUID) ->
 	true ->
 	    case snarl_call(Auth, {user, permissions, UUID}) of
 		{ok, Perms}  -> 
-		    {Auth, Perms};
+		    {ok, {Auth, Perms}};
 		E ->
 		    E
 	    end;
