@@ -93,7 +93,7 @@ allowed(_Auth, system, _Perm) ->
 allowed(_Auth, {system, _}, _Perm) ->
     true;
 
-allowed(_Auth, {_Auth, Perms}, Perm) ->
+allowed(_Auth, {_Auth1, Perms}, Perm) ->
     test_perms(Perm, Perms);
 
 allowed(Auth, UUID, Perm) ->
