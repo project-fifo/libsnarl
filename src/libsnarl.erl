@@ -133,6 +133,8 @@ group_delete_user(Auth, GUUID, UUUID) ->
 %%%===================================================================
 
 
+snarl_call({Auth, _Perms}, Call) ->
+    snarl_call(Auth, Call);
 snarl_call(Auth, Call) ->
     gen_server:call(snarl(), {call,  Auth, Call}).
 
