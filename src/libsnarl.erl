@@ -1,10 +1,10 @@
 %%%-------------------------------------------------------------------
-%%% @author Heinz N. Gies <>
+%%% @author Heinz N. Gies <heinz@licenser.net>
 %%% @copyright (C) 2012, Heinz N. Gies
 %%% @doc
 %%%
 %%% @end
-%%% Created :  5 May 2012 by Heinz N. Gies <>
+%%% Created :  5 May 2012 by Heinz N. Gies <heinz@licenser.net>
 %%%-------------------------------------------------------------------
 -module(libsnarl).
 
