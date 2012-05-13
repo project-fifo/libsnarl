@@ -32,6 +32,11 @@
 	 group_revoke/3,
 	 group_add_user/3,
 	 group_delete_user/3]).
+-export([option_list/2,
+	 option_get/3,
+	 option_delete/3,
+	 option_set/4]).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
@@ -152,6 +157,18 @@ group_delete_user(Auth, GUUID, {UUUID, _}) ->
 group_delete_user(Auth, GUUID, UUUID) ->
     snarl_call(Auth, {group, users, delete, GUUID, UUUID}).
 
+
+
+
+option_list(Auth, Category) ->
+    snarl_call(Auth, {option, list, Category}).
+
+option_get(Auth, Category, Name) ->
+    snarl_call(Auth, {option, get, Category, Name}).
+option_delete(Auth, Category, Name) ->
+    snarl_call(Auth, {option, delete, Category, Name}).
+option_set(Auth, Category, Name, Value) ->
+    snarl_call(Auth, {option, set, Category, Name, Value}).
 
 
 %%%===================================================================
