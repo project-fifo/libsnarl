@@ -14,6 +14,7 @@
 -export([user_add/3,
 	 user_passwd/3,
 	 user_delete/2,
+	 user_list/1,
 	 user_get/2,
 	 user_name/2,
 	 user_permissions/2,
@@ -62,6 +63,9 @@ user_delete(Auth, {UUID, _}) ->
     user_delete(Auth, UUID);
 user_delete(Auth, UUID) ->
     snarl_call(Auth, {user, delete, UUID}).
+
+user_list(Auth) ->
+    snarl_call(Auth, {user, list}).
 
 user_get(Auth, Name) ->
     snarl_call(Auth, {user, get, Name}).
