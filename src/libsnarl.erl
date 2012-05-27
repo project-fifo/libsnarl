@@ -18,6 +18,7 @@
 	 user_get/2,
 	 user_name/2,
 	 user_permissions/2,
+	 user_own_permissions/2,
 	 user_cache/2,
 	 user_add_to_group/3,
 	 user_delete_from_group/3,
@@ -81,6 +82,13 @@ user_permissions(Auth, {UUID, _}) ->
     user_permissions(Auth, UUID);
 user_permissions(Auth, UUID) ->
     snarl_call(Auth, {user, permissions, UUID}).
+
+user_own_permissions(Auth, {UUID, _}) ->
+    user_own_permissions(Auth, UUID);
+user_own_permissions(Auth, UUID) ->
+    snarl_call(Auth, {user, own_permissions, UUID}).
+
+
 
 user_cache(Auth, {UUID, _}) ->
     user_cache(Auth, UUID);
