@@ -27,6 +27,7 @@
 -export([group_add/2,
 	 group_delete/2,
 	 group_get/2,
+	 group_list/1,
 	 group_name/2,
 	 group_permissions/2,
 	 group_grant/3,
@@ -137,6 +138,10 @@ group_delete(Auth, UUID) ->
 
 group_get(Auth, Name) ->
     snarl_call(Auth, {group, get, Name}).
+
+group_list(Auth) ->
+    snarl_call(Auth, {group, list}).
+
 
 group_name(Auth, UUID) ->
     snarl_call(Auth, {group, name, UUID}).
