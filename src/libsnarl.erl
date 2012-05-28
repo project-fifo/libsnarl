@@ -17,6 +17,7 @@
 	 user_list/1,
 	 user_get/2,
 	 user_name/2,
+	 user_groups/2,
 	 user_permissions/2,
 	 user_own_permissions/2,
 	 user_cache/2,
@@ -28,6 +29,7 @@
 -export([group_add/2,
 	 group_delete/2,
 	 group_get/2,
+	 group_users/2,
 	 group_list/1,
 	 group_name/2,
 	 group_permissions/2,
@@ -72,7 +74,6 @@ user_list(Auth) ->
 user_get(Auth, Name) ->
     snarl_call(Auth, {user, get, Name}).
 
-
 user_name(Auth, {UUID, _}) ->
     user_name(Auth, UUID);
 user_name(Auth, UUID) ->
@@ -89,7 +90,10 @@ user_own_permissions(Auth, UUID) ->
     snarl_call(Auth, {user, own_permissions, UUID}).
 
 
-
+user_groups(Auth, {UUID, _}) ->
+    user_groups(Auth, UUID);
+user_groups(Auth, UUID) ->
+    snarl_call(Auth, {user, groups, UUID}).
 user_cache(Auth, {UUID, _}) ->
     user_cache(Auth, UUID);
 user_cache(Auth, UUID) ->
@@ -116,7 +120,6 @@ allowed(_Auth, {_Auth1, Perms}, Perm) ->
 
 allowed(Auth, UUID, Perm) ->
     snarl_call(Auth, {user, allowed, UUID, Perm}).
-
 
 user_add_to_group(Auth, {UUUID, _}, GUUID) ->
     user_add_to_group(Auth, UUUID, GUUID);
@@ -147,9 +150,11 @@ group_delete(Auth, UUID) ->
 group_get(Auth, Name) ->
     snarl_call(Auth, {group, get, Name}).
 
+group_users(Auth, UUID) ->
+    snarl_call(Auth, {group, users, UUID}).
+
 group_list(Auth) ->
     snarl_call(Auth, {group, list}).
-
 
 group_name(Auth, UUID) ->
     snarl_call(Auth, {group, name, UUID}).
@@ -163,7 +168,6 @@ group_grant(Auth, UUID, Perm) ->
 group_revoke(Auth, UUID, Perm) ->
     snarl_call(Auth, {group, revoke, UUID, Perm}).
 
-
 group_add_user(Auth, GUUID, {UUUID, _}) ->
     group_add_user(Auth, GUUID, UUUID);
 group_add_user(Auth, GUUID, UUUID) ->
@@ -171,19 +175,19 @@ group_add_user(Auth, GUUID, UUUID) ->
 
 group_delete_user(Auth, GUUID, {UUUID, _}) ->
     group_delete_user(Auth, GUUID, UUUID);
+
 group_delete_user(Auth, GUUID, UUUID) ->
     snarl_call(Auth, {group, users, delete, GUUID, UUUID}).
-
-
-
 
 option_list(Auth, Category) ->
     snarl_call(Auth, {option, list, Category}).
 
 option_get(Auth, Category, Name) ->
     snarl_call(Auth, {option, get, Category, Name}).
+
 option_delete(Auth, Category, Name) ->
     snarl_call(Auth, {option, delete, Category, Name}).
+
 option_set(Auth, Category, Name, Value) ->
     snarl_call(Auth, {option, set, Category, Name, Value}).
 
