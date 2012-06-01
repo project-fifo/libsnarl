@@ -98,6 +98,8 @@ user_cache(Auth, {UUID, _}) ->
     user_cache(Auth, UUID);
 user_cache(_Auth, system) ->
     system;
+user_cache(_Auth, {UUID, Perms}) ->
+    {UUID, Perms};
 user_cache(Auth, UUID) ->
     case snarl_call(Auth, {user, allowed, UUID, [user, UUID, allowed]}) of
 	true ->
