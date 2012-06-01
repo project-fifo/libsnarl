@@ -96,6 +96,8 @@ user_groups(Auth, UUID) ->
     snarl_call(Auth, {user, groups, UUID}).
 user_cache(Auth, {UUID, _}) ->
     user_cache(Auth, UUID);
+user_cache(_Auth, system) ->
+    system;
 user_cache(Auth, UUID) ->
     case snarl_call(Auth, {user, allowed, UUID, [user, UUID, allowed]}) of
 	true ->
