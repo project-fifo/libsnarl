@@ -44,6 +44,7 @@
 	 option_set/4]).
 
 -export([network_add/5,
+	 network_delete/2,
 	 network_get_net/2,
 	 network_get_mask/2,
 	 network_get_gateway/2,
@@ -211,11 +212,15 @@ network_add(Auth, Name, First, Netmask, Gateway) when is_binary(Gateway) orelse 
 network_add(Auth, Name, First, Netmask, Gateway) ->
     snarl_call(Auth, {network, add, Name, First, Netmask, Gateway}).
 
+network_delete(Auth, Name) ->
+    snarl_call(Auth, {network, delete, Name}).
+
 network_get_net(Auth, Name) ->
     snarl_call(Auth, {network, get, net, Name}).
 
 network_get_mask(Auth, Name) ->
     snarl_call(Auth, {network, get, mask, Name}).
+
 
 network_get_gateway(Auth, Name) ->
     snarl_call(Auth, {network, get, gateway, Name}).
