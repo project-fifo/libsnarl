@@ -284,5 +284,7 @@ parse_ip(IP) ->
     <<IPi:32>> = <<Ai:8, Bi:8, Ci:8, Di:8>>,
     IPi.
 
+ip_to_str(IP) when is_integer(IP) ->
+    ip_to_str(<<IP:32>>);
 ip_to_str(<<A:8, B:8, C:8, D:8>>) ->
     list_to_binary(io_bit:format("~p.~p.~p.~p", [A, B, C, D])).
