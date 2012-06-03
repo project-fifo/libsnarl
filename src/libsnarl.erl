@@ -45,6 +45,7 @@
 
 -export([network_add/5,
 	 network_delete/2,
+	 network_get/2,
 	 network_get_net/2,
 	 network_get_mask/2,
 	 network_get_gateway/2,
@@ -214,6 +215,9 @@ network_add(Auth, Name, First, Netmask, Gateway) ->
 
 network_delete(Auth, Name) ->
     snarl_call(Auth, {network, delete, Name}).
+
+network_get(Auth, Name) ->
+    snarl_call(Auth, {network, get, Name}).
 
 network_get_net(Auth, Name) ->
     snarl_call(Auth, {network, get, net, Name}).
