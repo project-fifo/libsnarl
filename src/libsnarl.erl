@@ -37,11 +37,20 @@
 	 group_revoke/3,
 	 group_add_user/3,
 	 group_delete_user/3]).
+
 -export([option_list/2,
 	 option_get/3,
 	 option_delete/3,
 	 option_set/4]).
 
+-export([network_add/5,
+	 network_get_net/2,
+	 network_get_mask/2,
+	 network_get_gateway/2,
+	 network_get_ip/2,
+	 network_release_ip/3,
+	 parse_ip/1,
+	 ip_to_str/1]).
 %%%===================================================================
 %%% API
 %%%===================================================================
@@ -98,8 +107,6 @@ user_cache(Auth, {UUID, _}) ->
     user_cache(Auth, UUID);
 user_cache(_Auth, system) ->
     system;
-user_cache(_Auth, {UUID, Perms}) ->
-    {UUID, Perms};
 user_cache(Auth, UUID) ->
     case snarl_call(Auth, {user, allowed, UUID, [user, UUID, allowed]}) of
 	true ->
@@ -195,6 +202,31 @@ option_delete(Auth, Category, Name) ->
 option_set(Auth, Category, Name, Value) ->
     snarl_call(Auth, {option, set, Category, Name, Value}).
 
+network_add(Auth, Name, First, Netmask, Gateway) when is_binary(First) orelse is_list(First) ->
+    network_add(Auth, Name, parse_ip(First), Netmask, Gateway);
+network_add(Auth, Name, First, Netmask, Gateway) when is_binary(Netmask) orelse is_list(Netmask) ->
+    network_add(Auth, Name, First, parse_ip(Netmask), Gateway);
+network_add(Auth, Name, First, Netmask, Gateway) when is_binary(Gateway) orelse is_list(Gateway) ->
+    network_add(Auth, Name, First, Netmask, parse_ip(Gateway));
+network_add(Auth, Name, First, Netmask, Gateway) ->
+    snarl_call(Auth, {network, add, Name, First, Netmask, Gateway}).
+
+network_get_net(Auth, Name) ->
+    snarl_call(Auth, {network, get, net, Name}).
+
+network_get_mask(Auth, Name) ->
+    snarl_call(Auth, {network, get, mask, Name}).
+
+network_get_gateway(Auth, Name) ->
+    snarl_call(Auth, {network, get, gateway, Name}).
+
+network_get_ip(Auth, Name) ->
+    snarl_call(Auth, {network, get, ip, Name}).
+
+network_release_ip(Auth, Name, IP) when is_binary(IP) orelse is_list(IP) ->
+    network_release_ip(Auth, Name, parse_ip(IP));
+network_release_ip(Auth, Name, IP) when is_integer(IP) ->
+    snarl_call(Auth, {network, release, ip, Name, IP}).
 
 %%%===================================================================
 %%% Internal functions
@@ -241,3 +273,16 @@ test_perms(_Perm, []) ->
 
 test_perms(Perm, [Test|Tests]) ->
     match(Perm, Test) orelse test_perms(Perm, Tests).
+
+parse_ip(IP) ->
+    {match,[A,B,C,D]} =
+	re:run(IP, <<"\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b">>, [{capture, all_but_first, list}]),
+    {Ai, []} = string:to_integer(A),
+    {Bi, []} = string:to_integer(B),
+    {Ci, []} = string:to_integer(C),
+    {Di, []} = string:to_integer(D),
+    <<IP:32>> = <<Ai:8, Bi:8, Ci:8, Di:8>>,
+    IP.
+
+ip_to_str(<<A:8, B:8, C:8, D:8>>) ->
+    list_to_binary(io_bit:format("~p.~p.~p.~p", [A, B, C, D])).
