@@ -256,7 +256,7 @@ snarl() ->
 	gproc:lookup_pid({n, g, snarl})
     catch
 	T:E ->
-	    ?ERROR({gproc_error, T, E}, [], [libsnarl]),
+	    ?ERROR({gproc_error, T, E}, [], [libsnarl])
     end.
 
 match([], []) ->
