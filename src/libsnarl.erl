@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -module(libsnarl).
 
+-include_lib("alog_pt.hrl").
+
 -export([auth/2,
 	 allowed/3]).
 
@@ -245,10 +247,17 @@ network_release_ip(Auth, Name, IP) when is_integer(IP) ->
 snarl_call({Auth, _Perms}, Call) ->
     snarl_call(Auth, Call);
 snarl_call(Auth, Call) ->
+    ?DBG({snarl_call, Auth, Call}, [], [libsnarl]),
     gen_server:call(snarl(), {call,  Auth, Call}).
 
 snarl() ->
-    gproc:lookup_pid({n, g, snarl}).
+    try
+	?INFO({get_snarl_pid}, [], [libsnarl]),
+	gproc:lookup_pid({n, g, snarl})
+    catch
+	T:E ->
+	    ?ERROR({gproc_error, T, E}, [], [libsnarl]),
+    end.
 
 match([], []) ->
     true;
@@ -256,10 +265,12 @@ match([], []) ->
 match(_, ['...']) ->
     true;
 
-match([], ['...'|_Rest]) ->
+match([], ['...'|_Rest] = Allowed) ->
+    ?WARNING({match, faild, [], Allowed}, [], [libsnarl]),
     false;
 
-match([], [_X|_R]) ->
+match([], [_X|_R] = Allowed) ->
+    ?WARNING({match, faild, [], Allowed}, [], [libsnarl]),
     false;
 
 match([X | InRest], ['...', X|TestRest] = Test) ->
@@ -274,10 +285,12 @@ match([X|InRest], [X|TestRest]) ->
 match([_|InRest], ['_'|TestRest]) ->
     match(InRest, TestRest);
 
-match(_, _) ->
+match(Perm, Allowed) ->
+    ?WARNING({match, faild, Perm, Allowed}, [], [libsnarl]),
     false.
 
-test_perms(_Perm, []) ->
+test_perms(Perm, []) ->
+    ?WARNING({test_perms, faild, Perm}, [], [libsnarl]),
     false;
 
 test_perms(Perm, [Test|Tests]) ->
