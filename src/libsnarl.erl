@@ -8,8 +8,6 @@
 %%%-------------------------------------------------------------------
 -module(libsnarl).
 
--include_lib("alog_pt.hrl").
-
 -export([auth/2,
 	 allowed/3]).
 
@@ -247,16 +245,16 @@ network_release_ip(Auth, Name, IP) when is_integer(IP) ->
 snarl_call({Auth, _Perms}, Call) ->
     snarl_call(Auth, Call);
 snarl_call(Auth, Call) ->
-    ?DBG({snarl_call, Auth, Call}, [], [libsnarl]),
+    lager:debug([{fifi_component, libsnarl}], "libsnarl:call - Auth: ~p, Call: ~p", [Auth, Call]),
     gen_server:call(snarl(), {call,  Auth, Call}).
 
 snarl() ->
     try
-	?INFO({get_snarl_pid}, [], [libsnarl]),
+	lager:debug([{fifi_component, libsnarl}], "libsnarl:snarl", []),
 	gproc:lookup_pid({n, g, snarl})
     catch
 	T:E ->
-	    ?ERROR({gproc_error, T, E}, [], [libsnarl])
+	    lager:debug([{fifi_component, libsnarl}], "libsnarl:snarl - Error: ~p:~p.", [T, E])
     end.
 
 match([], []) ->
@@ -266,11 +264,11 @@ match(_, ['...']) ->
     true;
 
 match([], ['...'|_Rest] = Allowed) ->
-    ?WARNING({match, faild, [], Allowed}, [], [libsnarl]),
+    lager:warning([{fifi_component, libsnarl}], "libsnarl:match - failed: ~p.", [Allowed]),
     false;
 
 match([], [_X|_R] = Allowed) ->
-    ?WARNING({match, faild, [], Allowed}, [], [libsnarl]),
+    lager:warning([{fifi_component, libsnarl}], "libsnarl:match - failed: ~p.", [Allowed]),
     false;
 
 match([X | InRest], ['...', X|TestRest] = Test) ->
@@ -286,11 +284,11 @@ match([_|InRest], ['_'|TestRest]) ->
     match(InRest, TestRest);
 
 match(Perm, Allowed) ->
-    ?WARNING({match, faild, Perm, Allowed}, [], [libsnarl]),
+    lager:warning([{fifi_component, libsnarl}], "libsnarl:match - failed: ~p vs. ~p.", [Perm, Allowed]),
     false.
 
 test_perms(Perm, []) ->
-    ?WARNING({test_perms, faild, Perm}, [], [libsnarl]),
+    lager:warning([{fifi_component, libsnarl}], "libsnarl:match - failed: ~p.", [Perm]),
     false;
 
 test_perms(Perm, [Test|Tests]) ->
