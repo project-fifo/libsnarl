@@ -9,6 +9,8 @@ REBAR=./rebar
 
 all: $(DEPS) $(OBJ)
 
+doc: FORCE
+	$(REBAR) doc
 clean: FORCE
 	$(REBAR) clean
 	-rm *.beam erl_crash.dump

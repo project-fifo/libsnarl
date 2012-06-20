@@ -50,77 +50,238 @@
 	 network_get_mask/2,
 	 network_get_gateway/2,
 	 network_get_ip/2,
-	 network_release_ip/3,
-	 parse_ip/1,
+	 network_release_ip/3]).
+
+-export([parse_ip/1,
 	 ip_to_str/1]).
+
+%%%===================================================================
+%%% Types
+%%%===================================================================
+
+
+%% @type ip() = integer() | binary() | atom().
+-type ip() ::
+	integer() |
+	binary() |
+	list().
+
+%% @type permission() = atom() | binary().
+-type permission() ::
+	atom() |
+	binary().
+
+%% @type permissions() = [permission()].
+-type permissions() ::
+	[permission()].
+
+
+%% @type uuid() = binary().
+-type uuid() ::
+	binary().
+
+%% @type network() = {Network::integer(), FirstFree::integer(), NetMask::integer(), Gateway::integer()}.
+-type network() :: 
+	{Network::integer(), FirstFree::integer(), NetMask::integer(), Gateway::integer()}.
+
+%% @type user() = uuid().
+-type user() :: uuid().
+
+%% @type group() = uuid().
+-type group() :: uuid().
+
+%% @type name() = binary().
+-type name() :: binary().
+
+
+%% @type cached_auth() = {user(), permissions()}.
+-type cached_auth() :: 
+	{user(), permissions()}.
+
+%% @type auth() = system | user() | cached_auth().
+-type auth() ::
+	system | 
+	user() |
+	cached_auth().
+
 %%%===================================================================
 %%% API
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc
-%% @spec
+%% @spec (binary(), binary()) -> user()
+%%
+%% @doc Authenticates a user.
+%%
+%% This fuction is used to retrieve an authentication token (User)
+%% based a username and password.
 %% @end
 %%--------------------------------------------------------------------
 
 auth(Name, Pass) ->
     snarl_call(system, {user, auth, Name, Pass}).
 
+%%--------------------------------------------------------------------
+%% @spec  (auth(), binary(), binary()) -> user()
+%%
+%% @doc Adds a new user.
+%%
+%% Adds a new user from a given password and username, returns 
+%% the new users User. This also grants the created user basic
+%% permissions to handle itself.
+%% @end
+%%--------------------------------------------------------------------
+
 user_add(Auth, Name, Pass) ->
     snarl_call(Auth, {user, add, Name, Pass}).
 
-user_passwd(Auth, {UUID, _}, Pass) ->
-    user_passwd(Auth, UUID, Pass);
-user_passwd(Auth, UUID, Pass) ->
-    snarl_call(Auth, {user, passwd, UUID, Pass}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), binary()) -> ok
+%%
+%% @doc Sets the password for an existing user.
+%% @end
+%%--------------------------------------------------------------------
 
-user_delete(Auth, {UUID, _}) ->
-    user_delete(Auth, UUID);
-user_delete(Auth, UUID) ->
-    snarl_call(Auth, {user, delete, UUID}).
+user_passwd(Auth, {User, _}, Pass) ->
+    user_passwd(Auth, User, Pass);
+user_passwd(Auth, User, Pass) ->
+    snarl_call(Auth, {user, passwd, User, Pass}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> ok
+%%
+%% @doc Deletes a user.
+%% @end
+%%--------------------------------------------------------------------
+
+user_delete(Auth, {User, _}) ->
+    user_delete(Auth, User);
+user_delete(Auth, User) ->
+    snarl_call(Auth, {user, delete, User}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth()) -> [user()]
+%%
+%% @doc Lists all uses.
+%% @end
+%%--------------------------------------------------------------------
 
 user_list(Auth) ->
     snarl_call(Auth, {user, list}).
 
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> user()
+%%
+%% @doc Retrieves a user.
+%%
+%% This function retrieves a user bypassing the authentication,
+%% it is meant primarily for admin/system internal use mosty.
+%% @end
+%%--------------------------------------------------------------------
+
 user_get(Auth, Name) ->
     snarl_call(Auth, {user, get, Name}).
 
-user_name(Auth, {UUID, _}) ->
-    user_name(Auth, UUID);
-user_name(Auth, UUID) ->
-    snarl_call(Auth, {user, name, UUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> Name::binary()
+%%
+%% @doc Retrieves a users name.
+%% @end
+%%--------------------------------------------------------------------
 
-user_permissions(Auth, {UUID, _}) ->
-    user_permissions(Auth, UUID);
-user_permissions(Auth, UUID) ->
-    snarl_call(Auth, {user, permissions, UUID}).
+user_name(Auth, {User, _}) ->
+    user_name(Auth, User);
+user_name(Auth, User) ->
+    snarl_call(Auth, {user, name, User}).
 
-user_own_permissions(Auth, {UUID, _}) ->
-    user_own_permissions(Auth, UUID);
-user_own_permissions(Auth, UUID) ->
-    snarl_call(Auth, {user, own_permissions, UUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> Permissions::permissions()
+%%
+%% @doc Retrives the uesrs <b>full</b> permissions.
+%%
+%% This function fetches all the permissions a user has, this 
+%% <b>includes</b> the ones delegated from groups the user is part of.
+%% @end
+%%--------------------------------------------------------------------
+
+user_permissions(Auth, {User, _}) ->
+    user_permissions(Auth, User);
+user_permissions(Auth, User) ->
+    snarl_call(Auth, {user, permissions, User}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> Permissions::permissions()
+%%
+%% @doc Retrives the uesrs <b>own</b> permissions.
+%%
+%% This function fetches the users own permissions, this does <b>not 
+%% includes</b> the ones delegated from groups the user is part of.
+%% @end
+%%--------------------------------------------------------------------
+
+user_own_permissions(Auth, {User, _}) ->
+    user_own_permissions(Auth, User);
+user_own_permissions(Auth, User) ->
+    snarl_call(Auth, {user, own_permissions, User}).
 
 
-user_groups(Auth, {UUID, _}) ->
-    user_groups(Auth, UUID);
-user_groups(Auth, UUID) ->
-    snarl_call(Auth, {user, groups, UUID}).
-user_cache(Auth, {UUID, _}) ->
-    user_cache(Auth, UUID);
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> [group()]
+%%
+%% @doc Retrives the uesrs groups.
+%% @end
+%%--------------------------------------------------------------------
+
+
+user_groups(Auth, {User, _}) ->
+    user_groups(Auth, User);
+user_groups(Auth, User) ->
+    snarl_call(Auth, {user, groups, User}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth()) -> cached_auth()
+%%
+%% @doc Creates a cached version of the users permissions.
+%%
+%% This function is used to prefetch the permissions of a user, it is
+%% supposed to be used to improve performance and minimize calls to
+%% the snarl server. With a cached auth all permission checks done by
+%% <b>allowed</b> can be performed localy in the process.
+%% @end
+%%--------------------------------------------------------------------
+
+user_cache(Auth, {User, _}) ->
+    user_cache(Auth, User);
 user_cache(_Auth, system) ->
     system;
-user_cache(Auth, UUID) ->
-    case snarl_call(Auth, {user, allowed, UUID, [user, UUID, allowed]}) of
+user_cache(Auth, User) ->
+    case snarl_call(Auth, {user, allowed, User, [user, User, allowed]}) of
 	true ->
-	    case snarl_call(Auth, {user, permissions, UUID}) of
+	    case snarl_call(Auth, {user, permissions, User}) of
 		{ok, Perms}  -> 
-		    {ok, {UUID, Perms}};
+		    {ok, {User, Perms}};
 		E ->
 		    E
 	    end;
 	E ->
 	    E
     end.
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), permission()) -> true | false
+%%
+%% @doc Checks the users permissions
+%%
+%% This is the core funcion of this library, it performs matches on
+%% the users permission to test if he is allowed to perform a certin
+%% action.
+%% it has a three step handeling of validationg the permissions:
+%% 1) the <b>system</b> user is always allowed to perform an action.
+%% 2) cached users are validated locally without a call to snarl.
+%% 3) The users permissions are validated remotely on the snarl server.
+%% @end
+%%--------------------------------------------------------------------
 
 allowed(_Auth, system, _Perm) ->
     true;
@@ -131,78 +292,244 @@ allowed(_Auth, {system, _}, _Perm) ->
 allowed(_Auth, {_Auth1, Perms}, Perm) ->
     test_perms(Perm, Perms);
 
-allowed(Auth, UUID, Perm) ->
-    snarl_call(Auth, {user, allowed, UUID, Perm}).
+allowed(Auth, User, Perm) ->
+    snarl_call(Auth, {user, allowed, User, Perm}).
 
-user_add_to_group(Auth, {UUUID, _}, GUUID) ->
-    user_add_to_group(Auth, UUUID, GUUID);
-user_add_to_group(Auth, UUUID, GUUID) ->
-    snarl_call(Auth, {user, groups, add, UUUID, GUUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), group()) -> ok
+%%
+%% @doc Adds the user to a group
+%%
+%% @end
+%%--------------------------------------------------------------------
 
-user_delete_from_group(Auth, {UUUID, _}, GUUID) ->
-    user_delete_from_group(Auth, UUUID, GUUID);
-user_delete_from_group(Auth, UUUID, GUUID) ->
-    snarl_call(Auth, {user, groups, delete, UUUID, GUUID}).
+user_add_to_group(Auth, {User, _}, Group) ->
+    user_add_to_group(Auth, User, Group);
+user_add_to_group(Auth, User, Group) ->
+    snarl_call(Auth, {user, groups, add, User, Group}).
 
-user_grant(Auth, {UUID, _}, Perm) ->
-    user_grant(Auth, UUID, Perm);
-user_grant(Auth, UUID, Perm) ->
-    snarl_call(Auth, {user, grant, UUID, Perm}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), group()) -> ok
+%%
+%% @doc Removes the user to a group
+%%
+%% @end
+%%--------------------------------------------------------------------
 
-user_revoke(Auth, {UUID, _}, Perm) ->
-    user_revoke(Auth, UUID, Perm);
-user_revoke(Auth, UUID, Perm) ->
-    snarl_call(Auth, {user, revoke, UUID, Perm}).
+user_delete_from_group(Auth, {User, _}, Group) ->
+    user_delete_from_group(Auth, User, Group);
+user_delete_from_group(Auth, User, Group) ->
+    snarl_call(Auth, {user, groups, delete, User, Group}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), permission()) -> ok
+%%
+%% @doc Grants the user a permission
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+user_grant(Auth, {User, _}, Perm) ->
+    user_grant(Auth, User, Perm);
+user_grant(Auth, User, Perm) ->
+    snarl_call(Auth, {user, grant, User, Perm}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), auth(), permission()) -> ok
+%%
+%% @doc Revokes a permission from a user
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+user_revoke(Auth, {User, _}, Perm) ->
+    user_revoke(Auth, User, Perm);
+user_revoke(Auth, User, Perm) ->
+    snarl_call(Auth, {user, revoke, User, Perm}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> group()
+%%
+%% @doc Creates a new group.
+%%
+%% @end
+%%--------------------------------------------------------------------
 
 group_add(Auth, Name) ->
     snarl_call(Auth, {group, add, Name}).
 
-group_delete(Auth, UUID) ->
-    snarl_call(Auth, {group, delete, UUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group()) -> ok
+%%
+%% @doc Deletes a group
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+group_delete(Auth, Group) ->
+    snarl_call(Auth, {group, delete, Group}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> group()
+%%
+%% @doc Retrievs the group from it's name.
+%%
+%% @end
+%%--------------------------------------------------------------------
 
 group_get(Auth, Name) ->
     snarl_call(Auth, {group, get, Name}).
 
-group_users(Auth, UUID) ->
-    snarl_call(Auth, {group, users, UUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group()) -> [user()]
+%%
+%% @doc Returns a list of users in a group.
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+group_users(Auth, Group) ->
+    snarl_call(Auth, {group, users, Group}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth()) -> [group()]
+%%
+%% @doc Returns a list of all visible groups.
+%%
+%% @end
+%%--------------------------------------------------------------------
 
 group_list(Auth) ->
     snarl_call(Auth, {group, list}).
 
-group_name(Auth, UUID) ->
-    snarl_call(Auth, {group, name, UUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group()) -> Name::binary()
+%%
+%% @doc Returns the name of a group
+%%
+%% @end
+%%--------------------------------------------------------------------
 
-group_permissions(Auth, UUID) ->
-    snarl_call(Auth, {group, permissions, UUID}).
+group_name(Auth, Group) ->
+    snarl_call(Auth, {group, name, Group}).
 
-group_grant(Auth, UUID, Perm) ->
-    snarl_call(Auth, {group, grant, UUID, Perm}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group()) -> permissions()
+%%
+%% @doc Retrieves the permissions of a group
+%%
+%% @end
+%%--------------------------------------------------------------------
 
-group_revoke(Auth, UUID, Perm) ->
-    snarl_call(Auth, {group, revoke, UUID, Perm}).
+group_permissions(Auth, Group) ->
+    snarl_call(Auth, {group, permissions, Group}).
 
-group_add_user(Auth, GUUID, {UUUID, _}) ->
-    group_add_user(Auth, GUUID, UUUID);
-group_add_user(Auth, GUUID, UUUID) ->
-    snarl_call(Auth, {group, users, add, GUUID, UUUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group(), permission()) -> ok
+%%
+%% @doc Grants a permission to a group
+%%
+%% @end
+%%--------------------------------------------------------------------
 
-group_delete_user(Auth, GUUID, {UUUID, _}) ->
-    group_delete_user(Auth, GUUID, UUUID);
+group_grant(Auth, Group, Perm) ->
+    snarl_call(Auth, {group, grant, Group, Perm}).
 
-group_delete_user(Auth, GUUID, UUUID) ->
-    snarl_call(Auth, {group, users, delete, GUUID, UUUID}).
+%%--------------------------------------------------------------------
+%% @spec (auth(), group(), permission()) -> ok
+%%
+%% @doc Revokes the permission from the group
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+group_revoke(Auth, Group, Perm) ->
+    snarl_call(Auth, {group, revoke, Group, Perm}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), group(), auth()) -> ok
+%%
+%% @doc Adds a user to the group
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+group_add_user(Auth, Group, {User, _}) ->
+    group_add_user(Auth, Group, User);
+group_add_user(Auth, Group, User) ->
+    snarl_call(Auth, {group, users, add, Group, User}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), group(), auth()) -> ok
+%%
+%% @doc Removes a user from the group
+%%
+%% @end
+%%--------------------------------------------------------------------
+
+group_delete_user(Auth, Group, {User, _}) ->
+    group_delete_user(Auth, Group, User);
+
+group_delete_user(Auth, Group, User) ->
+    snarl_call(Auth, {group, users, delete, Group, User}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> [binary()]
+%%
+%% @doc Lists all options in a category.
+%%
+%% @end
+%%--------------------------------------------------------------------
 
 option_list(Auth, Category) ->
     snarl_call(Auth, {option, list, Category}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary(), binary()) -> Value::binary()
+%%
+%% @doc Retrievs an option from a category
+%%
+%% @end
+%%--------------------------------------------------------------------
+
 option_get(Auth, Category, Name) ->
     snarl_call(Auth, {option, get, Category, Name}).
+
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary(), binary()) -> ok
+%%
+%% @doc Deletes the option from the category
+%%
+%% @end
+%%--------------------------------------------------------------------
 
 option_delete(Auth, Category, Name) ->
     snarl_call(Auth, {option, delete, Category, Name}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary(), binary(), term()) -> ok
+%%
+%% @doc Sets the option.
+%% 
+%% Value can be any kind of erlang term.
+%% @end
+%%--------------------------------------------------------------------
+
 option_set(Auth, Category, Name, Value) ->
     snarl_call(Auth, {option, set, Category, Name, Value}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary(), ip(), ip(), ip()) -> ok
+%%
+%% @doc Creates a new IP range.
+%% 
+%% This command creats a new IP range, the IP first must not be the
+%% network IP, if it is not, the IP range will recognize every IP
+%% between the first IP of the network and the IP passed as first as
+%% reserved and never be assigned to a virtual machine.
+%% @end
+%%--------------------------------------------------------------------
 
 network_add(Auth, Name, First, Netmask, Gateway) when is_binary(First) orelse is_list(First) ->
     network_add(Auth, Name, parse_ip(First), Netmask, Gateway);
@@ -213,29 +540,125 @@ network_add(Auth, Name, First, Netmask, Gateway) when is_binary(Gateway) orelse 
 network_add(Auth, Name, First, Netmask, Gateway) ->
     snarl_call(Auth, {network, add, Name, First, Netmask, Gateway}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> ok
+%%
+%% @doc Deletes a network rage.
+%% 
+%% The IP addresses handed out from this network are not affected!
+%% @end
+%%--------------------------------------------------------------------
+
 network_delete(Auth, Name) ->
     snarl_call(Auth, {network, delete, Name}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> network()
+%%
+%% @doc Fetches all details about a network.
+%% 
+%% @end
+%%--------------------------------------------------------------------
 
 network_get(Auth, Name) ->
     snarl_call(Auth, {network, get, Name}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> NetworkIP::integer()
+%%
+%% @doc Fetches the network IP.
+%% 
+%% @end
+%%--------------------------------------------------------------------
+
 network_get_net(Auth, Name) ->
     snarl_call(Auth, {network, get, net, Name}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> Netmask::integer()
+%%
+%% @doc Fetches the netmask.
+%% 
+%% @end
+%%--------------------------------------------------------------------
 
 network_get_mask(Auth, Name) ->
     snarl_call(Auth, {network, get, mask, Name}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> Gateway::integer()
+%%
+%% @doc Fetches the gateway.
+%% 
+%% @end
+%%--------------------------------------------------------------------
 
 network_get_gateway(Auth, Name) ->
     snarl_call(Auth, {network, get, gateway, Name}).
 
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary()) -> IP::integer()
+%%
+%% @doc Requests a IP.
+%% 
+%% This command will reserve an IP, this means this function will not
+%% return the same result twice without freeing the ip again.
+%% The IP is first retrieved from recently freed IP's then takes the
+%% first free IP from the network.
+%% @end
+%%--------------------------------------------------------------------
+
 network_get_ip(Auth, Name) ->
     snarl_call(Auth, {network, get, ip, Name}).
+
+%%--------------------------------------------------------------------
+%% @spec (auth(), binary(), ip()) -> ok
+%%
+%% @doc Frees an IP that was previousely reserved.
+%% 
+%% IP's that once were reserved via the network_get_ip/2 function
+%% must be freed before they can be reused. This function does exactly
+%% that, free the IP passed and retuns it to the pool.
+%% @end
+%%--------------------------------------------------------------------
 
 network_release_ip(Auth, Name, IP) when is_binary(IP) orelse is_list(IP) ->
     network_release_ip(Auth, Name, parse_ip(IP));
 network_release_ip(Auth, Name, IP) when is_integer(IP) ->
     snarl_call(Auth, {network, release, ip, Name, IP}).
+
+%%--------------------------------------------------------------------
+%% @spec (list()|binary()) -> IP::integer()
+%%
+%% @doc Parses the string representation of a IP.
+%% 
+%% @end
+%%--------------------------------------------------------------------
+
+parse_ip(IP) ->
+    {match,[A,B,C,D]} =
+	re:run(IP, <<"\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b">>, [{capture, all_but_first, list}]),
+    {Ai, []} = string:to_integer(A),
+    {Bi, []} = string:to_integer(B),
+    {Ci, []} = string:to_integer(C),
+    {Di, []} = string:to_integer(D),
+    <<IPi:32>> = <<Ai:8, Bi:8, Ci:8, Di:8>>,
+    IPi.
+
+
+%%--------------------------------------------------------------------
+%% @spec (integer()) -> IP::binary()
+%%
+%% @doc Formats an integer IP into the string representation.
+%% 
+%% @end
+%%--------------------------------------------------------------------
+
+ip_to_str(IP) when is_integer(IP) ->
+    ip_to_str(<<IP:32>>);
+ip_to_str(<<A:8, B:8, C:8, D:8>>) ->
+    list_to_binary(io_lib:format("~p.~p.~p.~p", [A, B, C, D])).
+
 
 %%%===================================================================
 %%% Internal functions
@@ -293,18 +716,3 @@ test_perms(Perm, []) ->
 
 test_perms(Perm, [Test|Tests]) ->
     match(Perm, Test) orelse test_perms(Perm, Tests).
-
-parse_ip(IP) ->
-    {match,[A,B,C,D]} =
-	re:run(IP, <<"\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b">>, [{capture, all_but_first, list}]),
-    {Ai, []} = string:to_integer(A),
-    {Bi, []} = string:to_integer(B),
-    {Ci, []} = string:to_integer(C),
-    {Di, []} = string:to_integer(D),
-    <<IPi:32>> = <<Ai:8, Bi:8, Ci:8, Di:8>>,
-    IPi.
-
-ip_to_str(IP) when is_integer(IP) ->
-    ip_to_str(<<IP:32>>);
-ip_to_str(<<A:8, B:8, C:8, D:8>>) ->
-    list_to_binary(io_lib:format("~p.~p.~p.~p", [A, B, C, D])).

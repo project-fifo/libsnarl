@@ -1,5 +1,6 @@
 ebin
 db
+doc
 deps
 *~
 .DS_Store
