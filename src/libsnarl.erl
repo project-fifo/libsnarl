@@ -95,7 +95,6 @@
 %% @type name() = binary().
 -type name() :: binary().
 
-
 %% @type cached_auth() = {user(), permissions()}.
 -type cached_auth() :: 
 	{user(), permissions()}.
