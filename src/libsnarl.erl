@@ -1,8 +1,10 @@
 %%%-------------------------------------------------------------------
 %%% @author Heinz N. Gies <heinz@licenser.net>
 %%% @copyright (C) 2012, Heinz N. Gies
-%%% @doc
-%%%
+%%% @doc This module provides a remote interface to the snarl server.
+%%% 
+%%% The functions exported are mostly remote calls using gproc to
+%%% identify the Server.
 %%% @end
 %%% Created :  5 May 2012 by Heinz N. Gies <heinz@licenser.net>
 %%%-------------------------------------------------------------------
