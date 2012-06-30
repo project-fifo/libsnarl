@@ -255,7 +255,7 @@ user_groups(Auth, User) ->
 user_cache(Auth, {User, _}) ->
     user_cache(Auth, User);
 user_cache(_Auth, system) ->
-    system;
+    {ok, system};
 user_cache(Auth, User) ->
     case snarl_call(Auth, {user, allowed, User, [user, User, allowed]}) of
 	true ->
