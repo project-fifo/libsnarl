@@ -5,7 +5,7 @@
                   kernel,
                   stdlib,
 		  lager,
-		  gproc
+		  backyard
                  ]},
   {mod, { libsnarl_app, []}},
   {env, []}
