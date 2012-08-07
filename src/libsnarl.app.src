@@ -1,6 +1,6 @@
 {application, libsnarl,
  [{description, "API for calling the snarl RBAC server."},
-  {vsn, "0.1.1"},
+  {vsn, "0.1.4"},
   {applications, [
                   kernel,
                   stdlib,
