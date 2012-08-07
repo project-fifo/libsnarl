@@ -55,7 +55,8 @@
 	 network_release_ip/3]).
 
 -export([parse_ip/1,
-	 ip_to_str/1]).
+	 ip_to_str/1,
+	 msg/3]).
 
 %%%===================================================================
 %%% Types
@@ -172,7 +173,7 @@ user_list(Auth) ->
 
 
 %%--------------------------------------------------------------------
-%% @spec (auth(), binary()) -> user()
+%% @spec (auth(), binary()) -> {ok, user()}
 %%
 %% @doc Retrieves a user.
 %%
@@ -659,6 +660,22 @@ ip_to_str(IP) when is_integer(IP) ->
     ip_to_str(<<IP:32>>);
 ip_to_str(<<A:8, B:8, C:8, D:8>>) ->
     list_to_binary(io_lib:format("~p.~p.~p.~p", [A, B, C, D])).
+
+
+%%--------------------------------------------------------------------
+%% @spec (user(), Type::binary(), Msg::binary()) -> ok
+%%
+%% @doc Sends a message to the user.
+%% 
+%% @end
+%%--------------------------------------------------------------------
+
+
+msg({Auth, _}, Type, Msg) ->
+    msg(Auth, Type, Msg);
+
+msg(Auth, Type, Msg) ->
+    gproc:send({p, g, {user, Auth}}, {msg, Type, Msg}).
 
 
 %%%===================================================================
