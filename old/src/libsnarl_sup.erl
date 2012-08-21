@@ -24,5 +24,5 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, [?CHILD(libsnarl_server, worker)]} }.
+    {ok, { {one_for_one, 5, 10}, []} }.
 
