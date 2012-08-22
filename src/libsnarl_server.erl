@@ -12,7 +12,8 @@
 
 %% API
 -export([start_link/0,
-	 send/1]).
+	 send/1,
+	 servers/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -40,6 +41,9 @@ start_link() ->
 send(Msg) ->
     gen_server:call(?SERVER, {send, Msg}).
 
+servers() ->
+    gen_server:call(?SERVER, servers).
+
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -55,6 +59,7 @@ send(Msg) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
+
 init([]) ->
     {ok, Pid} = zmq_mdns_client:instance("snarl"),
     {ok, #state{zmq_worker = Pid}}.
@@ -73,6 +78,10 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+
+handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
+    Reply = zmq_mdns_client_server:servers(Pid),
+    {reply, Reply, State};
 
 handle_call({send, Msg}, _From, #state{zmq_worker = Pid} = State) ->
     Reply = zmq_mdns_client:send(Pid, Msg),
