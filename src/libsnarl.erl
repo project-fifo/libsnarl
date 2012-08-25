@@ -5,6 +5,12 @@
 	 servers/0
 	]).
 
+
+-export([
+	 auth/2,
+	 allowed/2
+	]).
+
 -export([
 	 user_list/0,
 	 user_get/1,
@@ -12,7 +18,6 @@
 	 user_delete/1,
 	 user_grant/2,
 	 user_revoke/2,
-	 user_auth/2,
 	 user_passwd/2,
 	 user_join/2,
 	 user_leave/2
@@ -39,6 +44,12 @@ start() ->
 servers() ->
     libsnarl_server:servers().
 
+auth(User, Pass) ->
+    send({user, auth, User, Pass}).
+
+allowed(User, Permission) ->
+    send({user, allowed, User, Permission}).
+
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
@@ -61,11 +72,8 @@ user_grant(User, Permission) ->
 user_revoke(User, Permission) ->
     send({user, revoke, User, Permission}).
 
-user_auth(User, Pass) ->
-        send({user, auth, User, Pass}).
-
 user_passwd(User, Pass) ->
-        send({user, passwd, User, Pass}).
+    send({user, passwd, User, Pass}).
 
 user_join(User, Group) ->
     send({user, join, User, Group}).
