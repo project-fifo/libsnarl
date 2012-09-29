@@ -9,6 +9,10 @@ REBAR=./rebar
 
 all: $(DEPS) $(OBJ)
 
+test:
+	echo $(DEPS)
+	echo $(OBJ)
+
 doc: FORCE
 	$(REBAR) doc
 clean: FORCE
