@@ -17,7 +17,8 @@
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-	 terminate/2, code_change/3,
+	 terminate/2,
+	 code_change/3,
 	 register_on_connect/1,
 	 register_on_disconnect/1]).
 
