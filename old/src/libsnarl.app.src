@@ -1,13 +1,12 @@
 {application, libsnarl,
- [
-  {description, ""},
-  {vsn, "1"},
-  {registered, []},
+ [{description, "API for calling the snarl RBAC server."},
+  {vsn, "0.1.4"},
   {applications, [
                   kernel,
                   stdlib,
-		  zmq_mdns_client
+		  lager,
+		  backyard
                  ]},
   {mod, { libsnarl_app, []}},
-  {env, [{domain, ".local"}]}
+  {env, []}
  ]}.
