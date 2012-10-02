@@ -18,9 +18,7 @@
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
 	 terminate/2,
-	 code_change/3,
-	 register_on_connect/1,
-	 register_on_disconnect/1]).
+	 code_change/3]).
 
 -define(SERVER, ?MODULE). 
 
@@ -45,12 +43,6 @@ send(Msg) ->
 
 servers() ->
     gen_server:call(?SERVER, servers).
-
-register_on_connect(Fn) ->
-    gen_server:cast(?SERVER, {on_connect, Fn}).
-
-register_on_disconnect(Fn) ->
-    gen_server:cast(?SERVER, {on_disconnect, Fn}).
  
 %%%===================================================================
 %%% gen_server callbacks
@@ -109,13 +101,6 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({on_connect, Fn}, #state{zmq_worker = Pid} = State) ->
-    zmq_mdns_client:register_on_connect(Pid, Fn),
-    {noreply, State};
-
-handle_cast({on_disconnect, Fn}, #state{zmq_worker = Pid} = State) ->
-    zmq_mdns_client:register_on_disconnect(Pid, Fn),
-    {noreply, State};
 
 handle_cast(_Msg, State) ->
     {noreply, State}.

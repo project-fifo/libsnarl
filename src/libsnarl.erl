@@ -8,9 +8,7 @@
 
 -export([
 	 auth/2,
-	 allowed/2,
-	 register_on_connect/1,
-	 register_on_disconnect/1
+	 allowed/2
 	]).
 
 -export([
@@ -44,12 +42,6 @@ start() ->
 
 servers() ->
     libsnarl_server:servers().
-
-register_on_connect(Fn) ->
-    libsnarl_server:register_on_connect(Fn).
-
-register_on_disconnect(Fn) ->
-    libsnarl_server:register_on_disconnect(Fn).
 
 auth(User, Pass) ->
     send({user, auth, User, Pass}).
