@@ -12,11 +12,15 @@
 
 %% API
 -export([start_link/0,
-	 send/1,
+	 call/1,
+	 cast/1,
 	 servers/0]).
 
 %% gen_server callbacks
--export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+-export([init/1,
+	 handle_call/3,
+	 handle_cast/2,
+	 handle_info/2,
 	 terminate/2,
 	 code_change/3]).
 
@@ -30,7 +34,7 @@
 
 %%--------------------------------------------------------------------
 %% @doc
-%% Starts the server
+%% Starts the server.
 %%
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
@@ -38,8 +42,39 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-send(Msg) ->
-    gen_server:call(?SERVER, {send, Msg}).
+%%--------------------------------------------------------------------
+%% @doc
+%% This function sends a message to the server and waits for a reply.
+%%
+%% @spec call(Msg::term()) -> {error, no_server} | 
+%%                            {ok, Reply::term()}
+%% @end
+%%--------------------------------------------------------------------
+
+call(Msg) ->
+    gen_server:call(?SERVER, {call, Msg}).
+
+%%--------------------------------------------------------------------
+%% @doc
+%% This function sends a message to the server and just return. Since
+%% there is no way of determinign the success of sending the library
+%% will try to retransmitt once the server is back online. Be careful
+%% it won't be guarnateed that your messages are delivered in order!
+%%
+%% @spec cast(Msg::term()) -> ok
+%% @end
+%%--------------------------------------------------------------------
+
+cast(Msg) ->
+    gen_server:cast(?SERVER, {cast, Msg}).
+
+%%--------------------------------------------------------------------
+%% @doc
+%% Returns a list of all connected servers
+%%
+%% @spec servers() -> [] | [Server::term()]
+%% @end
+%%--------------------------------------------------------------------
 
 servers() ->
     gen_server:call(?SERVER, servers).
@@ -80,12 +115,16 @@ init([]) ->
 %%--------------------------------------------------------------------
 
 handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
+
     Reply = mdns_client_lib:servers(Pid),
     {reply, Reply, State};
 
-handle_call({send, Msg}, _From, #state{zmq_worker = Pid} = State) ->
-    Reply = mdns_client_lib:call(Pid, Msg),
-    {reply, Reply, State};
+handle_call({call, Msg}, From, #state{zmq_worker = Pid} = State) ->
+    spawn(fun() ->
+		  Reply = mdns_client_lib:call(Pid, Msg),
+		  gen_server:reply(From, Reply)
+	  end),
+    {noreply, State};
 
 handle_call(_Request, _From, State) ->
     Reply = ok,
@@ -101,6 +140,10 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+
+handle_cast({cast, Msg}, #state{zmq_worker = Pid} = State) ->
+    mdns_client_lib:cast(Pid, Msg),
+    {noreply, State};
 
 handle_cast(_Msg, State) ->
     {noreply, State}.

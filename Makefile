@@ -40,3 +40,9 @@ remove_trash:
 	-find . -name "*~" -exec rm {} \;.
 	-rm *.beam erl_crash.dump
 FORCE:
+
+clean-docs:
+	-rm doc/*.html doc/*.png doc/*.css doc/edoc-info
+
+docs: clean-docs
+	@$(REBAR) doc skip_deps=true
