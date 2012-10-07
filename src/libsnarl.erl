@@ -37,7 +37,7 @@
 %%%===================================================================
 
 start() ->
-    application:start(zmq_mdns_client),
+    application:start(mdns_client_lib),
     application:start(libsnarl).
 
 servers() ->

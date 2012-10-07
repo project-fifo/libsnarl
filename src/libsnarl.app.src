@@ -6,7 +6,7 @@
   {applications, [
                   kernel,
                   stdlib,
-		  zmq_mdns_client
+		  mdns_client_lib
                  ]},
   {mod, { libsnarl_app, []}},
   {env, [{domain, ".local"}]}
