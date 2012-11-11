@@ -86,7 +86,8 @@ auth(User, Pass) ->
 -spec allowed(User::binary(),
 	      Permission::[atom()|binary()|string()]) -> 
 		     {error, not_found} |
-		     term().
+		     true |
+		     false.
 allowed(User, Permission) ->
     send({user, allowed, User, Permission}).
 
