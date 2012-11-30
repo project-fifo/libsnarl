@@ -24,7 +24,7 @@
 	 terminate/2,
 	 code_change/3]).
 
--define(SERVER, ?MODULE). 
+-define(SERVER, ?MODULE).
 
 -record(state, {zmq_worker}).
 
@@ -46,7 +46,7 @@ start_link() ->
 %% @doc
 %% This function sends a message to the server and waits for a reply.
 %%
-%% @spec call(Msg::term()) -> {error, no_server} | 
+%% @spec call(Msg::term()) -> {error, no_server} |
 %%                            {ok, Reply::term()}
 %% @end
 %%--------------------------------------------------------------------
