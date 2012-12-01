@@ -40,8 +40,6 @@ APPS = kernel stdlib sasl erts ssl tools os_mon runtime_tools crypto inets \
 	xmerl webtool snmp public_key mnesia eunit syntax_tools compiler
 COMBO_PLT = $(HOME)/.libsnarl_combo_dialyzer_plt
 
-DIALYZER_IGNORE="^\(ager_stdlib.erl\|lager_trunc_io.erl\|lager_stdlib.erl\)"
-
 check_plt: deps compile
 	dialyzer --check_plt --plt $(COMBO_PLT) --apps $(APPS) \
 		deps/*/ebin ebin
@@ -56,7 +54,7 @@ dialyzer: deps compile
 	@echo Use "'make build_plt'" to build PLT prior to using this target.
 	@echo
 	@sleep 1
-	dialyzer -Wno_return --plt $(COMBO_PLT) deps/*/ebin ebin | grep -v $(DIALYZER_IGNORE)
+	dialyzer -Wno_return --plt $(COMBO_PLT) deps/*/ebin ebin | grep -v -f dialyzer.mittigate
 
 
 cleanplt:
