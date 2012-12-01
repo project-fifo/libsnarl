@@ -358,9 +358,7 @@ group_revoke(Group, Permission) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:smarl_message()) ->
-		  ok |
-		  not_found |
-		  doublicate |
+		  atom() |
 		  {ok, Reply::term()} |
 		  {error, no_server}.
 send(Msg) ->
