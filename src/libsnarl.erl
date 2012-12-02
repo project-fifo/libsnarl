@@ -80,8 +80,9 @@ servers() ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec auth(User::binary(), Pass::binary()) ->
-		  {ok, not_found | {token, binary()}} |
+-spec auth(User::fifo:user_id(), Pass::binary()) ->
+		  not_found |
+		  {ok, {token, binary()}} |
 		  {error, no_servers}.
 
 auth(User, Pass) ->
@@ -95,8 +96,9 @@ auth(User, Pass) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec allowed(User::binary() | {token, binary()},
+-spec allowed(User::fifo:user_id() | {token, binary()},
 	      Permission::fifo:permission()) ->
+		     {error, timeout} |
 		     {error, no_servers} |
 		     not_found |
 		     true |
@@ -117,7 +119,7 @@ allowed(User, Permission) ->
 %%--------------------------------------------------------------------
 
 -spec user_list() -> {error, timeout} |
-		     {ok, [term()]}.
+		     {ok, [fifo:user()]}.
 user_list() ->
     send({user, list}).
 
@@ -128,9 +130,10 @@ user_list() ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_get(User::binary()) ->
-		       {error, no_servers} |
-		       {ok, not_found | term()}.
+-spec user_get(User::fifo:user_id()) ->
+		      not_found |
+		      {error, no_servers} |
+		      {ok, fifo:user()}.
 user_get(User) ->
     send({user, get, User}).
 
@@ -141,7 +144,7 @@ user_get(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_cache(User::binary()) ->
+-spec user_cache(User::fifo:user_id()) ->
 			{error, no_servers} |
 			not_found |
 			{ok, [fifo:permission()]}.
@@ -155,7 +158,7 @@ user_cache(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_add(User::binary()) ->
+-spec user_add(User::fifo:user_id()) ->
 		      {error, no_servers} |
 		      doublicate |
 		      ok.
@@ -169,7 +172,7 @@ user_add(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_delete(User::binary()) ->
+-spec user_delete(User::fifo:user_id()) ->
 			 {error, no_servers} |
 			 not_found |
 			 ok.
@@ -184,7 +187,7 @@ user_delete(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_grant(User::binary(),
+-spec user_grant(User::fifo:user_id(),
 		 Permission::fifo:permission()) ->
 			{error, no_servers} |
 			not_found |
@@ -200,7 +203,7 @@ user_grant(User, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_revoke(User::binary(),
+-spec user_revoke(User::fifo:user_id(),
 		  Permission::fifo:permission()) ->
 			 {error, no_servers} |
 			 not_found |
@@ -217,7 +220,7 @@ user_revoke(User, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_passwd(User::binary(), Pass::binary()) ->
+-spec user_passwd(User::fifo:user_id(), Pass::binary()) ->
 			 {error, no_servers} |
 			 not_found |
 			 ok.
@@ -233,7 +236,7 @@ user_passwd(User, Pass) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_join(User::binary(), Group::binary()) ->
+-spec user_join(User::fifo:user_id(), Group::fifo:group_id()) ->
 			 {error, no_servers} |
 			 not_found |
 			 ok.
@@ -248,7 +251,7 @@ user_join(User, Group) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_leave(User::binary(), Group::binary()) ->
+-spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
 			 {error, no_servers} |
 			 not_found |
 			 ok.
@@ -266,9 +269,8 @@ user_leave(User, Group) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_list() -> {error, not_found} |
-		      not_found |
-		      {ok, [binary()]}.
+-spec group_list() -> {error, no_servers} |
+		      {ok, [fifo:group_id()]}.
 group_list() ->
     send({group, list}).
 
@@ -279,10 +281,9 @@ group_list() ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_get(Group::binary()) ->
+-spec group_get(Group::fifo:group_id()) ->
 		       {error, no_servers} |
-		       not_found |
-		       {ok, term()}.
+		       {ok, fifo:group()}.
 group_get(Group) ->
     send({group, get, Group}).
 
@@ -293,7 +294,7 @@ group_get(Group) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_add(Group::binary()) ->
+-spec group_add(Group::fifo:group_id()) ->
 		       {error, no_servers} |
 		       doublicate |
 		       ok.
@@ -307,7 +308,7 @@ group_add(Group) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_delete(Group::binary()) ->
+-spec group_delete(Group::fifo:group_id()) ->
 			  {error, no_servers} |
 			  not_found |
 			  ok.
@@ -322,7 +323,7 @@ group_delete(Group) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_grant(Group::binary(),
+-spec group_grant(Group::fifo:group_id(),
 		  Permission::fifo:permission()) ->
 			 {error, no_servers} |
 			 not_found |
@@ -338,7 +339,7 @@ group_grant(Group, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec group_revoke(Group::binary(),
+-spec group_revoke(Group::fifo:group_id(),
                    Permission::fifo:permission()) ->
 			  {error, no_servers} |
 			  not_found |
