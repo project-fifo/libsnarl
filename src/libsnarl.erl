@@ -86,7 +86,7 @@ servers() ->
                    not_found |
                    {error, no_servers}.
 version() ->
-    {ok, ServerVersion} = send(version),
+    ServerVersion = send(version),
     {?VERSION, ServerVersion}.
 
 %%--------------------------------------------------------------------
