@@ -34,8 +34,6 @@
          group_revoke/2
         ]).
 
--include("libsnarl_version.hrl").
-
 %%%===================================================================
 %%% Generatl Functions
 %%%===================================================================
@@ -87,7 +85,7 @@ servers() ->
                    {error, no_servers}.
 version() ->
     ServerVersion = send(version),
-    {?VERSION, ServerVersion}.
+    ServerVersion.
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
