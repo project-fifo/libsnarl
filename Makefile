@@ -1,10 +1,13 @@
 REBAR = $(shell pwd)/rebar
 
-.PHONY: deps rel package
+.PHONY: deps rel package version
 
 all: deps compile
 
-compile:
+version:
+	echo "-define(VERSION, <<\"$(shell git symbolic-ref HEAD 2> /dev/null | cut -b 12-)-$(shell git log --pretty=format:'%h, %ad' -1)\">>)." > src/libsnarl_version.hrl
+
+compile: version
 	$(REBAR) compile
 
 deps:
@@ -13,7 +16,7 @@ deps:
 clean:
 	$(REBAR) clean
 
-distclean: clean 
+distclean: clean
 	$(REBAR) delete-deps
 
 test:

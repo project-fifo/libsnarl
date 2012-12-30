@@ -1,3 +1,4 @@
+src/libsnarl_version.hrl
 .eunit
 ebin
 db
