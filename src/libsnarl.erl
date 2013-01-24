@@ -13,6 +13,7 @@
         ]).
 
 -export([
+         user_lookup/1,
          user_list/0,
          user_cache/1,
          user_get/1,
@@ -152,6 +153,20 @@ user_list() ->
                       {ok, fifo:user()}.
 user_get(User) ->
     send({user, get, User}).
+
+%%--------------------------------------------------------------------
+%% @doc Retrieves user data from the server.
+%% @spec user_get(User::binary()) ->
+%%                 {error, not_found|no_servers} | term()
+%% @end
+%%--------------------------------------------------------------------
+
+-spec user_lookup(User::fifo:user_id()) ->
+                         not_found |
+                         {error, no_servers} |
+                         {ok, fifo:user()}.
+user_lookup(User) ->
+    send({user, lookup, User}).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves all user permissions to later test.
