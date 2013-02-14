@@ -13,6 +13,10 @@
         ]).
 
 -export([
+         token_delete/1
+        ]).
+
+-export([
          user_lookup/1,
          user_list/0,
          user_cache/1,
@@ -128,10 +132,28 @@ auth(User, Pass) ->
 allowed(User, Permission) ->
     send({user, allowed, User, Permission}).
 
+
+%%%===================================================================
+%%% Token Functions
+%%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @doc Deletes a user.
+%% @spec token_delete(Token::binary()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+
+-spec token_delete(Token::fifo:uuid()) ->
+                          {error, no_servers} |
+                          not_found |
+                          ok.
+token_delete(Token) ->
+    send({token, delete, Token}).
+
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
-
 
 -spec user_set(User::fifo:uuid(),
                Attribute::binary(),
