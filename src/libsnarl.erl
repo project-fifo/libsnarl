@@ -13,6 +13,10 @@
         ]).
 
 -export([
+         token_delete/1
+        ]).
+
+-export([
          user_lookup/1,
          user_list/0,
          user_cache/1,
@@ -23,7 +27,9 @@
          user_revoke/2,
          user_passwd/2,
          user_join/2,
-         user_leave/2
+         user_leave/2,
+         user_set/2,
+         user_set/3
         ]).
 
 -export([
@@ -32,7 +38,9 @@
          group_add/1,
          group_delete/1,
          group_grant/2,
-         group_revoke/2
+         group_revoke/2,
+         group_set/2,
+         group_set/3
         ]).
 
 %%%===================================================================
@@ -124,9 +132,43 @@ auth(User, Pass) ->
 allowed(User, Permission) ->
     send({user, allowed, User, Permission}).
 
+
+%%%===================================================================
+%%% Token Functions
+%%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @doc Deletes a user.
+%% @spec token_delete(Token::binary()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+
+-spec token_delete(Token::fifo:uuid()) ->
+                          {error, no_servers} |
+                          not_found |
+                          ok.
+token_delete(Token) ->
+    send({token, delete, Token}).
+
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
+
+-spec user_set(User::fifo:uuid(),
+               Attribute::binary(),
+               Value::any()) -> ok | not_found |
+                                {'error','no_servers'}.
+user_set(User, Attribute, Value) when
+      is_binary(User) ->
+    send({user, set, User, Attribute, Value}).
+
+-spec user_set(User::fifo:uuid(),
+               Attributes::fifo:config_list()) -> ok | not_found |
+                                                {'error','no_servers'}.
+user_set(User, Attributes) when
+      is_binary(User) ->
+    send({user, set, User, Attributes}).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
@@ -292,6 +334,22 @@ user_leave(User, Group) ->
 %%%===================================================================
 %%% Group Functions
 %%%===================================================================
+
+
+-spec group_set(Group::fifo:uuid(),
+                Attribute::binary(),
+                Value::any()) -> ok | not_found |
+                                 {'error','no_servers'}.
+group_set(Group, Attribute, Value) when
+      is_binary(Group) ->
+    send({group, set, Group, Attribute, Value}).
+
+-spec group_set(Group::fifo:uuid(),
+                Attributes::fifo:config_list()) -> ok | not_found |
+                                                  {'error','no_servers'}.
+group_set(Group, Attributes) when
+      is_binary(Group) ->
+    send({group, set, Group, Attributes}).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all group id's.
