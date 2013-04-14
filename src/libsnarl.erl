@@ -103,7 +103,7 @@ version() ->
 %%--------------------------------------------------------------------
 -spec auth(User::fifo:user_id(), Pass::binary()) ->
                   not_found |
-                  {ok, {token, binary()}} |
+                  {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass) ->
     send({user, auth, User, Pass}).
@@ -117,7 +117,6 @@ auth(User, Pass) ->
 %%--------------------------------------------------------------------
 -spec allowed(User::fifo:user_id() | {token, binary()},
               Permission::fifo:permission()) ->
-                     {error, timeout} |
                      {error, no_servers} |
                      not_found |
                      true |
@@ -151,9 +150,9 @@ token_delete(Token) ->
 %% @doc Sets a attribute for the user.
 %% @end
 %%--------------------------------------------------------------------
--spec user_set(User::fifo:uuid(),
+-spec user_set(User::fifo:user_id(),
                Attribute::fifo:key(),
-               Value::any()) ->
+               Value::fifo:value()) ->
                       ok | not_found |
                       {'error','no_servers'}.
 user_set(User, Attribute, Value) when
@@ -232,7 +231,7 @@ user_cache(User) ->
 -spec user_add(UserName::binary()) ->
                       {error, no_servers} |
                       duplicate |
-                      ok.
+                      {ok, UUID::fifo:user_id()}.
 user_add(UserName) ->
     send({user, add, UserName}).
 
@@ -333,7 +332,7 @@ user_leave(User, Group) ->
 %%--------------------------------------------------------------------
 -spec group_set(Group::fifo:group_id(),
                 Attribute::fifo:key(),
-                Value::any()) -> ok | not_found |
+                Value::fifo:value()) -> ok | not_found |
                                  {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
       is_binary(Group) ->
