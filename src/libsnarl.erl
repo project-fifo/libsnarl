@@ -53,8 +53,8 @@
 %% @spec start() -> ok
 %% @end
 %%--------------------------------------------------------------------
-
--spec start() -> ok.
+-spec start() ->
+                   ok.
 start() ->
     application:start(libsnarlmatch),
     application:start(mdns_client_lib),
@@ -65,22 +65,20 @@ start() ->
 %% @spec test([term()], [[term()]]) -> true | false
 %% @end
 %%--------------------------------------------------------------------
-
--spec test(fifo:permission(), [fifo:permission()]) -> true | false.
-
+-spec test(fifo:permission(), [fifo:permission()]) ->
+                  true | false.
 test(Permission, Permissions) ->
     libsnarlmatch:test_perms(Permission, Permissions).
+
 %%--------------------------------------------------------------------
 %% @doc Gets a list of servers
 %% @spec servers() -> [term()]
 %% @end
 %%--------------------------------------------------------------------
-
--spec servers() -> [term()].
-
+-spec servers() ->
+                     [term()].
 servers() ->
     libsnarl_server:servers().
-
 
 %%--------------------------------------------------------------------
 %% @private
@@ -88,7 +86,6 @@ servers() ->
 %% @spec version() -> binary
 %% @end
 %%--------------------------------------------------------------------
-
 -spec version() -> {binary(), binary()} |
                    not_found |
                    {error, no_servers}.
@@ -104,12 +101,10 @@ version() ->
 %%           {error, not_found}
 %% @end
 %%--------------------------------------------------------------------
-
 -spec auth(User::fifo:user_id(), Pass::binary()) ->
                   not_found |
                   {ok, {token, binary()}} |
                   {error, no_servers}.
-
 auth(User, Pass) ->
     send({user, auth, User, Pass}).
 
@@ -120,7 +115,6 @@ auth(User, Pass) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
-
 -spec allowed(User::fifo:user_id() | {token, binary()},
               Permission::fifo:permission()) ->
                      {error, timeout} |
@@ -128,10 +122,8 @@ auth(User, Pass) ->
                      not_found |
                      true |
                      false.
-
 allowed(User, Permission) ->
     send({user, allowed, User, Permission}).
-
 
 %%%===================================================================
 %%% Token Functions
@@ -155,17 +147,27 @@ token_delete(Token) ->
 %%% User Functions
 %%%===================================================================
 
+%%--------------------------------------------------------------------
+%% @doc Sets a attribute for the user.
+%% @end
+%%--------------------------------------------------------------------
 -spec user_set(User::fifo:uuid(),
-               Attribute::binary(),
-               Value::any()) -> ok | not_found |
-                                {'error','no_servers'}.
+               Attribute::fifo:key(),
+               Value::any()) ->
+                      ok | not_found |
+                      {'error','no_servers'}.
 user_set(User, Attribute, Value) when
       is_binary(User) ->
     send({user, set, User, Attribute, Value}).
 
+%%--------------------------------------------------------------------
+%% @doc Sets multiple attributes for the user.
+%% @end
+%%--------------------------------------------------------------------
 -spec user_set(User::fifo:uuid(),
-               Attributes::fifo:config_list()) -> ok | not_found |
-                                                {'error','no_servers'}.
+               Attributes::fifo:attr_list()) ->
+                      ok | not_found |
+                      {'error','no_servers'}.
 user_set(User, Attributes) when
       is_binary(User) ->
     send({user, set, User, Attributes}).
@@ -176,9 +178,9 @@ user_set(User, Attributes) when
 %%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
-
--spec user_list() -> {error, timeout} |
-                     {ok, [fifo:user()]}.
+-spec user_list() ->
+                       {error, timeout} |
+                       {ok, [fifo:user_id()]}.
 user_list() ->
     send({user, list}).
 
@@ -188,7 +190,6 @@ user_list() ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_get(User::fifo:user_id()) ->
                       not_found |
                       {error, no_servers} |
@@ -202,7 +203,6 @@ user_get(User) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_lookup(User::fifo:user_id()) ->
                          not_found |
                          {error, no_servers} |
@@ -216,7 +216,6 @@ user_lookup(User) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_cache(User::fifo:user_id()) ->
                         {error, no_servers} |
                         not_found |
@@ -230,13 +229,12 @@ user_cache(User) ->
 %%                 {error, doublicate} | ok
 %% @end
 %%--------------------------------------------------------------------
-
--spec user_add(User::fifo:user_id()) ->
+-spec user_add(UserName::binary()) ->
                       {error, no_servers} |
                       doublicate |
                       ok.
-user_add(User) ->
-    send({user, add, User}).
+user_add(UserName) ->
+    send({user, add, UserName}).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a user.
@@ -244,7 +242,6 @@ user_add(User) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_delete(User::fifo:user_id()) ->
                          {error, no_servers} |
                          not_found |
@@ -275,13 +272,11 @@ user_grant(User, Permission) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_revoke(User::fifo:user_id(),
                   Permission::fifo:permission()) ->
                          {error, no_servers} |
                          not_found |
                          ok.
-
 user_revoke(User, Permission) ->
     send({user, revoke, User, Permission}).
 
@@ -292,12 +287,10 @@ user_revoke(User, Permission) ->
 %%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_passwd(User::fifo:user_id(), Pass::binary()) ->
                          {error, no_servers} |
                          not_found |
                          ok.
-
 user_passwd(User, Pass) ->
     send({user, passwd, User, Pass}).
 
@@ -323,7 +316,6 @@ user_join(User, Group) ->
 %%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
                         {error, no_servers} |
                         not_found |
@@ -335,18 +327,26 @@ user_leave(User, Group) ->
 %%% Group Functions
 %%%===================================================================
 
-
--spec group_set(Group::fifo:uuid(),
-                Attribute::binary(),
+%%--------------------------------------------------------------------
+%% @doc Sets an attribute on the group.
+%% @end
+%%--------------------------------------------------------------------
+-spec group_set(Group::fifo:group_id(),
+                Attribute::fifo:key(),
                 Value::any()) -> ok | not_found |
                                  {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
       is_binary(Group) ->
     send({group, set, Group, Attribute, Value}).
 
--spec group_set(Group::fifo:uuid(),
-                Attributes::fifo:config_list()) -> ok | not_found |
-                                                  {'error','no_servers'}.
+%%--------------------------------------------------------------------
+%% @doc Sets multiple attributes on the group.
+%% @end
+%%--------------------------------------------------------------------
+-spec group_set(Group::fifo:group_id(),
+                Attributes::fifo:attr_list()) ->
+                       ok | not_found |
+                       {'error','no_servers'}.
 group_set(Group, Attributes) when
       is_binary(Group) ->
     send({group, set, Group, Attributes}).
@@ -357,9 +357,9 @@ group_set(Group, Attributes) when
 %%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
-
--spec group_list() -> {error, no_servers} |
-                      {ok, [fifo:group_id()]}.
+-spec group_list() ->
+                        {error, no_servers} |
+                        {ok, [fifo:group_id()]}.
 group_list() ->
     send({group, list}).
 
@@ -369,7 +369,6 @@ group_list() ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
-
 -spec group_get(Group::fifo:group_id()) ->
                        {error, no_servers} |
                        {ok, fifo:group()}.
@@ -382,7 +381,6 @@ group_get(Group) ->
 %%                 {error, doublicate} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec group_add(Group::fifo:group_id()) ->
                        {error, no_servers} |
                        doublicate |
@@ -396,7 +394,6 @@ group_add(Group) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec group_delete(Group::fifo:group_id()) ->
                           {error, no_servers} |
                           not_found |
@@ -411,7 +408,6 @@ group_delete(Group) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec group_grant(Group::fifo:group_id(),
                   Permission::fifo:permission()) ->
                          {error, no_servers} |
@@ -427,7 +423,6 @@ group_grant(Group, Permission) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
-
 -spec group_revoke(Group::fifo:group_id(),
                    Permission::fifo:permission()) ->
                           {error, no_servers} |
@@ -447,7 +442,7 @@ group_revoke(Group, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec send(Msg::fifo:smarl_message()) ->
+-spec send(Msg::fifo:snarl_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.
