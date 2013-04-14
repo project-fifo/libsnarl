@@ -226,12 +226,12 @@ user_cache(User) ->
 %%--------------------------------------------------------------------
 %% @doc Adds a new user.
 %% @spec user_add(User::binary()) ->
-%%                 {error, doublicate} | ok
+%%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec user_add(UserName::binary()) ->
                       {error, no_servers} |
-                      doublicate |
+                      duplicate |
                       ok.
 user_add(UserName) ->
     send({user, add, UserName}).
@@ -378,12 +378,12 @@ group_get(Group) ->
 %%--------------------------------------------------------------------
 %% @doc Adds a new group.
 %% @spec group_add(Group::binary()) ->
-%%                 {error, doublicate} | ok
+%%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec group_add(Group::fifo:group_id()) ->
                        {error, no_servers} |
-                       doublicate |
+                       duplicate |
                        ok.
 group_add(Group) ->
     send({group, add, Group}).
