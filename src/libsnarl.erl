@@ -369,6 +369,7 @@ group_list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_get(Group::fifo:group_id()) ->
+                       not_found |
                        {error, no_servers} |
                        {ok, fifo:group()}.
 group_get(Group) ->
