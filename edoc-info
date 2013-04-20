@@ -1,0 +1,3 @@
+{application,libsnarl}.
+{packages,[]}.
+{modules,[libsnarl,libsnarl_app,libsnarl_server,libsnarl_sup]}.

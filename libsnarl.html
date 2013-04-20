@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Module libsnarl</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module libsnarl</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#allowed-2">allowed/2</a></td><td>Checks if the user has the given permission.</td></tr>
+<tr><td valign="top"><a href="#auth-2">auth/2</a></td><td>Authenticates a user and returns a token that can be used for
+   the session.</td></tr>
+<tr><td valign="top"><a href="#group_add-1">group_add/1</a></td><td>Adds a new group.</td></tr>
+<tr><td valign="top"><a href="#group_delete-1">group_delete/1</a></td><td>Deletes a group.</td></tr>
+<tr><td valign="top"><a href="#group_get-1">group_get/1</a></td><td>Retrieves group data from the server.</td></tr>
+<tr><td valign="top"><a href="#group_grant-2">group_grant/2</a></td><td>Grants a right of a group.</td></tr>
+<tr><td valign="top"><a href="#group_list-0">group_list/0</a></td><td>Retrievs a list of all group id's.</td></tr>
+<tr><td valign="top"><a href="#group_revoke-2">group_revoke/2</a></td><td>Revokes a right of a group.</td></tr>
+<tr><td valign="top"><a href="#group_set-2">group_set/2</a></td><td>Sets multiple attributes on the group.</td></tr>
+<tr><td valign="top"><a href="#group_set-3">group_set/3</a></td><td>Sets an attribute on the group.</td></tr>
+<tr><td valign="top"><a href="#servers-0">servers/0</a></td><td>Gets a list of servers.</td></tr>
+<tr><td valign="top"><a href="#test-2">test/2</a></td><td>Tests cached permissions.</td></tr>
+<tr><td valign="top"><a href="#token_delete-1">token_delete/1</a></td><td>Deletes a user.</td></tr>
+<tr><td valign="top"><a href="#user_add-1">user_add/1</a></td><td>Adds a new user.</td></tr>
+<tr><td valign="top"><a href="#user_cache-1">user_cache/1</a></td><td>Retrieves all user permissions to later test.</td></tr>
+<tr><td valign="top"><a href="#user_delete-1">user_delete/1</a></td><td>Deletes a user.</td></tr>
+<tr><td valign="top"><a href="#user_get-1">user_get/1</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#user_grant-2">user_grant/2</a></td><td>Grants a right of a user.</td></tr>
+<tr><td valign="top"><a href="#user_join-2">user_join/2</a></td><td>Adds a user to a group.</td></tr>
+<tr><td valign="top"><a href="#user_leave-2">user_leave/2</a></td><td>Removes a user from a group.</td></tr>
+<tr><td valign="top"><a href="#user_list-0">user_list/0</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#user_lookup-1">user_lookup/1</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#user_passwd-2">user_passwd/2</a></td><td>Changes the Password of a user.</td></tr>
+<tr><td valign="top"><a href="#user_revoke-2">user_revoke/2</a></td><td>Revokes a right of a user.</td></tr>
+<tr><td valign="top"><a href="#user_set-2">user_set/2</a></td><td>Sets multiple attributes for the user.</td></tr>
+<tr><td valign="top"><a href="#user_set-3">user_set/3</a></td><td>Sets a attribute for the user.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="allowed-2">allowed/2</a></h3>
+<div class="spec">
+<p><tt>allowed(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Checks if the user has the given permission.</p>
+
+<h3 class="function"><a name="auth-2">auth/2</a></h3>
+<div class="spec">
+<p><tt>auth(User::binary(), Pass::binary()) -&gt; {ok, Token::{token, binary()}} | {error, not_found}</tt><br></p>
+</div><p>Authenticates a user and returns a token that can be used for
+   the session.</p>
+
+<h3 class="function"><a name="group_add-1">group_add/1</a></h3>
+<div class="spec">
+<p><tt>group_add(Group::binary()) -&gt; {error, duplicate} | ok</tt><br></p>
+</div><p>Adds a new group.</p>
+
+<h3 class="function"><a name="group_delete-1">group_delete/1</a></h3>
+<div class="spec">
+<p><tt>group_delete(Group::binary()) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Deletes a group.</p>
+
+<h3 class="function"><a name="group_get-1">group_get/1</a></h3>
+<div class="spec">
+<p><tt>group_get(Group::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves group data from the server.</p>
+
+<h3 class="function"><a name="group_grant-2">group_grant/2</a></h3>
+<div class="spec">
+<p><tt>group_grant(Group::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Grants a right of a group.</p>
+
+<h3 class="function"><a name="group_list-0">group_list/0</a></h3>
+<div class="spec">
+<p><tt>group_list() -&gt; [term()]</tt><br></p>
+</div><p>Retrievs a list of all group id's.</p>
+
+<h3 class="function"><a name="group_revoke-2">group_revoke/2</a></h3>
+<div class="spec">
+<p><tt>group_revoke(Group::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Revokes a right of a group.</p>
+
+<h3 class="function"><a name="group_set-2">group_set/2</a></h3>
+<div class="spec">
+<p><tt>group_set(Group::<a href="fifo.html#type-group_id">fifo:group_id()</a>, Attributes::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; ok | not_found | {error, no_servers}</tt><br></p>
+</div><p>Sets multiple attributes on the group.</p>
+
+<h3 class="function"><a name="group_set-3">group_set/3</a></h3>
+<div class="spec">
+<p><tt>group_set(Group::<a href="fifo.html#type-group_id">fifo:group_id()</a>, Attribute::<a href="fifo.html#type-key">fifo:key()</a>, Value::<a href="fifo.html#type-value">fifo:value()</a>) -&gt; ok | not_found | {error, no_servers}</tt><br></p>
+</div><p>Sets an attribute on the group.</p>
+
+<h3 class="function"><a name="servers-0">servers/0</a></h3>
+<div class="spec">
+<p><tt>servers() -&gt; [term()]</tt><br></p>
+</div><p>Gets a list of servers</p>
+
+<h3 class="function"><a name="test-2">test/2</a></h3>
+<div class="spec">
+<p><tt>test(Permission::[term()], Permissions::[[term()]]) -&gt; true | false</tt><br></p>
+</div><p>Tests cached permissions.</p>
+
+<h3 class="function"><a name="token_delete-1">token_delete/1</a></h3>
+<div class="spec">
+<p><tt>token_delete(Token::binary()) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Deletes a user.</p>
+
+<h3 class="function"><a name="user_add-1">user_add/1</a></h3>
+<div class="spec">
+<p><tt>user_add(User::binary()) -&gt; {error, duplicate} | ok</tt><br></p>
+</div><p>Adds a new user.</p>
+
+<h3 class="function"><a name="user_cache-1">user_cache/1</a></h3>
+<div class="spec">
+<p><tt>user_cache(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves all user permissions to later test.</p>
+
+<h3 class="function"><a name="user_delete-1">user_delete/1</a></h3>
+<div class="spec">
+<p><tt>user_delete(User::binary()) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Deletes a user.</p>
+
+<h3 class="function"><a name="user_get-1">user_get/1</a></h3>
+<div class="spec">
+<p><tt>user_get(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="user_grant-2">user_grant/2</a></h3>
+<div class="spec">
+<p><tt>user_grant(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Grants a right of a user.</p>
+
+<h3 class="function"><a name="user_join-2">user_join/2</a></h3>
+<div class="spec">
+<p><tt>user_join(User::binary(), Group::binary()) -&gt; ok | {error, not_found | no_servers}</tt><br></p>
+</div><p>Adds a user to a group.</p>
+
+<h3 class="function"><a name="user_leave-2">user_leave/2</a></h3>
+<div class="spec">
+<p><tt>user_leave(User::binary(), Group::binary()) -&gt; ok | {error, not_found | no_servers}</tt><br></p>
+</div><p>Removes a user from a group.</p>
+
+<h3 class="function"><a name="user_list-0">user_list/0</a></h3>
+<div class="spec">
+<p><tt>user_list() -&gt; [term()]</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="user_lookup-1">user_lookup/1</a></h3>
+<div class="spec">
+<p><tt>user_lookup(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="user_passwd-2">user_passwd/2</a></h3>
+<div class="spec">
+<p><tt>user_passwd(User::binary(), Pass::binary()) -&gt; ok | {error, not_found | no_servers}</tt><br></p>
+</div><p>Changes the Password of a user.</p>
+
+<h3 class="function"><a name="user_revoke-2">user_revoke/2</a></h3>
+<div class="spec">
+<p><tt>user_revoke(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Revokes a right of a user.</p>
+
+<h3 class="function"><a name="user_set-2">user_set/2</a></h3>
+<div class="spec">
+<p><tt>user_set(User::<a href="fifo.html#type-uuid">fifo:uuid()</a>, Attributes::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; ok | not_found | {error, no_servers}</tt><br></p>
+</div><p>Sets multiple attributes for the user.</p>
+
+<h3 class="function"><a name="user_set-3">user_set/3</a></h3>
+<div class="spec">
+<p><tt>user_set(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Attribute::<a href="fifo.html#type-key">fifo:key()</a>, Value::<a href="fifo.html#type-value">fifo:value()</a>) -&gt; ok | not_found | {error, no_servers}</tt><br></p>
+</div><p>Sets a attribute for the user.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Apr 20 2013, 22:01:50.</i></p>
+</body>
+</html>
