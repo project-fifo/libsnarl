@@ -23,7 +23,7 @@ perl -pi -e "s/\'\'\'erlang/\`\`\`/g" README.md
 echo "@title libsnarl - SNARL interface library" > doc/overview.edoc
 echo "@copyright 2012 Heinz N. Gies" >> doc/overview.edoc
 echo "" >> doc/overview.edoc
-sed -r -f tmp/bin/markedoc.sed README.md >> doc/overview.edoc
+gsed -r -f tmp/bin/markedoc.sed README.md >> doc/overview.edoc
 
 # restore original README.md
 mv README.md.bak README.md
