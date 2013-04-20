@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Module libsnarl</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module libsnarl</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#allowed-2">allowed/2</a></td><td>Checks if the user has the given permission.</td></tr>
+<tr><td valign="top"><a href="#auth-2">auth/2</a></td><td>Authenticates a user and returns a token that can be used for
+   the session.</td></tr>
+<tr><td valign="top"><a href="#group_add-1">group_add/1</a></td><td>Adds a new group.</td></tr>
+<tr><td valign="top"><a href="#group_delete-1">group_delete/1</a></td><td>Deletes a group.</td></tr>
+<tr><td valign="top"><a href="#group_get-1">group_get/1</a></td><td>Retrieves group data from the server.</td></tr>
+<tr><td valign="top"><a href="#group_grant-2">group_grant/2</a></td><td>Grants a right of a group.</td></tr>
+<tr><td valign="top"><a href="#group_list-0">group_list/0</a></td><td>Retrievs a list of all group id's.</td></tr>
+<tr><td valign="top"><a href="#group_revoke-2">group_revoke/2</a></td><td>Revokes a right of a group.</td></tr>
+<tr><td valign="top"><a href="#servers-0">servers/0</a></td><td>Gets a list of servers.</td></tr>
+<tr><td valign="top"><a href="#user_add-1">user_add/1</a></td><td>Adds a new user.</td></tr>
+<tr><td valign="top"><a href="#user_delete-1">user_delete/1</a></td><td>Deletes a user.</td></tr>
+<tr><td valign="top"><a href="#user_get-1">user_get/1</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#user_grant-2">user_grant/2</a></td><td>Grants a right of a user.</td></tr>
+<tr><td valign="top"><a href="#user_join-2">user_join/2</a></td><td>Adds a user to a group.</td></tr>
+<tr><td valign="top"><a href="#user_leave-2">user_leave/2</a></td><td>Removes a user from a group.</td></tr>
+<tr><td valign="top"><a href="#user_list-0">user_list/0</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#user_passwd-2">user_passwd/2</a></td><td>Changes the Password of a user.</td></tr>
+<tr><td valign="top"><a href="#user_revoke-2">user_revoke/2</a></td><td>Revokes a right of a user.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="allowed-2">allowed/2</a></h3>
+<div class="spec">
+<p><tt>allowed(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found} | term()</tt><br></p>
+</div><p>Checks if the user has the given permission.</p>
+
+<h3 class="function"><a name="auth-2">auth/2</a></h3>
+<div class="spec">
+<p><tt>auth(User::binary(), Pass::binary()) -&gt; {ok, Token::{token, binary()}} | {error, not_found}</tt><br></p>
+</div><p>Authenticates a user and returns a token that can be used for
+   the session.</p>
+
+<h3 class="function"><a name="group_add-1">group_add/1</a></h3>
+<div class="spec">
+<p><tt>group_add(Group::binary()) -&gt; {error, doublicate} | ok</tt><br></p>
+</div><p>Adds a new group.</p>
+
+<h3 class="function"><a name="group_delete-1">group_delete/1</a></h3>
+<div class="spec">
+<p><tt>group_delete(Group::binary()) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Deletes a group.</p>
+
+<h3 class="function"><a name="group_get-1">group_get/1</a></h3>
+<div class="spec">
+<p><tt>group_get(Group::binary()) -&gt; {error, not_found} | term()</tt><br></p>
+</div><p>Retrieves group data from the server.</p>
+
+<h3 class="function"><a name="group_grant-2">group_grant/2</a></h3>
+<div class="spec">
+<p><tt>group_grant(Group::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Grants a right of a group.</p>
+
+<h3 class="function"><a name="group_list-0">group_list/0</a></h3>
+<div class="spec">
+<p><tt>group_list() -&gt; [term()]</tt><br></p>
+</div><p>Retrievs a list of all group id's.</p>
+
+<h3 class="function"><a name="group_revoke-2">group_revoke/2</a></h3>
+<div class="spec">
+<p><tt>group_revoke(Group::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Revokes a right of a group.</p>
+
+<h3 class="function"><a name="servers-0">servers/0</a></h3>
+<div class="spec">
+<p><tt>servers() -&gt; [term()]</tt><br></p>
+</div><p>Gets a list of servers</p>
+
+<h3 class="function"><a name="user_add-1">user_add/1</a></h3>
+<div class="spec">
+<p><tt>user_add(User::binary()) -&gt; {error, doublicate} | ok</tt><br></p>
+</div><p>Adds a new user.</p>
+
+<h3 class="function"><a name="user_delete-1">user_delete/1</a></h3>
+<div class="spec">
+<p><tt>user_delete(User::binary()) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Deletes a user.</p>
+
+<h3 class="function"><a name="user_get-1">user_get/1</a></h3>
+<div class="spec">
+<p><tt>user_get(User::binary()) -&gt; {error, not_found} | term()</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="user_grant-2">user_grant/2</a></h3>
+<div class="spec">
+<p><tt>user_grant(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Grants a right of a user.</p>
+
+<h3 class="function"><a name="user_join-2">user_join/2</a></h3>
+<div class="spec">
+<p><tt>user_join(User::binary(), Group::binary()) -&gt; ok | {error, not_found}</tt><br></p>
+</div><p>Adds a user to a group.</p>
+
+<h3 class="function"><a name="user_leave-2">user_leave/2</a></h3>
+<div class="spec">
+<p><tt>user_leave(User::binary(), Group::binary()) -&gt; ok | {error, not_found}</tt><br></p>
+</div><p>Removes a user from a group.</p>
+
+<h3 class="function"><a name="user_list-0">user_list/0</a></h3>
+<div class="spec">
+<p><tt>user_list() -&gt; [term()]</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="user_passwd-2">user_passwd/2</a></h3>
+<div class="spec">
+<p><tt>user_passwd(User::binary(), Pass::binary()) -&gt; ok | {error, not_found}</tt><br></p>
+</div><p>Changes the Password of a user.</p>
+
+<h3 class="function"><a name="user_revoke-2">user_revoke/2</a></h3>
+<div class="spec">
+<p><tt>user_revoke(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found} | ok</tt><br></p>
+</div><p>Revokes a right of a user.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Oct 7 2012, 23:04:48.</i></p>
+</body>
+</html>
