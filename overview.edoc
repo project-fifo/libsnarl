@@ -1,3 +1,13 @@
 @title libsnarl - SNARL interface library
 @copyright 2012 Heinz N. Gies
 
+@doc
+
+libsnarl is a interface library for <a href="https://github.com/project-fifo/snarl">SNARL</a> it is designed to access the functions of the server over the internal TCP protocol.
+
+A full documentation can be found <a href="http://project-fifo.github.io/libsnarl/">here</a>.
+<script>
+// Jump directly to a referenced url given in trailing '[]:...'-notation
+function goto(tag) { parent.document.location.href = url(tag); }
+function url(tag) { var o=document.getElementById(tag); return o ? o.href : '#'+tag; }
+</script>
