@@ -197,7 +197,7 @@ user_get(User) ->
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
-%% @spec user_get(User::binary()) ->
+%% @spec user_lookup(User::binary()) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
@@ -210,7 +210,7 @@ user_lookup(User) ->
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves all user permissions to later test.
-%% @spec user_get(User::binary()) ->
+%% @spec user_cache(User::binary()) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
