@@ -25,6 +25,7 @@
          user_delete/1,
          user_grant/2,
          user_revoke/2,
+         user_revoke_prefix/2,
          user_passwd/2,
          user_join/2,
          user_leave/2,
@@ -39,6 +40,7 @@
          group_delete/1,
          group_grant/2,
          group_revoke/2,
+         group_revoke_prefix/2,
          group_set/2,
          group_set/3
         ]).
@@ -266,7 +268,7 @@ user_grant(User, Permission) ->
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a user.
 %% @spec user_revoke(User::binary(),
-%%                   Permission::[atom()|binary()|string()]) ->
+%%                   Permission::fifo:permission()) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
@@ -277,6 +279,21 @@ user_grant(User, Permission) ->
                          ok.
 user_revoke(User, Permission) ->
     send({user, revoke, User, Permission}).
+
+%%--------------------------------------------------------------------
+%% @doc Revokes all right with a certain prefix from a user.
+%% @spec user_revoke(User::binary(),
+%%                   Prefix::fifo:permission()) ->
+%%                   {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec user_revoke_prefix(User::fifo:user_id(),
+                         Prefix::fifo:permission()) ->
+                                {error, no_servers} |
+                                not_found |
+                                ok.
+user_revoke_prefix(User, Prefix) ->
+    send({user, revoke_prefix, User, Prefix}).
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a user.
@@ -332,7 +349,7 @@ user_leave(User, Group) ->
 -spec group_set(Group::fifo:group_id(),
                 Attribute::fifo:key(),
                 Value::fifo:value()) -> ok | not_found |
-                                 {'error','no_servers'}.
+                                        {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
       is_binary(Group) ->
     send({group, set, Group, Attribute, Value}).
@@ -418,7 +435,7 @@ group_grant(Group, Permission) ->
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a group.
 %% @spec group_revoke(Group::binary(),
-%%                    Permission::[atom()|binary()|string()]) ->
+%%                    Permission::fifo:permission()) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
@@ -429,6 +446,21 @@ group_grant(Group, Permission) ->
                           ok.
 group_revoke(Group, Permission) ->
     send({group, revoke, Group, Permission}).
+
+%%--------------------------------------------------------------------
+%% @doc Revokes all rights matching a prefix from a group.
+%% @spec group_revoke(Group::binary(),
+%%                    Prefix::fifo:permission()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec group_revoke_prefix(Group::fifo:group_id(),
+                          Prefix::fifo:permission()) ->
+                                 {error, no_servers} |
+                                 not_found |
+                                 ok.
+group_revoke_prefix(Group, Prefix) ->
+    send({group, revoke, Group, Prefix}).
 
 %%%===================================================================
 %%% Internal Functions
