@@ -97,9 +97,6 @@ version() ->
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
 %%  the session.
-%% @spec auth(User::binary(), Pass::binary()) ->
-%%           {ok, Token::{token, binary()}} |
-%%           {error, not_found}
 %% @end
 %%--------------------------------------------------------------------
 -spec auth(User::fifo:user_id(), Pass::binary()) ->
@@ -107,23 +104,20 @@ version() ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass) ->
-    send({user, auth, User, Pass}).
+    send(libsnarl_msg:auth(User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
-%% @spec allowed(User::binary(),
-%%                Permission::[atom()|binary()|string()]) ->
-%%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec allowed(User::fifo:user_id() | {token, binary()},
+-spec allowed(User::fifo:user_token_id() | {token, binary()},
               Permission::fifo:permission()) ->
                      {error, no_servers} |
                      not_found |
                      true |
                      false.
 allowed(User, Permission) ->
-    send({user, allowed, User, Permission}).
+    send(libsnarl_msg:allowed(User, Permission)).
 
 %%%===================================================================
 %%% Token Functions
@@ -136,12 +130,12 @@ allowed(User, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec token_delete(Token::fifo:uuid()) ->
+-spec token_delete(Token::fifo:token()) ->
                           {error, no_servers} |
                           not_found |
                           ok.
 token_delete(Token) ->
-    send({token, delete, Token}).
+    send(libsnarl_msg:token_delete(Token)).
 
 %%%===================================================================
 %%% User Functions
@@ -156,9 +150,8 @@ token_delete(Token) ->
                Value::fifo:value()) ->
                       ok | not_found |
                       {'error','no_servers'}.
-user_set(User, Attribute, Value) when
-      is_binary(User) ->
-    send({user, set, User, Attribute, Value}).
+user_set(User, Attribute, Value) ->
+    send(libsnarl_msg:user_set(User, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes for the user.
@@ -168,9 +161,8 @@ user_set(User, Attribute, Value) when
                Attributes::fifo:attr_list()) ->
                       ok | not_found |
                       {'error','no_servers'}.
-user_set(User, Attributes) when
-      is_binary(User) ->
-    send({user, set, User, Attributes}).
+user_set(User, Attributes) ->
+    send(libsnarl_msg:user_set(User, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
@@ -182,7 +174,7 @@ user_set(User, Attributes) when
                        {error, timeout} |
                        {ok, [fifo:user_id()]}.
 user_list() ->
-    send({user, list}).
+    send(libsnarl_msg:user_list()).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -195,7 +187,7 @@ user_list() ->
                       {error, no_servers} |
                       {ok, fifo:user()}.
 user_get(User) ->
-    send({user, get, User}).
+    send(libsnarl_msg:user_get(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -208,7 +200,7 @@ user_get(User) ->
                          {error, no_servers} |
                          {ok, fifo:user()}.
 user_lookup(User) ->
-    send({user, lookup, User}).
+    send(libsnarl_msg:user_lookup(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves all user permissions to later test.
@@ -221,7 +213,7 @@ user_lookup(User) ->
                         not_found |
                         {ok, [fifo:permission()]}.
 user_cache(User) ->
-    send({user, cache, User}).
+    send(libsnarl_msg:user_cache(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new user.
@@ -234,7 +226,7 @@ user_cache(User) ->
                       duplicate |
                       {ok, UUID::fifo:user_id()}.
 user_add(UserName) ->
-    send({user, add, UserName}).
+    send(libsnarl_msg:user_add(UserName)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a user.
@@ -247,7 +239,7 @@ user_add(UserName) ->
                          not_found |
                          ok.
 user_delete(User) ->
-    send({user, delete, User}).
+    send(libsnarl_msg:user_delete(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Grants a right of a user.
@@ -263,7 +255,7 @@ user_delete(User) ->
                         not_found |
                         ok.
 user_grant(User, Permission) ->
-    send({user, grant, User, Permission}).
+    send(libsnarl_msg:user_grant(User, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a user.
@@ -278,7 +270,7 @@ user_grant(User, Permission) ->
                          not_found |
                          ok.
 user_revoke(User, Permission) ->
-    send({user, revoke, User, Permission}).
+    send(libsnarl_msg:user_revoke(User, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a user.
@@ -293,7 +285,7 @@ user_revoke(User, Permission) ->
                                 not_found |
                                 ok.
 user_revoke_prefix(User, Prefix) ->
-    send({user, revoke_prefix, User, Prefix}).
+    send(libsnarl_msg:user_revoke_prefix(User, Prefix)).
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a user.
@@ -307,11 +299,11 @@ user_revoke_prefix(User, Prefix) ->
                          not_found |
                          ok.
 user_passwd(User, Pass) ->
-    send({user, passwd, User, Pass}).
+    send(libsnarl_msg:user_passwd(User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a user to a group.
-%% @spec user_join(User::binary(), Group::binary()) ->
+%% @spec user_join(User::binary()(Group::binary()) ->
 %%             ok |
 %%             {error, not_found|no_servers}
 %% @end
@@ -322,11 +314,11 @@ user_passwd(User, Pass) ->
                        not_found |
                        ok.
 user_join(User, Group) ->
-    send({user, join, User, Group}).
+    send(libsnarl_msg:user_join(User, Group)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.
-%% @spec user_leave(User::binary(), Group::binary()) ->
+%% @spec user_leave(User::binary()(Group::binary()) ->
 %%          ok |
 %%          {error, not_found|no_servers}
 %% @end
@@ -336,7 +328,7 @@ user_join(User, Group) ->
                         not_found |
                         ok.
 user_leave(User, Group) ->
-    send({user, leave, User, Group}).
+    send(libsnarl_msg:user_leave(User, Group)).
 
 %%%===================================================================
 %%% Group Functions
@@ -352,7 +344,7 @@ user_leave(User, Group) ->
                                         {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
       is_binary(Group) ->
-    send({group, set, Group, Attribute, Value}).
+    send(libsnarl_msg:group_set(Group, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes on the group.
@@ -364,7 +356,7 @@ group_set(Group, Attribute, Value) when
                        {'error','no_servers'}.
 group_set(Group, Attributes) when
       is_binary(Group) ->
-    send({group, set, Group, Attributes}).
+    send(libsnarl_msg:group_set(Group, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all group id's.
@@ -376,7 +368,7 @@ group_set(Group, Attributes) when
                         {error, no_servers} |
                         {ok, [fifo:group_id()]}.
 group_list() ->
-    send({group, list}).
+    send(libsnarl_msg:group_list()).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
@@ -389,7 +381,7 @@ group_list() ->
                        {error, no_servers} |
                        {ok, fifo:group()}.
 group_get(Group) ->
-    send({group, get, Group}).
+    send(libsnarl_msg:group_get(Group)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new group.
@@ -402,7 +394,7 @@ group_get(Group) ->
                        duplicate |
                        ok.
 group_add(Group) ->
-    send({group, add, Group}).
+    send(libsnarl_msg:group_add(Group)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a group.
@@ -415,7 +407,7 @@ group_add(Group) ->
                           not_found |
                           ok.
 group_delete(Group) ->
-    send({group, delete, Group}).
+    send(libsnarl_msg:group_delete(Group)).
 
 %%--------------------------------------------------------------------
 %% @doc Grants a right of a group.
@@ -430,7 +422,7 @@ group_delete(Group) ->
                          not_found |
                          ok.
 group_grant(Group, Permission) ->
-    send({group, grant, Group, Permission}).
+    send(libsnarl_msg:group_grant(Group, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a group.
@@ -445,7 +437,7 @@ group_grant(Group, Permission) ->
                           not_found |
                           ok.
 group_revoke(Group, Permission) ->
-    send({group, revoke, Group, Permission}).
+    send(libsnarl_msg:group_revoke(Group, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a group.
@@ -460,7 +452,7 @@ group_revoke(Group, Permission) ->
                                  not_found |
                                  ok.
 group_revoke_prefix(Group, Prefix) ->
-    send({group, revoke, Group, Prefix}).
+    send(libsnarl_msg:group_revoke(Group, Prefix)).
 
 %%%===================================================================
 %%% Internal Functions
