@@ -62,7 +62,7 @@ auth(Login, Pass) when
 
 allowed(?Token, Permission)
   when is_list(Permission) ->
-    {user, allowed, {token, Token}, Permission};
+    {user, allowed, Token, Permission};
 
 allowed(?User, Permission)
   when is_list(Permission) ->
