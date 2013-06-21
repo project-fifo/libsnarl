@@ -62,7 +62,7 @@ auth(Login, Pass) when
 
 allowed(?Token, Permission)
   when is_list(Permission) ->
-    {user, allowed, {token, Token}, Permission};
+    {user, allowed, Token, Permission};
 
 allowed(?User, Permission)
   when is_list(Permission) ->
@@ -86,11 +86,11 @@ token_delete(<<Token:36/binary>>) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_set(User::fifo:user_id(),
-               Attribute::fifo:key(),
-               Value::fifo:value()) ->
+               Attribute::fifo:keys(),
+               Value::fifo:value()  | delete) ->
                       {user, set, User::fifo:user_id(),
-                       Attribute::fifo:key(),
-                       Value::fifo:value()}.
+                       Attribute::fifo:keys(),
+                       Value::fifo:value()  | delete}.
 user_set(?User, Attribute, Value) ->
     {user, set, User, Attribute, Value}.
 
@@ -253,12 +253,12 @@ user_leave(?User,?Group) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_set(Group::fifo:group_id(),
-                Attribute::fifo:key(),
-                Value::fifo:value()) ->
+                Attribute::fifo:keys(),
+                Value::fifo:value() | delete) ->
                        {group, set,
                         Group::fifo:group_id(),
-                        Attribute::fifo:key(),
-                        Value::fifo:value()}.
+                        Attribute::fifo:keys(),
+                        Value::fifo:value() | delete}.
 
 group_set(?Group, Attribute, Value)  ->
     {group, set, Group, Attribute, Value}.

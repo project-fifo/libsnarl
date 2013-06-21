@@ -146,8 +146,8 @@ token_delete(Token) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_set(User::fifo:user_id(),
-               Attribute::fifo:key(),
-               Value::fifo:value()) ->
+               Attribute::fifo:keys(),
+               Value::fifo:value() | delete) ->
                       ok | not_found |
                       {'error','no_servers'}.
 user_set(User, Attribute, Value) ->
@@ -339,9 +339,9 @@ user_leave(User, Group) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_set(Group::fifo:group_id(),
-                Attribute::fifo:key(),
-                Value::fifo:value()) -> ok | not_found |
-                                        {'error','no_servers'}.
+                Attribute::fifo:keys(),
+                Value::fifo:value() | delete) -> ok | not_found |
+                                                 {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
       is_binary(Group) ->
     send(libsnarl_msg:group_set(Group, Attribute, Value)).
