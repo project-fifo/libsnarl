@@ -146,7 +146,7 @@ token_delete(Token) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_set(User::fifo:user_id(),
-               Attribute::fifo:key(),
+               Attribute::fifo:keys(),
                Value::fifo:value()) ->
                       ok | not_found |
                       {'error','no_servers'}.
@@ -339,7 +339,7 @@ user_leave(User, Group) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_set(Group::fifo:group_id(),
-                Attribute::fifo:key(),
+                Attribute::fifo:keys(),
                 Value::fifo:value()) -> ok | not_found |
                                         {'error','no_servers'}.
 group_set(Group, Attribute, Value) when
