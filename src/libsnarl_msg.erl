@@ -86,10 +86,10 @@ token_delete(<<Token:36/binary>>) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_set(User::fifo:user_id(),
-               Attribute::fifo:key(),
+               Attribute::fifo:keys(),
                Value::fifo:value()) ->
                       {user, set, User::fifo:user_id(),
-                       Attribute::fifo:key(),
+                       Attribute::fifo:keys(),
                        Value::fifo:value()}.
 user_set(?User, Attribute, Value) ->
     {user, set, User, Attribute, Value}.
@@ -253,11 +253,11 @@ user_leave(?User,?Group) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_set(Group::fifo:group_id(),
-                Attribute::fifo:key(),
+                Attribute::fifo:keys(),
                 Value::fifo:value()) ->
                        {group, set,
                         Group::fifo:group_id(),
-                        Attribute::fifo:key(),
+                        Attribute::fifo:keys(),
                         Value::fifo:value()}.
 
 group_set(?Group, Attribute, Value)  ->
