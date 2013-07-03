@@ -1,8 +1,8 @@
 -module(libsnarl_msg).
 
 -export([
-         auth/2,
-         allowed/2
+         allowed/2,
+         auth/2
         ]).
 
 -export([
@@ -10,28 +10,31 @@
         ]).
 
 -export([
-         user_lookup/1,
-         user_list/0,
-         user_cache/1,
-         user_get/1,
          user_add/1,
+         user_cache/1,
          user_delete/1,
+         user_get/1,
          user_grant/2,
+         user_join/2,
+         user_key_add/3,
+         user_key_revoke/2,
+         user_keys/1,
+         user_leave/2,
+         user_list/0,
+         user_lookup/1,
+         user_passwd/2,
          user_revoke/2,
          user_revoke_prefix/2,
-         user_passwd/2,
-         user_join/2,
-         user_leave/2,
          user_set/2,
          user_set/3
         ]).
 
 -export([
-         group_list/0,
-         group_get/1,
          group_add/1,
          group_delete/1,
+         group_get/1,
          group_grant/2,
+         group_list/0,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -219,9 +222,6 @@ user_passwd(?User, Pass) when is_binary(Pass) ->
 
 %%--------------------------------------------------------------------
 %% @doc Adds a user to a group.
-%% @spec user_join(User::binary(), Group::binary()) ->
-%%             ok |
-%%             {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 
@@ -229,6 +229,25 @@ user_passwd(?User, Pass) when is_binary(Pass) ->
                        {user, join, User::fifo:user_id(), Group::fifo:group_id()}.
 user_join(?User, ?Group) ->
     {user, join, User, Group}.
+
+
+-spec user_key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
+                          {user, keys, add, User::fifo:user_id(), KeyID::binary(), Key::binary()}.
+user_key_add(?User, KeyID, Key)
+  when is_binary(KeyID),
+       is_binary(Key) ->
+    {user, keys, add, User, KeyID, Key}.
+
+-spec user_key_revoke(User::fifo:user_id(), KeyID::binary()) ->
+                          {user, keys, add, User::fifo:user_id(), KeyID::binary()}.
+user_key_revoke(?User, KeyID)
+  when is_binary(KeyID) ->
+    {user, keys, revoke, User, KeyID}.
+
+-spec user_keys(User::fifo:user_id()) ->
+                       {user, keys, get, User::fifo:user_id()}.
+user_keys(?User) ->
+    {user, keys, get, User}.
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.

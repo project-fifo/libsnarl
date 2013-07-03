@@ -1,13 +1,13 @@
 -module(libsnarl).
 
 -export([
-         start/0,
-         servers/0
+         servers/0,
+         start/0
         ]).
 
 -export([
-         auth/2,
          allowed/2,
+         auth/2,
          test/2,
          version/0
         ]).
@@ -17,28 +17,31 @@
         ]).
 
 -export([
-         user_lookup/1,
-         user_list/0,
-         user_cache/1,
-         user_get/1,
          user_add/1,
+         user_cache/1,
          user_delete/1,
+         user_get/1,
          user_grant/2,
+         user_join/2,
+         user_key_add/3,
+         user_key_revoke/2,
+         user_keys/1,
+         user_leave/2,
+         user_list/0,
+         user_lookup/1,
+         user_passwd/2,
          user_revoke/2,
          user_revoke_prefix/2,
-         user_passwd/2,
-         user_join/2,
-         user_leave/2,
          user_set/2,
          user_set/3
         ]).
 
 -export([
-         group_list/0,
-         group_get/1,
          group_add/1,
          group_delete/1,
+         group_get/1,
          group_grant/2,
+         group_list/0,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -303,12 +306,8 @@ user_passwd(User, Pass) ->
 
 %%--------------------------------------------------------------------
 %% @doc Adds a user to a group.
-%% @spec user_join(User::binary()(Group::binary()) ->
-%%             ok |
-%%             {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
-
 -spec user_join(User::fifo:user_id(), Group::fifo:group_id()) ->
                        {error, no_servers} |
                        not_found |
@@ -316,6 +315,38 @@ user_passwd(User, Pass) ->
 user_join(User, Group) ->
     send(libsnarl_msg:user_join(User, Group)).
 
+%%--------------------------------------------------------------------
+%% @doc Adds a key to the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
+                       {error, no_servers} |
+                       not_found |
+                       ok.
+user_key_add(User, KeyID, Key) ->
+    send(libsnarl_msg:user_key_add(User, KeyID, Key)).
+
+%%--------------------------------------------------------------------
+%% @doc Removes a key from the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_key_revoke(User::fifo:user_id(), KeyID::binary()) ->
+                       {error, no_servers} |
+                       not_found |
+                       ok.
+user_key_revoke(User, KeyID) ->
+    send(libsnarl_msg:user_key_revoke(User, KeyID)).
+
+%%--------------------------------------------------------------------
+%% @doc Returns a list of all SSH keys for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_keys(User::fifo:user_id()) ->
+                       {error, no_servers} |
+                       not_found |
+                       {ok, [{KeyID::binary(), Key::binary()}]}.
+user_keys(User) ->
+    send(libsnarl_msg:user_keys(User)).
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.
 %% @spec user_leave(User::binary()(Group::binary()) ->
