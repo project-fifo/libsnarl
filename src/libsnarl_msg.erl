@@ -16,6 +16,7 @@
          user_get/1,
          user_grant/2,
          user_join/2,
+         user_key_find/1,
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
@@ -229,6 +230,12 @@ user_passwd(?User, Pass) when is_binary(Pass) ->
                        {user, join, User::fifo:user_id(), Group::fifo:group_id()}.
 user_join(?User, ?Group) ->
     {user, join, User, Group}.
+
+-spec user_key_find(KeyID::binary()) ->
+                           {user, keys, find, KeyID::binary()}.
+
+user_key_find(<<KeyID:16/binary>>) ->
+    {user, keys, find, KeyID}.
 
 
 -spec user_key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->

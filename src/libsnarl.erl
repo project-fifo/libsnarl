@@ -9,7 +9,8 @@
          allowed/2,
          auth/2,
          test/2,
-         version/0
+         version/0,
+         keystr_to_id/1
         ]).
 
 -export([
@@ -23,6 +24,7 @@
          user_get/1,
          user_grant/2,
          user_join/2,
+         user_key_find/1,
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
@@ -64,6 +66,10 @@ start() ->
     application:start(libsnarlmatch),
     application:start(mdns_client_lib),
     application:start(libsnarl).
+
+
+keystr_to_id(S) ->
+    << <<D:8>> || {ok, [D], []} <- [io_lib:fread("~16u", P) || P <- re:split(S, ":", [{return, list}])]>>.
 
 %%--------------------------------------------------------------------
 %% @doc Tests cached permissions.
@@ -314,6 +320,13 @@ user_passwd(User, Pass) ->
                        ok.
 user_join(User, Group) ->
     send(libsnarl_msg:user_join(User, Group)).
+
+-spec user_key_find(KeyID::binary()) ->
+                           {error, no_servers} |
+                           not_found |
+                           {ok, UUID::fifo:user_id()}.
+user_key_find(KeyID) ->
+    send(libsnarl_msg:user_key_find(KeyID)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a key to the users SSH keys.
