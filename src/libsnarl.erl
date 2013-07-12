@@ -35,7 +35,10 @@
          user_revoke/2,
          user_revoke_prefix/2,
          user_set/2,
-         user_set/3
+         user_set/3,
+         user_join_org/2,
+         user_leave_org/2,
+         user_select_org/2
         ]).
 
 -export([
@@ -48,6 +51,18 @@
          group_revoke_prefix/2,
          group_set/2,
          group_set/3
+        ]).
+
+-export([
+         org_add/1,
+         org_delete/1,
+         org_get/1,
+         org_add_trigger/2,
+         org_list/0,
+         org_remove_trigger/2,
+         org_execute_trigger/3,
+         org_set/2,
+         org_set/3
         ]).
 
 %%%===================================================================
@@ -360,6 +375,7 @@ user_key_revoke(User, KeyID) ->
                        {ok, [{KeyID::binary(), Key::binary()}]}.
 user_keys(User) ->
     send(libsnarl_msg:user_keys(User)).
+
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.
 %% @spec user_leave(User::binary()(Group::binary()) ->
@@ -373,6 +389,39 @@ user_keys(User) ->
                         ok.
 user_leave(User, Group) ->
     send(libsnarl_msg:user_leave(User, Group)).
+
+%%--------------------------------------------------------------------
+%% @doc Lets a user join the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_join_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                           {error, no_servers} |
+                           not_found |
+                           ok.
+user_join_org(User, Org) ->
+    send(libsnarl_msg:user_join_org(User, Org)).
+
+%%--------------------------------------------------------------------
+%% @doc Lets a user leave the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                            {error, no_servers} |
+                            not_found |
+                           ok.
+user_leave_org(User, Org) ->
+    send(libsnarl_msg:user_leave_org(User, Org)).
+
+%%--------------------------------------------------------------------
+%% @doc Sets a org as active for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_select_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+user_select_org(User, Org) ->
+    send(libsnarl_msg:user_select_org(User, Org)).
 
 %%%===================================================================
 %%% Group Functions
@@ -497,6 +546,132 @@ group_revoke(Group, Permission) ->
                                  ok.
 group_revoke_prefix(Group, Prefix) ->
     send(libsnarl_msg:group_revoke(Group, Prefix)).
+
+
+%%%===================================================================
+%%% org Functions
+%%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @doc Sets an attribute on the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_set(Org::fifo:org_id(),
+                Attribute::fifo:keys(),
+                Value::fifo:value() | delete) -> ok | not_found |
+                                                 {'error','no_servers'}.
+org_set(Org, Attribute, Value) when
+      is_binary(Org) ->
+    send(libsnarl_msg:org_set(Org, Attribute, Value)).
+
+%%--------------------------------------------------------------------
+%% @doc Sets multiple attributes on the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_set(Org::fifo:org_id(),
+                Attributes::fifo:attr_list()) ->
+                       ok | not_found |
+                       {'error','no_servers'}.
+org_set(Org, Attributes) when
+      is_binary(Org) ->
+    send(libsnarl_msg:org_set(Org, Attributes)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all org id's.
+%% @spec org_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec org_list() ->
+                        {error, no_servers} |
+                        {ok, [fifo:org_id()]}.
+org_list() ->
+    send(libsnarl_msg:org_list()).
+
+%%--------------------------------------------------------------------
+%% @doc Retrieves org data from the server.
+%% @spec org_get(Org::binary()) ->
+%%                 {error, not_found|no_servers} | term()
+%% @end
+%%--------------------------------------------------------------------
+-spec org_get(Org::fifo:org_id()) ->
+                       not_found |
+                       {error, no_servers} |
+                       {ok, fifo:org()}.
+org_get(Org) ->
+    send(libsnarl_msg:org_get(Org)).
+
+%%--------------------------------------------------------------------
+%% @doc Adds a new org.
+%% @spec org_add(Org::binary()) ->
+%%                 {error, duplicate} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec org_add(Org::fifo:org_id()) ->
+                       {error, no_servers} |
+                       duplicate |
+                       ok.
+org_add(Org) ->
+    send(libsnarl_msg:org_add(Org)).
+
+%%--------------------------------------------------------------------
+%% @doc Deletes a org.
+%% @spec org_delete(Org::binary()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec org_delete(Org::fifo:org_id()) ->
+                          {error, no_servers} |
+                          not_found |
+                          ok.
+org_delete(Org) ->
+    send(libsnarl_msg:org_delete(Org)).
+
+%%--------------------------------------------------------------------
+%% @doc Grants a right of a org.
+%% @spec org_grant(Org::binary(),
+%%                   Permission::[atom()|binary()|string()]) ->
+%%                   {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec org_add_trigger(Org::fifo:org_id(),
+                      Trigger::fifo:trigger()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+org_add_trigger(Org, Trigger) ->
+    send(libsnarl_msg:org_add_trigger(Org, Trigger)).
+
+%%--------------------------------------------------------------------
+%% @doc Revokes a right of a org.
+%% @spec org_revoke(Org::binary(),
+%%                    Permission::fifo:permission()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec org_remove_trigger(Org::fifo:org_id(),
+                         Trigger::fifo:trigger()) ->
+                                {error, no_servers} |
+                                not_found |
+                                ok.
+org_remove_trigger(Org, Trigger) ->
+    send(libsnarl_msg:org_remove_trigger(Org, Trigger)).
+
+%%--------------------------------------------------------------------
+%% @doc Revokes all rights matching a prefix from a org.
+%% @spec org_revoke(Org::binary(),
+%%                    Prefix::fifo:permission()) ->
+%%                    {error, not_found|no_servers} | ok
+%% @end
+%%--------------------------------------------------------------------
+-spec org_execute_trigger(Org::fifo:org_id(),
+                          Event::fifo:event(),
+                          Payload::term()) ->
+                                 {error, no_servers} |
+                                 not_found |
+                                 ok.
+org_execute_trigger(Org, Event, Payload) ->
+    send(libsnarl_msg:org_execute_trigger(Org, Event, Payload)).
 
 %%%===================================================================
 %%% Internal Functions
