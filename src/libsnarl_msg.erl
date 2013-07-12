@@ -28,7 +28,7 @@
          user_revoke_prefix/2,
          user_set/2,
          user_set/3,
-         user_org/1,
+         user_active_org/1,
          user_orgs/1,
          user_join_org/2,
          user_leave_org/2,
@@ -295,10 +295,10 @@ user_join_org(?User, ?Org) ->
 user_orgs(?User) ->
     {user, org, get, User}.
 
--spec user_org(User::fifo:user_id()) ->
-                      {user, org, active,
-                       User::fifo:user_id()}.
-user_org(?User) ->
+-spec user_active_org(User::fifo:user_id()) ->
+                             {user, org, active,
+                              User::fifo:user_id()}.
+user_active_org(?User) ->
     {user, org, active, User}.
 
 -spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
