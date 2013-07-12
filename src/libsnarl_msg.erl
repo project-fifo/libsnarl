@@ -28,6 +28,8 @@
          user_revoke_prefix/2,
          user_set/2,
          user_set/3,
+         user_org/1,
+         user_orgs/1,
          user_join_org/2,
          user_leave_org/2,
          user_select_org/2
@@ -287,6 +289,18 @@ user_keys(?User) ->
 user_join_org(?User, ?Org) ->
     {user, org, join, User, Org}.
 
+-spec user_orgs(User::fifo:user_id()) ->
+                       {user, org, get,
+                        User::fifo:user_id()}.
+user_orgs(?User) ->
+    {user, org, get, User}.
+
+-spec user_org(User::fifo:user_id()) ->
+                      {user, org, active,
+                       User::fifo:user_id()}.
+user_org(?User) ->
+    {user, org, active, User}.
+
 -spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                             {user, org, leave,
                              User::fifo:user_id(),
@@ -299,7 +313,7 @@ user_leave_org(?User, ?Org) ->
                               User::fifo:user_id(),
                               Org::fifo:group_id()}.
 user_select_org(?User, ?Org) ->
-    {user, org, leave, User, Org}.
+    {user, org, select, User, Org}.
 
 
 %%%===================================================================
@@ -509,9 +523,9 @@ org_remove_trigger(?Org, Trigger) ->
 -spec org_execute_trigger(Org::fifo:org_id(),
                           Event::fifo:event(),
                           Payload::term()) ->
-                                {org, trigger, execute,
-                                 Org::fifo:org_id(),
-                                 Trigger::fifo:trigger()}.
+                                 {org, trigger, execute,
+                                  Org::fifo:org_id(),
+                                  Trigger::fifo:trigger()}.
 
 org_execute_trigger(?Org, Event, Payload) ->
     {org, trigger, execute, Org, Event, Payload}.

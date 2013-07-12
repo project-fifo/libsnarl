@@ -36,6 +36,8 @@
          user_revoke_prefix/2,
          user_set/2,
          user_set/3,
+         user_org/1,
+         user_orgs/1,
          user_join_org/2,
          user_leave_org/2,
          user_select_org/2
@@ -423,6 +425,28 @@ user_leave_org(User, Org) ->
 user_select_org(User, Org) ->
     send(libsnarl_msg:user_select_org(User, Org)).
 
+%%--------------------------------------------------------------------
+%% @doc Fetches the active org.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_org(User::fifo:user_id()) ->
+                      {error, no_servers} |
+                      not_found |
+                      {ok, Org::fifo:org_id() | binary()}.
+user_org(User) ->
+    send(libsnarl_msg:user_org(User)).
+
+%%--------------------------------------------------------------------
+%% @doc Fetches all orgs.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_orgs(User::fifo:user_id()) ->
+                      {error, no_servers} |
+                      not_found |
+                      {ok, [Org::fifo:org_id() | binary()]}.
+user_orgs(User) ->
+    send(libsnarl_msg:user_orgs(User)).
+
 %%%===================================================================
 %%% Group Functions
 %%%===================================================================
@@ -546,7 +570,6 @@ group_revoke(Group, Permission) ->
                                  ok.
 group_revoke_prefix(Group, Prefix) ->
     send(libsnarl_msg:group_revoke(Group, Prefix)).
-
 
 %%%===================================================================
 %%% org Functions
