@@ -27,7 +27,12 @@
          user_revoke/2,
          user_revoke_prefix/2,
          user_set/2,
-         user_set/3
+         user_set/3,
+         user_active_org/1,
+         user_orgs/1,
+         user_join_org/2,
+         user_leave_org/2,
+         user_select_org/2
         ]).
 
 -export([
@@ -42,8 +47,21 @@
          group_set/3
         ]).
 
+-export([
+         org_add/1,
+         org_delete/1,
+         org_get/1,
+         org_add_trigger/2,
+         org_list/0,
+         org_remove_trigger/2,
+         org_execute_trigger/3,
+         org_set/2,
+         org_set/3
+        ]).
+
 -define(User, <<User:36/binary>>).
 -define(Group, <<Group:36/binary>>).
+-define(Org, <<Org:36/binary>>).
 -define(Token, {token, <<_:36/binary>>} = Token).
 
 
@@ -77,7 +95,7 @@ allowed(?User, Permission)
 %%%===================================================================
 
 -spec token_delete(Token::fifo:token()) ->
-    {token, delete, Token::fifo:token()}.
+                          {token, delete, Token::fifo:token()}.
 token_delete(<<Token:36/binary>>) ->
     {token, delete, Token}.
 
@@ -191,9 +209,9 @@ user_grant(User, Permission) ->
 %%--------------------------------------------------------------------
 -spec user_revoke(User::fifo:user_id(),
                   Permission::fifo:permission()) ->
-                        {user, revoke,
-                         User::fifo:user_id(),
-                         Permission::fifo:permission()}.
+                         {user, revoke,
+                          User::fifo:user_id(),
+                          Permission::fifo:permission()}.
 user_revoke(User, Permission) ->
     {user, revoke, User, Permission}.
 
@@ -203,9 +221,9 @@ user_revoke(User, Permission) ->
 %%--------------------------------------------------------------------
 -spec user_revoke_prefix(User::fifo:user_id(),
                          Prefix::fifo:permission()) ->
-                        {user, revoke_prefix,
-                         User::fifo:user_id(),
-                         Permission::fifo:permission()}.
+                                {user, revoke_prefix,
+                                 User::fifo:user_id(),
+                                 Permission::fifo:permission()}.
 user_revoke_prefix(?User, Prefix) when is_list(Prefix)->
     {user, revoke_prefix, User, Prefix}.
 
@@ -231,6 +249,14 @@ user_passwd(?User, Pass) when is_binary(Pass) ->
 user_join(?User, ?Group) ->
     {user, join, User, Group}.
 
+-spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
+                        {user, leave,
+                         User::fifo:user_id(),
+                         Group::fifo:group_id()}.
+
+user_leave(?User,?Group) ->
+    {user, leave, User, Group}.
+
 -spec user_key_find(KeyID::binary()) ->
                            {user, keys, find, KeyID::binary()}.
 
@@ -246,7 +272,7 @@ user_key_add(?User, KeyID, Key)
     {user, keys, add, User, KeyID, Key}.
 
 -spec user_key_revoke(User::fifo:user_id(), KeyID::binary()) ->
-                          {user, keys, add, User::fifo:user_id(), KeyID::binary()}.
+                             {user, keys, add, User::fifo:user_id(), KeyID::binary()}.
 user_key_revoke(?User, KeyID)
   when is_binary(KeyID) ->
     {user, keys, revoke, User, KeyID}.
@@ -256,19 +282,39 @@ user_key_revoke(?User, KeyID)
 user_keys(?User) ->
     {user, keys, get, User}.
 
-%%--------------------------------------------------------------------
-%% @doc Removes a user from a group.
-%% @spec user_leave(User::binary(), Group::binary()) ->
-%%          ok |
-%%          {error, not_found|no_servers}
-%% @end
-%%--------------------------------------------------------------------
--spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
-                        {user, leave,
-                         User::fifo:user_id(),
-                         Group::fifo:group_id()}.
-user_leave(?User,?Group) ->
-    {user, leave, User, Group}.
+-spec user_join_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                           {user, org, join,
+                            User::fifo:user_id(),
+                            Org::fifo:org_id()}.
+user_join_org(?User, ?Org) ->
+    {user, org, join, User, Org}.
+
+-spec user_orgs(User::fifo:user_id()) ->
+                       {user, org, get,
+                        User::fifo:user_id()}.
+user_orgs(?User) ->
+    {user, org, get, User}.
+
+-spec user_active_org(User::fifo:user_id()) ->
+                             {user, org, active,
+                              User::fifo:user_id()}.
+user_active_org(?User) ->
+    {user, org, active, User}.
+
+-spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                            {user, org, leave,
+                             User::fifo:user_id(),
+                             Org::fifo:group_id()}.
+user_leave_org(?User, ?Org) ->
+    {user, org, leave, User, Org}.
+
+-spec user_select_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                             {user, org, select,
+                              User::fifo:user_id(),
+                              Org::fifo:group_id()}.
+user_select_org(?User, ?Org) ->
+    {user, org, select, User, Org}.
+
 
 %%%===================================================================
 %%% Group Functions
@@ -307,7 +353,7 @@ group_set(?Group, Attributes) when
 %% @end
 %%--------------------------------------------------------------------
 -spec group_list() ->
-    {group, list}.
+                        {group, list}.
 group_list() ->
     {group, list}.
 
@@ -369,11 +415,120 @@ group_revoke(?Group, Permission) when is_list(Permission) ->
 %%--------------------------------------------------------------------
 -spec group_revoke_prefix(Group::fifo:group_id(),
                           Prefix::fifo:permission()) ->
-                          {group, revoke_prefix,
-                           Group::fifo:group_id(),
-                           Permission::fifo:permission()}.
+                                 {group, revoke_prefix,
+                                  Group::fifo:group_id(),
+                                  Permission::fifo:permission()}.
 group_revoke_prefix(?Group, Prefix) when is_list(Prefix) ->
     {group, revoke_prefix, Group, Prefix}.
+
+
+%%%===================================================================
+%%% Org Functions
+%%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @doc Sets an attribute on the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_set(Org::fifo:org_id(),
+              Attribute::fifo:keys(),
+              Value::fifo:value() | delete) ->
+                     {org, set,
+                      Org::fifo:org_id(),
+                      Attribute::fifo:keys(),
+                      Value::fifo:value() | delete}.
+
+org_set(?Org, Attribute, Value)  ->
+    {org, set, Org, Attribute, Value}.
+
+%%--------------------------------------------------------------------
+%% @doc Sets multiple attributes on the org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_set(Org::fifo:org_id(),
+              Attributes::fifo:attr_list()) ->
+                     {org, set,
+                      Org::fifo:org_id(),
+                      Attributes::fifo:attr_list()}.
+org_set(?Org, Attributes) when
+      is_list(Attributes) ->
+    {org, set, Org, Attributes}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all org id's.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_list() ->
+                      {org, list}.
+org_list() ->
+    {org, list}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrieves org data from the server.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_get(Org::fifo:org_id()) ->
+                     {org, get, Org::fifo:org_id()}.
+org_get(?Org) ->
+    {org, get, Org}.
+
+%%--------------------------------------------------------------------
+%% @doc Adds a new org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_add(OrgName::binary()) ->
+                     {org, add, OrgName::binary()}.
+org_add(OrgName) when is_binary(OrgName)->
+    {org, add, OrgName}.
+
+%%--------------------------------------------------------------------
+%% @doc Deletes a org.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_delete(Org::fifo:org_id()) ->
+                        {org, delete, Org::fifo:org_id()}.
+org_delete(?Org) ->
+    {org, delete, Org}.
+
+%%--------------------------------------------------------------------
+%% @doc adds a trigger.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_add_trigger(Org::fifo:org_id(),
+                      Trigger::fifo:trigger()) ->
+                             {org, trigger, add,
+                              Org::fifo:org_id(),
+                              Trigger::fifo:trigger()}.
+
+org_add_trigger(?Org, Trigger) ->
+    {org, trigger, add, Org, Trigger}.
+
+%%--------------------------------------------------------------------
+%% @doc Removes a trigger.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_remove_trigger(Org::fifo:org_id(),
+                         Trigger::fifo:trigger()) ->
+                                {org, trigger, remove,
+                                 Org::fifo:org_id(),
+                                 Trigger::fifo:trigger()}.
+
+org_remove_trigger(?Org, Trigger) ->
+    {org, trigger, remove, Org, Trigger}.
+
+%%--------------------------------------------------------------------
+%% @doc Executes a trigger.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_execute_trigger(Org::fifo:org_id(),
+                          Event::fifo:event(),
+                          Payload::term()) ->
+                                 {org, trigger, execute,
+                                  Org::fifo:org_id(),
+                                  Trigger::fifo:trigger()}.
+
+org_execute_trigger(?Org, Event, Payload) ->
+    {org, trigger, execute, Org, Event, Payload}.
 
 %%%===================================================================
 %%% Internal Functions
