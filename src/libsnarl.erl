@@ -434,7 +434,7 @@ user_select_org(User, Org) ->
                       not_found |
                       {ok, Org::fifo:org_id() | binary()}.
 user_active_org(User) ->
-    send(libsnarl_msg:user_org(User)).
+    send(libsnarl_msg:user_active_org(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Fetches all orgs.
