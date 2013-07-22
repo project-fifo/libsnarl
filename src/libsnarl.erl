@@ -30,6 +30,7 @@
          user_keys/1,
          user_leave/2,
          user_list/0,
+         user_list/1,
          user_lookup/1,
          user_passwd/2,
          user_revoke/2,
@@ -49,6 +50,7 @@
          group_get/1,
          group_grant/2,
          group_list/0,
+         group_list/1,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -61,11 +63,87 @@
          org_get/1,
          org_add_trigger/2,
          org_list/0,
+         org_list/1,
          org_remove_trigger/2,
          org_execute_trigger/3,
          org_set/2,
          org_set/3
         ]).
+
+%%%===================================================================
+%%% Ignore
+%%%===================================================================
+
+
+-ignore_xref([
+              servers/0,
+              start/0
+             ]).
+
+-ignore_xref([
+              allowed/2,
+              auth/2,
+              test/2,
+              version/0,
+              keystr_to_id/1
+             ]).
+
+-ignore_xref([
+              token_delete/1
+             ]).
+
+-ignore_xref([
+              user_add/1,
+              user_cache/1,
+              user_delete/1,
+              user_get/1,
+              user_grant/2,
+              user_join/2,
+              user_key_find/1,
+              user_key_add/3,
+              user_key_revoke/2,
+              user_keys/1,
+              user_leave/2,
+              user_list/0,
+              user_list/1,
+              user_lookup/1,
+              user_passwd/2,
+              user_revoke/2,
+              user_revoke_prefix/2,
+              user_set/2,
+              user_set/3,
+              user_active_org/1,
+              user_orgs/1,
+              user_join_org/2,
+              user_leave_org/2,
+              user_select_org/2
+             ]).
+
+-ignore_xref([
+              group_add/1,
+              group_delete/1,
+              group_get/1,
+              group_grant/2,
+              group_list/0,
+              group_list/1,
+              group_revoke/2,
+              group_revoke_prefix/2,
+              group_set/2,
+              group_set/3
+             ]).
+
+-ignore_xref([
+              org_add/1,
+              org_delete/1,
+              org_get/1,
+              org_add_trigger/2,
+              org_list/0,
+              org_list/1,
+              org_remove_trigger/2,
+              org_execute_trigger/3,
+              org_set/2,
+              org_set/3
+             ]).
 
 %%%===================================================================
 %%% Generatl Functions
@@ -201,6 +279,16 @@ user_set(User, Attributes) ->
                        {ok, [fifo:user_id()]}.
 user_list() ->
     send(libsnarl_msg:user_list()).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for users.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_list(Reqs::[fifo:matcher()]) ->
+                       {error, timeout} |
+                       {ok, [fifo:user_id()]}.
+user_list(Reqs) ->
+    send(libsnarl_msg:user_list(Reqs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -350,9 +438,9 @@ user_key_find(KeyID) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
-                       {error, no_servers} |
-                       not_found |
-                       ok.
+                          {error, no_servers} |
+                          not_found |
+                          ok.
 user_key_add(User, KeyID, Key) ->
     send(libsnarl_msg:user_key_add(User, KeyID, Key)).
 
@@ -361,9 +449,9 @@ user_key_add(User, KeyID, Key) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_key_revoke(User::fifo:user_id(), KeyID::binary()) ->
-                       {error, no_servers} |
-                       not_found |
-                       ok.
+                             {error, no_servers} |
+                             not_found |
+                             ok.
 user_key_revoke(User, KeyID) ->
     send(libsnarl_msg:user_key_revoke(User, KeyID)).
 
@@ -410,7 +498,7 @@ user_join_org(User, Org) ->
 -spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                             {error, no_servers} |
                             not_found |
-                           ok.
+                            ok.
 user_leave_org(User, Org) ->
     send(libsnarl_msg:user_leave_org(User, Org)).
 
@@ -430,9 +518,9 @@ user_select_org(User, Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_active_org(User::fifo:user_id()) ->
-                      {error, no_servers} |
-                      not_found |
-                      {ok, Org::fifo:org_id() | binary()}.
+                             {error, no_servers} |
+                             not_found |
+                             {ok, Org::fifo:org_id() | binary()}.
 user_active_org(User) ->
     send(libsnarl_msg:user_active_org(User)).
 
@@ -441,9 +529,9 @@ user_active_org(User) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_orgs(User::fifo:user_id()) ->
-                      {error, no_servers} |
-                      not_found |
-                      {ok, [Org::fifo:org_id() | binary()]}.
+                       {error, no_servers} |
+                       not_found |
+                       {ok, [Org::fifo:org_id() | binary()]}.
 user_orgs(User) ->
     send(libsnarl_msg:user_orgs(User)).
 
@@ -486,6 +574,16 @@ group_set(Group, Attributes) when
                         {ok, [fifo:group_id()]}.
 group_list() ->
     send(libsnarl_msg:group_list()).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for groups.
+%% @end
+%%--------------------------------------------------------------------
+-spec group_list(Reqs::[fifo:matcher()]) ->
+                        {error, timeout} |
+                        {ok, [fifo:group_id()]}.
+group_list(Reqs) ->
+    send(libsnarl_msg:group_list(Reqs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
@@ -569,7 +667,7 @@ group_revoke(Group, Permission) ->
                                  not_found |
                                  ok.
 group_revoke_prefix(Group, Prefix) ->
-    send(libsnarl_msg:group_revoke(Group, Prefix)).
+    send(libsnarl_msg:group_revoke_prefix(Group, Prefix)).
 
 %%%===================================================================
 %%% org Functions
@@ -580,9 +678,9 @@ group_revoke_prefix(Group, Prefix) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec org_set(Org::fifo:org_id(),
-                Attribute::fifo:keys(),
-                Value::fifo:value() | delete) -> ok | not_found |
-                                                 {'error','no_servers'}.
+              Attribute::fifo:keys(),
+              Value::fifo:value() | delete) -> ok | not_found |
+                                               {'error','no_servers'}.
 org_set(Org, Attribute, Value) when
       is_binary(Org) ->
     send(libsnarl_msg:org_set(Org, Attribute, Value)).
@@ -592,24 +690,32 @@ org_set(Org, Attribute, Value) when
 %% @end
 %%--------------------------------------------------------------------
 -spec org_set(Org::fifo:org_id(),
-                Attributes::fifo:attr_list()) ->
-                       ok | not_found |
-                       {'error','no_servers'}.
+              Attributes::fifo:attr_list()) ->
+                     ok | not_found |
+                     {'error','no_servers'}.
 org_set(Org, Attributes) when
       is_binary(Org) ->
     send(libsnarl_msg:org_set(Org, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.
-%% @spec org_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec org_list() ->
-                        {error, no_servers} |
-                        {ok, [fifo:org_id()]}.
+                      {error, no_servers} |
+                      {ok, [fifo:org_id()]}.
 org_list() ->
     send(libsnarl_msg:org_list()).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for orgs.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_list(Reqs::[fifo:matcher()]) ->
+                      {error, timeout} |
+                      {ok, [fifo:org_id()]}.
+org_list(Reqs) ->
+    send(libsnarl_msg:org_list(Reqs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
@@ -618,9 +724,9 @@ org_list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec org_get(Org::fifo:org_id()) ->
-                       not_found |
-                       {error, no_servers} |
-                       {ok, fifo:org()}.
+                     not_found |
+                     {error, no_servers} |
+                     {ok, fifo:org()}.
 org_get(Org) ->
     send(libsnarl_msg:org_get(Org)).
 
@@ -631,9 +737,9 @@ org_get(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec org_add(Org::fifo:org_id()) ->
-                       {error, no_servers} |
-                       duplicate |
-                       ok.
+                     {error, no_servers} |
+                     duplicate |
+                     ok.
 org_add(Org) ->
     send(libsnarl_msg:org_add(Org)).
 
@@ -644,9 +750,9 @@ org_add(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec org_delete(Org::fifo:org_id()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+                        {error, no_servers} |
+                        not_found |
+                        ok.
 org_delete(Org) ->
     send(libsnarl_msg:org_delete(Org)).
 
