@@ -10,7 +10,7 @@
         ]).
 
 -export([
-         user_add/1,
+         user_add/1, user_add/2,
          user_cache/1,
          user_delete/1,
          user_get/1,
@@ -186,14 +186,16 @@ user_cache(?Token) ->
 user_cache(?User) ->
     {user, cache, User}.
 
-%%--------------------------------------------------------------------
-%% @doc Adds a new user.
-%% @end
-%%--------------------------------------------------------------------
 -spec user_add(UserName::binary()) ->
                       {user, add, UserName::binary()}.
 user_add(UserName) ->
     {user, add, UserName}.
+
+-spec user_add(Creator::fifo:user_id(),
+               UserName::binary()) ->
+                      {user, add, Creator::fifo:user_id(), UserName::binary()}.
+user_add(Creator, UserName) ->
+    {user, add, Creator, UserName}.
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a user.

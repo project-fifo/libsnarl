@@ -18,7 +18,7 @@
         ]).
 
 -export([
-         user_add/1,
+         user_add/1, user_add/2,
          user_cache/1,
          user_delete/1,
          user_get/1,
@@ -341,6 +341,20 @@ user_cache(User) ->
                       {ok, UUID::fifo:user_id()}.
 user_add(UserName) ->
     send(libsnarl_msg:user_add(UserName)).
+
+
+%%--------------------------------------------------------------------
+%% @doc Adds a new user from perspective of a creator, triggering
+%%      Org events in the process
+%% @end
+%%--------------------------------------------------------------------
+-spec user_add(Creator::fifo:user_id(),
+               UserName::binary()) ->
+                      {error, no_servers} |
+                      duplicate |
+                      {ok, UUID::fifo:user_id()}.
+user_add(Creator, UserName) ->
+    send(libsnarl_msg:user_add(Creator, UserName)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a user.
