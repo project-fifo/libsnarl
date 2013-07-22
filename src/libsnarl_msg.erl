@@ -22,6 +22,7 @@
          user_keys/1,
          user_leave/2,
          user_list/0,
+         user_list/1,
          user_lookup/1,
          user_passwd/2,
          user_revoke/2,
@@ -41,6 +42,7 @@
          group_get/1,
          group_grant/2,
          group_list/0,
+         group_list/1,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -53,6 +55,7 @@
          org_get/1,
          org_add_trigger/2,
          org_list/0,
+         org_list/1,
          org_remove_trigger/2,
          org_execute_trigger/3,
          org_set/2,
@@ -138,6 +141,17 @@ user_set(?User, Attributes) ->
                        {user, list}.
 user_list() ->
     {user, list}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all user id's.
+%% @spec user_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec user_list(Reqs::[fifo:matcher()]) ->
+                       {user, list, Reqs::[fifo:matcher()]}.
+user_list(Reqs) ->
+    {user, list, Reqs}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -358,6 +372,17 @@ group_list() ->
     {group, list}.
 
 %%--------------------------------------------------------------------
+%% @doc Retrievs a list of all user id's.
+%% @spec group_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec group_list(Reqs::[fifo:matcher()]) ->
+                       {group, list, Reqs::[fifo:matcher()]}.
+group_list(Reqs) ->
+    {group, list, Reqs}.
+
+%%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
 %% @end
 %%--------------------------------------------------------------------
@@ -462,6 +487,11 @@ org_set(?Org, Attributes) when
                       {org, list}.
 org_list() ->
     {org, list}.
+
+-spec org_list(Reqs::[fifo:matcher()]) ->
+                       {org, list, Reqs::[fifo:matcher()]}.
+org_list(Reqs) ->
+    {org, list, Reqs}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
