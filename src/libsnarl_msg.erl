@@ -288,7 +288,7 @@ user_key_add(?User, KeyID, Key)
     {user, keys, add, User, KeyID, Key}.
 
 -spec user_key_revoke(User::fifo:user_id(), KeyID::binary()) ->
-                             {user, keys, add, User::fifo:user_id(), KeyID::binary()}.
+                             {user, keys, revoke, User::fifo:user_id(), KeyID::binary()}.
 user_key_revoke(?User, KeyID)
   when is_binary(KeyID) ->
     {user, keys, revoke, User, KeyID}.
@@ -320,14 +320,14 @@ user_active_org(?User) ->
 -spec user_leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                             {user, org, leave,
                              User::fifo:user_id(),
-                             Org::fifo:group_id()}.
+                             Org::fifo:org_id()}.
 user_leave_org(?User, ?Org) ->
     {user, org, leave, User, Org}.
 
 -spec user_select_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                              {user, org, select,
                               User::fifo:user_id(),
-                              Org::fifo:group_id()}.
+                              Org::fifo:org_id()}.
 user_select_org(?User, ?Org) ->
     {user, org, select, User, Org}.
 
@@ -557,7 +557,8 @@ org_remove_trigger(?Org, Trigger) ->
                           Payload::term()) ->
                                  {org, trigger, execute,
                                   Org::fifo:org_id(),
-                                  Trigger::fifo:trigger()}.
+                                  Trigger::fifo:trigger(),
+                                  Payload::term()}.
 
 org_execute_trigger(?Org, Event, Payload) ->
     {org, trigger, execute, Org, Event, Payload}.
