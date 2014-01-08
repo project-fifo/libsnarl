@@ -36,6 +36,7 @@
          user_leave/2,
          user_list/0,
          user_list/1,
+         user_list/2,
          user_lookup/1,
          user_passwd/2,
          user_revoke/2,
@@ -56,6 +57,7 @@
          group_grant/2,
          group_list/0,
          group_list/1,
+         group_list/2,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -69,6 +71,7 @@
          org_add_trigger/2,
          org_list/0,
          org_list/1,
+         org_list/2,
          org_remove_trigger/2,
          org_execute_trigger/3,
          org_set/2,
@@ -115,6 +118,7 @@
               user_leave/2,
               user_list/0,
               user_list/1,
+              user_list/2,
               user_lookup/1,
               user_passwd/2,
               user_revoke/2,
@@ -135,6 +139,7 @@
               group_grant/2,
               group_list/0,
               group_list/1,
+              group_list/2,
               group_revoke/2,
               group_revoke_prefix/2,
               group_set/2,
@@ -148,6 +153,7 @@
               org_add_trigger/2,
               org_list/0,
               org_list/1,
+              org_list/2,
               org_remove_trigger/2,
               org_execute_trigger/3,
               org_set/2,
@@ -320,6 +326,16 @@ user_list() ->
                        {ok, [fifo:user_id()]}.
 user_list(Reqs) ->
     send(libsnarl_msg:user_list(Reqs)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for users.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {error, timeout} |
+                       {ok, [fifo:user_id()]}.
+user_list(Reqs, Full) ->
+    send(libsnarl_msg:user_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -665,6 +681,16 @@ group_list(Reqs) ->
     send(libsnarl_msg:group_list(Reqs)).
 
 %%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for groups.
+%% @end
+%%--------------------------------------------------------------------
+-spec group_list(Reqs::[fifo:matcher()], boolean()) ->
+                        {error, timeout} |
+                        {ok, [fifo:group_id()]}.
+group_list(Reqs, Full) ->
+    send(libsnarl_msg:group_list(Reqs, Full)).
+
+%%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
 %% @spec group_get(Group::binary()) ->
 %%                 {error, not_found|no_servers} | term()
@@ -795,6 +821,16 @@ org_list() ->
                       {ok, [fifo:org_id()]}.
 org_list(Reqs) ->
     send(libsnarl_msg:org_list(Reqs)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for orgs.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_list(Reqs::[fifo:matcher()], boolean()) ->
+                      {error, timeout} |
+                      {ok, [fifo:org_id()]}.
+org_list(Reqs, Full) ->
+    send(libsnarl_msg:org_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
