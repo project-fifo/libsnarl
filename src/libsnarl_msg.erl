@@ -20,6 +20,9 @@
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
+         user_yubikey_add/2,
+         user_yubikey_remove/2,
+         user_yubikeys/1,
          user_leave/2,
          user_list/0,
          user_list/1,
@@ -297,6 +300,23 @@ user_key_revoke(?User, KeyID)
                        {user, keys, get, User::fifo:user_id()}.
 user_keys(?User) ->
     {user, keys, get, User}.
+
+-spec user_yubikey_add(User::fifo:user_id(), KeyID::binary()) ->
+                              {user, yubikeys, add, User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_add(?User, KeyID)
+  when is_binary(KeyID) ->
+    {user, yubikeys, add, User, KeyID}.
+
+-spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
+                             {user, keys, revoke, User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_remove(?User, KeyID)
+  when is_binary(KeyID) ->
+    {user, yubikeys, remove, User, KeyID}.
+
+-spec user_yubikeys(User::fifo:user_id()) ->
+                           {user, yubikeys, get, User::fifo:user_id()}.
+user_yubikeys(?User) ->
+    {user, yubikeys, get, User}.
 
 -spec user_join_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                            {user, org, join,

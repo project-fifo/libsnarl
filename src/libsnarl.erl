@@ -9,6 +9,7 @@
 -export([
          allowed/2,
          auth/2,
+         auth/3,
          test/2,
          version/0,
          keystr_to_id/1
@@ -29,6 +30,9 @@
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
+         user_yubikey_add/2,
+         user_yubikey_remove/2,
+         user_yubikeys/1,
          user_leave/2,
          user_list/0,
          user_list/1,
@@ -71,12 +75,9 @@
          org_set/3
         ]).
 
-
-
 %%%===================================================================
 %%% Ignore
 %%%===================================================================
-
 
 -ignore_xref([
               servers/0,
@@ -87,6 +88,7 @@
 -ignore_xref([
               allowed/2,
               auth/2,
+              auth/3,
               test/2,
               version/0,
               keystr_to_id/1
@@ -107,6 +109,9 @@
               user_key_add/3,
               user_key_revoke/2,
               user_keys/1,
+              user_yubikey_add/2,
+              user_yubikey_remove/2,
+              user_yubikeys/1,
               user_leave/2,
               user_list/0,
               user_list/1,
@@ -223,6 +228,18 @@ version() ->
                   {error, no_servers}.
 auth(User, Pass) ->
     send(libsnarl_msg:auth(User, Pass)).
+
+%%--------------------------------------------------------------------
+%% @doc Authenticates a user and returns a token that can be used for
+%%  the session. This version takes a Yubikey OTP.
+%% @end
+%%--------------------------------------------------------------------
+-spec auth(User::fifo:user_id(), Pass::binary(), OTP::binary()) ->
+                  not_found |
+                  {ok, {token, fifo:user_id()}} |
+                  {error, no_servers}.
+auth(User, Pass, OTP) ->
+    send(libsnarl_msg:auth(User, Pass, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
@@ -493,6 +510,40 @@ user_key_revoke(User, KeyID) ->
                        {ok, [{KeyID::binary(), Key::binary()}]}.
 user_keys(User) ->
     send(libsnarl_msg:user_keys(User)).
+
+
+%%--------------------------------------------------------------------
+%% @doc Adds a key to the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikey_add(User::fifo:user_id(), OTP::binary()) ->
+                              {error, no_servers} |
+                              not_found |
+                              ok.
+user_yubikey_add(User, OTP) ->
+    send(libsnarl_msg:user_yubikey_add(User, OTP)).
+
+%%--------------------------------------------------------------------
+%% @doc Removes a key from the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+user_yubikey_remove(User, KeyID) ->
+    send(libsnarl_msg:user_yubikey_remove(User, KeyID)).
+
+%%--------------------------------------------------------------------
+%% @doc Returns a list of all SSH keys for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikeys(User::fifo:user_id()) ->
+                           {error, no_servers} |
+                           not_found |
+                           {ok, [KeyID::binary()]}.
+user_yubikeys(User) ->
+    send(libsnarl_msg:user_yubikeys(User)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.
