@@ -2,7 +2,8 @@
 
 -export([
          allowed/2,
-         auth/2
+         auth/2,
+         auth/3
         ]).
 
 -export([
@@ -84,6 +85,14 @@ auth(Login, Pass) when
       is_binary(Login),
       is_binary(Pass)->
     {user, auth, Login, Pass}.
+
+-spec auth(Login::binary(), Pass::binary(), OTP::binary()) ->
+                  {user, auth, Login::binary(), Pass::binary()}.
+auth(Login, Pass, OTP) when
+      is_binary(Login),
+      is_binary(Pass),
+      is_binary(OTP) ->
+    {user, auth, Login, Pass, OTP}.
 
 -spec allowed(User::fifo:user_token_id(),
               Permission::fifo:permission()) ->
