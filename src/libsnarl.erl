@@ -240,7 +240,7 @@ auth(User, Pass) ->
 %%  the session. This version takes a Yubikey OTP.
 %% @end
 %%--------------------------------------------------------------------
--spec auth(User::fifo:user_id(), Pass::binary(), OTP::binary()) ->
+-spec auth(User::fifo:user_id(), Pass::binary(), OTP::binary() | basic) ->
                   not_found |
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.

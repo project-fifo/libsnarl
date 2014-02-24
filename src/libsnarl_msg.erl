@@ -86,8 +86,12 @@ auth(Login, Pass) when
       is_binary(Pass)->
     {user, auth, Login, Pass}.
 
--spec auth(Login::binary(), Pass::binary(), OTP::binary()) ->
+-spec auth(Login::binary(), Pass::binary(), OTP::binary()|basic) ->
                   {user, auth, Login::binary(), Pass::binary()}.
+auth(Login, Pass, basic) when
+      is_binary(Login),
+      is_binary(Pass) ->
+    {user, auth, Login, Pass, basic};
 auth(Login, Pass, OTP) when
       is_binary(Login),
       is_binary(Pass),
