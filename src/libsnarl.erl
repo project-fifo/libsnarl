@@ -9,6 +9,7 @@
 -export([
          allowed/2,
          auth/2,
+         auth/3,
          test/2,
          version/0,
          keystr_to_id/1
@@ -29,9 +30,13 @@
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
+         user_yubikey_add/2,
+         user_yubikey_remove/2,
+         user_yubikeys/1,
          user_leave/2,
          user_list/0,
          user_list/1,
+         user_list/2,
          user_lookup/1,
          user_passwd/2,
          user_revoke/2,
@@ -52,6 +57,7 @@
          group_grant/2,
          group_list/0,
          group_list/1,
+         group_list/2,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -65,18 +71,16 @@
          org_add_trigger/2,
          org_list/0,
          org_list/1,
+         org_list/2,
          org_remove_trigger/2,
          org_execute_trigger/3,
          org_set/2,
          org_set/3
         ]).
 
-
-
 %%%===================================================================
 %%% Ignore
 %%%===================================================================
-
 
 -ignore_xref([
               servers/0,
@@ -87,6 +91,7 @@
 -ignore_xref([
               allowed/2,
               auth/2,
+              auth/3,
               test/2,
               version/0,
               keystr_to_id/1
@@ -107,9 +112,13 @@
               user_key_add/3,
               user_key_revoke/2,
               user_keys/1,
+              user_yubikey_add/2,
+              user_yubikey_remove/2,
+              user_yubikeys/1,
               user_leave/2,
               user_list/0,
               user_list/1,
+              user_list/2,
               user_lookup/1,
               user_passwd/2,
               user_revoke/2,
@@ -130,6 +139,7 @@
               group_grant/2,
               group_list/0,
               group_list/1,
+              group_list/2,
               group_revoke/2,
               group_revoke_prefix/2,
               group_set/2,
@@ -143,6 +153,7 @@
               org_add_trigger/2,
               org_list/0,
               org_list/1,
+              org_list/2,
               org_remove_trigger/2,
               org_execute_trigger/3,
               org_set/2,
@@ -225,6 +236,18 @@ auth(User, Pass) ->
     send(libsnarl_msg:auth(User, Pass)).
 
 %%--------------------------------------------------------------------
+%% @doc Authenticates a user and returns a token that can be used for
+%%  the session. This version takes a Yubikey OTP.
+%% @end
+%%--------------------------------------------------------------------
+-spec auth(User::fifo:user_id(), Pass::binary(), OTP::binary() | basic) ->
+                  not_found |
+                  {ok, {token, fifo:user_id()}} |
+                  {error, no_servers}.
+auth(User, Pass, OTP) ->
+    send(libsnarl_msg:auth(User, Pass, OTP)).
+
+%%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
 %% @end
 %%--------------------------------------------------------------------
@@ -303,6 +326,16 @@ user_list() ->
                        {ok, [fifo:user_id()]}.
 user_list(Reqs) ->
     send(libsnarl_msg:user_list(Reqs)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for users.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {error, timeout} |
+                       {ok, [fifo:user_id()]}.
+user_list(Reqs, Full) ->
+    send(libsnarl_msg:user_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -494,6 +527,40 @@ user_key_revoke(User, KeyID) ->
 user_keys(User) ->
     send(libsnarl_msg:user_keys(User)).
 
+
+%%--------------------------------------------------------------------
+%% @doc Adds a key to the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikey_add(User::fifo:user_id(), OTP::binary()) ->
+                              {error, no_servers} |
+                              not_found |
+                              ok.
+user_yubikey_add(User, OTP) ->
+    send(libsnarl_msg:user_yubikey_add(User, OTP)).
+
+%%--------------------------------------------------------------------
+%% @doc Removes a key from the users SSH keys.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+user_yubikey_remove(User, KeyID) ->
+    send(libsnarl_msg:user_yubikey_remove(User, KeyID)).
+
+%%--------------------------------------------------------------------
+%% @doc Returns a list of all SSH keys for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_yubikeys(User::fifo:user_id()) ->
+                           {error, no_servers} |
+                           not_found |
+                           {ok, [KeyID::binary()]}.
+user_yubikeys(User) ->
+    send(libsnarl_msg:user_yubikeys(User)).
+
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a group.
 %% @spec user_leave(User::binary()(Group::binary()) ->
@@ -612,6 +679,16 @@ group_list() ->
                         {ok, [fifo:group_id()]}.
 group_list(Reqs) ->
     send(libsnarl_msg:group_list(Reqs)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for groups.
+%% @end
+%%--------------------------------------------------------------------
+-spec group_list(Reqs::[fifo:matcher()], boolean()) ->
+                        {error, timeout} |
+                        {ok, [fifo:group_id()]}.
+group_list(Reqs, Full) ->
+    send(libsnarl_msg:group_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
@@ -744,6 +821,16 @@ org_list() ->
                       {ok, [fifo:org_id()]}.
 org_list(Reqs) ->
     send(libsnarl_msg:org_list(Reqs)).
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a filtered list for orgs.
+%% @end
+%%--------------------------------------------------------------------
+-spec org_list(Reqs::[fifo:matcher()], boolean()) ->
+                      {error, timeout} |
+                      {ok, [fifo:org_id()]}.
+org_list(Reqs, Full) ->
+    send(libsnarl_msg:org_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.

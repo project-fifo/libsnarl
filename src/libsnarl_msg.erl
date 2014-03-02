@@ -2,7 +2,8 @@
 
 -export([
          allowed/2,
-         auth/2
+         auth/2,
+         auth/3
         ]).
 
 -export([
@@ -20,9 +21,13 @@
          user_key_add/3,
          user_key_revoke/2,
          user_keys/1,
+         user_yubikey_add/2,
+         user_yubikey_remove/2,
+         user_yubikeys/1,
          user_leave/2,
          user_list/0,
          user_list/1,
+         user_list/2,
          user_lookup/1,
          user_passwd/2,
          user_revoke/2,
@@ -43,6 +48,7 @@
          group_grant/2,
          group_list/0,
          group_list/1,
+         group_list/2,
          group_revoke/2,
          group_revoke_prefix/2,
          group_set/2,
@@ -56,6 +62,7 @@
          org_add_trigger/2,
          org_list/0,
          org_list/1,
+         org_list/2,
          org_remove_trigger/2,
          org_execute_trigger/3,
          org_set/2,
@@ -78,6 +85,18 @@ auth(Login, Pass) when
       is_binary(Login),
       is_binary(Pass)->
     {user, auth, Login, Pass}.
+
+-spec auth(Login::binary(), Pass::binary(), OTP::binary()|basic) ->
+                  {user, auth, Login::binary(), Pass::binary()}.
+auth(Login, Pass, basic) when
+      is_binary(Login),
+      is_binary(Pass) ->
+    {user, auth, Login, Pass, basic};
+auth(Login, Pass, OTP) when
+      is_binary(Login),
+      is_binary(Pass),
+      is_binary(OTP) ->
+    {user, auth, Login, Pass, OTP}.
 
 -spec allowed(User::fifo:user_token_id(),
               Permission::fifo:permission()) ->
@@ -152,6 +171,17 @@ user_list() ->
                        {user, list, Reqs::[fifo:matcher()]}.
 user_list(Reqs) ->
     {user, list, Reqs}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all user id's.
+%% @spec user_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec user_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {user, list, Reqs::[fifo:matcher()]}.
+user_list(Reqs, Full) ->
+    {user, list, Reqs, Full}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -298,6 +328,23 @@ user_key_revoke(?User, KeyID)
 user_keys(?User) ->
     {user, keys, get, User}.
 
+-spec user_yubikey_add(User::fifo:user_id(), KeyID::binary()) ->
+                              {user, yubikeys, add, User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_add(?User, KeyID)
+  when is_binary(KeyID) ->
+    {user, yubikeys, add, User, KeyID}.
+
+-spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
+                             {user, keys, revoke, User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_remove(?User, KeyID)
+  when is_binary(KeyID) ->
+    {user, yubikeys, remove, User, KeyID}.
+
+-spec user_yubikeys(User::fifo:user_id()) ->
+                           {user, yubikeys, get, User::fifo:user_id()}.
+user_yubikeys(?User) ->
+    {user, yubikeys, get, User}.
+
 -spec user_join_org(User::fifo:user_id(), Org::fifo:org_id()) ->
                            {user, org, join,
                             User::fifo:user_id(),
@@ -383,6 +430,17 @@ group_list() ->
                        {group, list, Reqs::[fifo:matcher()]}.
 group_list(Reqs) ->
     {group, list, Reqs}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all user id's.
+%% @spec group_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec group_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {group, list, Reqs::[fifo:matcher()]}.
+group_list(Reqs, Full) ->
+    {group, list, Reqs, Full}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves group data from the server.
@@ -494,6 +552,11 @@ org_list() ->
                        {org, list, Reqs::[fifo:matcher()]}.
 org_list(Reqs) ->
     {org, list, Reqs}.
+
+-spec org_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {org, list, Reqs::[fifo:matcher()]}.
+org_list(Reqs, Full) ->
+    {org, list, Reqs, Full}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
