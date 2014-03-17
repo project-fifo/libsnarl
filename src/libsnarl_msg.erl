@@ -322,7 +322,7 @@ user_yubikey_add(?User, KeyID)
     {user, yubikeys, add, User, KeyID}.
 
 -spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
-                             {user, yubikeys, revoke, User::fifo:user_id(), KeyID::binary()}.
+                             {user, yubikeys, remove, User::fifo:user_id(), KeyID::binary()}.
 user_yubikey_remove(?User, KeyID)
   when is_binary(KeyID) ->
     {user, yubikeys, remove, User, KeyID}.
