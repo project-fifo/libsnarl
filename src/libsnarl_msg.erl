@@ -84,7 +84,8 @@ auth(Login, Pass) when
     {user, auth, Login, Pass}.
 
 -spec auth(Login::binary(), Pass::binary(), OTP::binary()|basic) ->
-                  {user, auth, Login::binary(), Pass::binary()}.
+                  {user, auth, Login::binary(), Pass::binary(),
+                   OTP::binary() | basic}.
 auth(Login, Pass, basic) when
       is_binary(Login),
       is_binary(Pass) ->
@@ -165,7 +166,7 @@ user_list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec user_list(Reqs::[fifo:matcher()], boolean()) ->
-                       {user, list, Reqs::[fifo:matcher()]}.
+                       {user, list, Reqs::[fifo:matcher()], boolean()}.
 user_list(Reqs, Full) ->
     {user, list, Reqs, Full}.
 
@@ -321,7 +322,7 @@ user_yubikey_add(?User, KeyID)
     {user, yubikeys, add, User, KeyID}.
 
 -spec user_yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
-                             {user, keys, revoke, User::fifo:user_id(), KeyID::binary()}.
+                             {user, yubikeys, revoke, User::fifo:user_id(), KeyID::binary()}.
 user_yubikey_remove(?User, KeyID)
   when is_binary(KeyID) ->
     {user, yubikeys, remove, User, KeyID}.
@@ -413,7 +414,7 @@ group_list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec group_list(Reqs::[fifo:matcher()], boolean()) ->
-                       {group, list, Reqs::[fifo:matcher()]}.
+                       {group, list, Reqs::[fifo:matcher()], boolean()}.
 group_list(Reqs, Full) ->
     {group, list, Reqs, Full}.
 
@@ -524,7 +525,7 @@ org_list() ->
     {org, list}.
 
 -spec org_list(Reqs::[fifo:matcher()], boolean()) ->
-                       {org, list, Reqs::[fifo:matcher()]}.
+                       {org, list, Reqs::[fifo:matcher()], boolean()}.
 org_list(Reqs, Full) ->
     {org, list, Reqs, Full}.
 
