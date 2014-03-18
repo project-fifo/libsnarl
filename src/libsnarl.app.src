@@ -1,7 +1,7 @@
 {application, libsnarl,
  [
   {description, "snarl interface library"},
-  {vsn, "0.2.32"},
+  {vsn, "0.2.33"},
   {registered, []},
   {applications, [
                   kernel,
