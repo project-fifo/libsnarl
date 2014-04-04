@@ -41,16 +41,16 @@
         ]).
 
 -export([
-         group_add/1,
-         group_delete/1,
-         group_get/1,
-         group_grant/2,
-         group_list/0,
-         group_list/2,
-         group_revoke/2,
-         group_revoke_prefix/2,
-         group_set/2,
-         group_set/3
+         role_add/1,
+         role_delete/1,
+         role_get/1,
+         role_grant/2,
+         role_list/0,
+         role_list/2,
+         role_revoke/2,
+         role_revoke_prefix/2,
+         role_set/2,
+         role_set/3
         ]).
 
 -export([
@@ -67,7 +67,7 @@
         ]).
 
 -define(User, <<User:36/binary>>).
--define(Group, <<Group:36/binary>>).
+-define(Role, <<Role:36/binary>>).
 -define(Org, <<Org:36/binary>>).
 -define(Token, {token, <<_:36/binary>>} = Token).
 
@@ -273,22 +273,22 @@ user_passwd(?User, Pass) when is_binary(Pass) ->
     {user, passwd, User, Pass}.
 
 %%--------------------------------------------------------------------
-%% @doc Adds a user to a group.
+%% @doc Adds a user to a role.
 %% @end
 %%--------------------------------------------------------------------
 
--spec user_join(User::fifo:user_id(), Group::fifo:group_id()) ->
-                       {user, join, User::fifo:user_id(), Group::fifo:group_id()}.
-user_join(?User, ?Group) ->
-    {user, join, User, Group}.
+-spec user_join(User::fifo:user_id(), Role::fifo:role_id()) ->
+                       {user, join, User::fifo:user_id(), Role::fifo:role_id()}.
+user_join(?User, ?Role) ->
+    {user, join, User, Role}.
 
--spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
+-spec user_leave(User::fifo:user_id(), Role::fifo:role_id()) ->
                         {user, leave,
                          User::fifo:user_id(),
-                         Group::fifo:group_id()}.
+                         Role::fifo:role_id()}.
 
-user_leave(?User,?Group) ->
-    {user, leave, User, Group}.
+user_leave(?User,?Role) ->
+    {user, leave, User, Role}.
 
 -spec user_key_find(KeyID::binary()) ->
                            {user, keys, find, KeyID::binary()}.
@@ -367,120 +367,120 @@ user_select_org(?User, ?Org) ->
 
 
 %%%===================================================================
-%%% Group Functions
+%%% Role Functions
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc Sets an attribute on the group.
+%% @doc Sets an attribute on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_set(Group::fifo:group_id(),
+-spec role_set(Role::fifo:role_id(),
                 Attribute::fifo:keys(),
                 Value::fifo:value() | delete) ->
-                       {group, set,
-                        Group::fifo:group_id(),
+                       {role, set,
+                        Role::fifo:role_id(),
                         Attribute::fifo:keys(),
                         Value::fifo:value() | delete}.
 
-group_set(?Group, Attribute, Value)  ->
-    {group, set, Group, Attribute, Value}.
+role_set(?Role, Attribute, Value)  ->
+    {role, set, Role, Attribute, Value}.
 
 %%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the group.
+%% @doc Sets multiple attributes on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_set(Group::fifo:group_id(),
+-spec role_set(Role::fifo:role_id(),
                 Attributes::fifo:attr_list()) ->
-                       {group, set,
-                        Group::fifo:group_id(),
+                       {role, set,
+                        Role::fifo:role_id(),
                         Attributes::fifo:attr_list()}.
-group_set(?Group, Attributes) when
+role_set(?Role, Attributes) when
       is_list(Attributes) ->
-    {group, set, Group, Attributes}.
+    {role, set, Role, Attributes}.
 
 %%--------------------------------------------------------------------
-%% @doc Retrievs a list of all group id's.
+%% @doc Retrievs a list of all role id's.
 %% @end
 %%--------------------------------------------------------------------
--spec group_list() ->
-                        {group, list}.
-group_list() ->
-    {group, list}.
+-spec role_list() ->
+                        {role, list}.
+role_list() ->
+    {role, list}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
-%% @spec group_list() ->
+%% @spec role_list() ->
 %%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
--spec group_list(Reqs::[fifo:matcher()], boolean()) ->
-                       {group, list, Reqs::[fifo:matcher()], boolean()}.
-group_list(Reqs, Full) ->
-    {group, list, Reqs, Full}.
+-spec role_list(Reqs::[fifo:matcher()], boolean()) ->
+                       {role, list, Reqs::[fifo:matcher()], boolean()}.
+role_list(Reqs, Full) ->
+    {role, list, Reqs, Full}.
 
 %%--------------------------------------------------------------------
-%% @doc Retrieves group data from the server.
+%% @doc Retrieves role data from the server.
 %% @end
 %%--------------------------------------------------------------------
--spec group_get(Group::fifo:group_id()) ->
-                       {group, get, Group::fifo:group_id()}.
-group_get(?Group) ->
-    {group, get, Group}.
+-spec role_get(Role::fifo:role_id()) ->
+                       {role, get, Role::fifo:role_id()}.
+role_get(?Role) ->
+    {role, get, Role}.
 
 %%--------------------------------------------------------------------
-%% @doc Adds a new group.
+%% @doc Adds a new role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_add(GroupName::binary()) ->
-                       {group, add, GroupName::binary()}.
-group_add(GroupName) when is_binary(GroupName)->
-    {group, add, GroupName}.
+-spec role_add(RoleName::binary()) ->
+                       {role, add, RoleName::binary()}.
+role_add(RoleName) when is_binary(RoleName)->
+    {role, add, RoleName}.
 
 %%--------------------------------------------------------------------
-%% @doc Deletes a group.
+%% @doc Deletes a role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_delete(Group::fifo:group_id()) ->
-                          {group, delete, Group::fifo:group_id()}.
-group_delete(?Group) ->
-    {group, delete, Group}.
+-spec role_delete(Role::fifo:role_id()) ->
+                          {role, delete, Role::fifo:role_id()}.
+role_delete(?Role) ->
+    {role, delete, Role}.
 
 %%--------------------------------------------------------------------
-%% @doc Grants a right of a group.
+%% @doc Grants a right of a role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_grant(Group::fifo:group_id(),
+-spec role_grant(Role::fifo:role_id(),
                   Permission::fifo:permission()) ->
-                         {group, grant,
-                          Group::fifo:group_id(),
+                         {role, grant,
+                          Role::fifo:role_id(),
                           Permission::fifo:permission()}.
 
-group_grant(?Group, Permission) when is_list(Permission) ->
-    {group, grant, Group, Permission}.
+role_grant(?Role, Permission) when is_list(Permission) ->
+    {role, grant, Role, Permission}.
 
 %%--------------------------------------------------------------------
-%% @doc Revokes a right of a group.
+%% @doc Revokes a right of a role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_revoke(Group::fifo:group_id(),
+-spec role_revoke(Role::fifo:role_id(),
                    Permission::fifo:permission()) ->
-                          {group, revoke,
-                           Group::fifo:group_id(),
+                          {role, revoke,
+                           Role::fifo:role_id(),
                            Permission::fifo:permission()}.
-group_revoke(?Group, Permission) when is_list(Permission) ->
-    {group, revoke, Group, Permission}.
+role_revoke(?Role, Permission) when is_list(Permission) ->
+    {role, revoke, Role, Permission}.
 
 %%--------------------------------------------------------------------
-%% @doc Revokes all rights matching a prefix from a group.
+%% @doc Revokes all rights matching a prefix from a role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_revoke_prefix(Group::fifo:group_id(),
+-spec role_revoke_prefix(Role::fifo:role_id(),
                           Prefix::fifo:permission()) ->
-                                 {group, revoke_prefix,
-                                  Group::fifo:group_id(),
+                                 {role, revoke_prefix,
+                                  Role::fifo:role_id(),
                                   Permission::fifo:permission()}.
-group_revoke_prefix(?Group, Prefix) when is_list(Prefix) ->
-    {group, revoke_prefix, Group, Prefix}.
+role_revoke_prefix(?Role, Prefix) when is_list(Prefix) ->
+    {role, revoke_prefix, Role, Prefix}.
 
 
 %%%===================================================================
