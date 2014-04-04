@@ -50,16 +50,16 @@
         ]).
 
 -export([
-         group_add/1,
-         group_delete/1,
-         group_get/1,
-         group_grant/2,
-         group_list/0,
-         group_list/2,
-         group_revoke/2,
-         group_revoke_prefix/2,
-         group_set/2,
-         group_set/3
+         role_add/1,
+         role_delete/1,
+         role_get/1,
+         role_grant/2,
+         role_list/0,
+         role_list/2,
+         role_revoke/2,
+         role_revoke_prefix/2,
+         role_set/2,
+         role_set/3
         ]).
 
 -export([
@@ -129,16 +129,16 @@
              ]).
 
 -ignore_xref([
-              group_add/1,
-              group_delete/1,
-              group_get/1,
-              group_grant/2,
-              group_list/0,
-              group_list/2,
-              group_revoke/2,
-              group_revoke_prefix/2,
-              group_set/2,
-              group_set/3
+              role_add/1,
+              role_delete/1,
+              role_get/1,
+              role_grant/2,
+              role_list/0,
+              role_list/2,
+              role_revoke/2,
+              role_revoke_prefix/2,
+              role_set/2,
+              role_set/3
              ]).
 
 -ignore_xref([
@@ -461,15 +461,15 @@ user_passwd(User, Pass) ->
     send(libsnarl_msg:user_passwd(User, Pass)).
 
 %%--------------------------------------------------------------------
-%% @doc Adds a user to a group.
+%% @doc Adds a user to a role.
 %% @end
 %%--------------------------------------------------------------------
--spec user_join(User::fifo:user_id(), Group::fifo:group_id()) ->
+-spec user_join(User::fifo:user_id(), Role::fifo:role_id()) ->
                        {error, no_servers} |
                        not_found |
                        ok.
-user_join(User, Group) ->
-    send(libsnarl_msg:user_join(User, Group)).
+user_join(User, Role) ->
+    send(libsnarl_msg:user_join(User, Role)).
 
 -spec user_key_find(KeyID::binary()) ->
                            {error, no_servers} |
@@ -546,18 +546,18 @@ user_yubikeys(User) ->
     send(libsnarl_msg:user_yubikeys(User)).
 
 %%--------------------------------------------------------------------
-%% @doc Removes a user from a group.
-%% @spec user_leave(User::binary()(Group::binary()) ->
+%% @doc Removes a user from a role.
+%% @spec user_leave(User::binary()(Role::binary()) ->
 %%          ok |
 %%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
--spec user_leave(User::fifo:user_id(), Group::fifo:group_id()) ->
+-spec user_leave(User::fifo:user_id(), Role::fifo:role_id()) ->
                         {error, no_servers} |
                         not_found |
                         ok.
-user_leave(User, Group) ->
-    send(libsnarl_msg:user_leave(User, Group)).
+user_leave(User, Role) ->
+    send(libsnarl_msg:user_leave(User, Role)).
 
 %%--------------------------------------------------------------------
 %% @doc Lets a user join the org.
@@ -615,138 +615,138 @@ user_orgs(User) ->
     send(libsnarl_msg:user_orgs(User)).
 
 %%%===================================================================
-%%% Group Functions
+%%% Role Functions
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc Sets an attribute on the group.
+%% @doc Sets an attribute on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_set(Group::fifo:group_id(),
+-spec role_set(Role::fifo:role_id(),
                 Attribute::fifo:keys(),
                 Value::fifo:value() | delete) -> ok | not_found |
                                                  {'error','no_servers'}.
-group_set(Group, Attribute, Value) when
-      is_binary(Group) ->
-    send(libsnarl_msg:group_set(Group, Attribute, Value)).
+role_set(Role, Attribute, Value) when
+      is_binary(Role) ->
+    send(libsnarl_msg:role_set(Role, Attribute, Value)).
 
 %%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the group.
+%% @doc Sets multiple attributes on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec group_set(Group::fifo:group_id(),
+-spec role_set(Role::fifo:role_id(),
                 Attributes::fifo:attr_list()) ->
                        ok | not_found |
                        {'error','no_servers'}.
-group_set(Group, Attributes) when
-      is_binary(Group) ->
-    send(libsnarl_msg:group_set(Group, Attributes)).
+role_set(Role, Attributes) when
+      is_binary(Role) ->
+    send(libsnarl_msg:role_set(Role, Attributes)).
 
 %%--------------------------------------------------------------------
-%% @doc Retrievs a list of all group id's.
-%% @spec group_list() ->
+%% @doc Retrievs a list of all role id's.
+%% @spec role_list() ->
 %%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
--spec group_list() ->
+-spec role_list() ->
                         {error, no_servers} |
-                        {ok, [fifo:group_id()]}.
-group_list() ->
-    send(libsnarl_msg:group_list()).
+                        {ok, [fifo:role_id()]}.
+role_list() ->
+    send(libsnarl_msg:role_list()).
 
 %%--------------------------------------------------------------------
-%% @doc Retrievs a filtered list for groups.
+%% @doc Retrievs a filtered list for roles.
 %% @end
 %%--------------------------------------------------------------------
--spec group_list(Reqs::[fifo:matcher()], boolean()) ->
+-spec role_list(Reqs::[fifo:matcher()], boolean()) ->
                         {error, timeout} |
-                        {ok, [fifo:group_id()]}.
-group_list(Reqs, Full) ->
-    send(libsnarl_msg:group_list(Reqs, Full)).
+                        {ok, [fifo:role_id()]}.
+role_list(Reqs, Full) ->
+    send(libsnarl_msg:role_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
-%% @doc Retrieves group data from the server.
-%% @spec group_get(Group::binary()) ->
+%% @doc Retrieves role data from the server.
+%% @spec role_get(Role::binary()) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec group_get(Group::fifo:group_id()) ->
+-spec role_get(Role::fifo:role_id()) ->
                        not_found |
                        {error, no_servers} |
-                       {ok, fifo:group()}.
-group_get(Group) ->
-    send(libsnarl_msg:group_get(Group)).
+                       {ok, fifo:role()}.
+role_get(Role) ->
+    send(libsnarl_msg:role_get(Role)).
 
 %%--------------------------------------------------------------------
-%% @doc Adds a new group.
-%% @spec group_add(Group::binary()) ->
+%% @doc Adds a new role.
+%% @spec role_add(Role::binary()) ->
 %%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec group_add(Group::fifo:group_id()) ->
+-spec role_add(Role::fifo:role_id()) ->
                        {error, no_servers} |
                        duplicate |
                        ok.
-group_add(Group) ->
-    send(libsnarl_msg:group_add(Group)).
+role_add(Role) ->
+    send(libsnarl_msg:role_add(Role)).
 
 %%--------------------------------------------------------------------
-%% @doc Deletes a group.
-%% @spec group_delete(Group::binary()) ->
+%% @doc Deletes a role.
+%% @spec role_delete(Role::binary()) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec group_delete(Group::fifo:group_id()) ->
+-spec role_delete(Role::fifo:role_id()) ->
                           {error, no_servers} |
                           not_found |
                           ok.
-group_delete(Group) ->
-    send(libsnarl_msg:group_delete(Group)).
+role_delete(Role) ->
+    send(libsnarl_msg:role_delete(Role)).
 
 %%--------------------------------------------------------------------
-%% @doc Grants a right of a group.
-%% @spec group_grant(Group::binary(),
+%% @doc Grants a right of a role.
+%% @spec role_grant(Role::binary(),
 %%                   Permission::[atom()|binary()|string()]) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec group_grant(Group::fifo:group_id(),
+-spec role_grant(Role::fifo:role_id(),
                   Permission::fifo:permission()) ->
                          {error, no_servers} |
                          not_found |
                          ok.
-group_grant(Group, Permission) ->
-    send(libsnarl_msg:group_grant(Group, Permission)).
+role_grant(Role, Permission) ->
+    send(libsnarl_msg:role_grant(Role, Permission)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes a right of a group.
-%% @spec group_revoke(Group::binary(),
+%% @doc Revokes a right of a role.
+%% @spec role_revoke(Role::binary(),
 %%                    Permission::fifo:permission()) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec group_revoke(Group::fifo:group_id(),
+-spec role_revoke(Role::fifo:role_id(),
                    Permission::fifo:permission()) ->
                           {error, no_servers} |
                           not_found |
                           ok.
-group_revoke(Group, Permission) ->
-    send(libsnarl_msg:group_revoke(Group, Permission)).
+role_revoke(Role, Permission) ->
+    send(libsnarl_msg:role_revoke(Role, Permission)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes all rights matching a prefix from a group.
-%% @spec group_revoke(Group::binary(),
+%% @doc Revokes all rights matching a prefix from a role.
+%% @spec role_revoke(Role::binary(),
 %%                    Prefix::fifo:permission()) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec group_revoke_prefix(Group::fifo:group_id(),
+-spec role_revoke_prefix(Role::fifo:role_id(),
                           Prefix::fifo:permission()) ->
                                  {error, no_servers} |
                                  not_found |
                                  ok.
-group_revoke_prefix(Group, Prefix) ->
-    send(libsnarl_msg:group_revoke_prefix(Group, Prefix)).
+role_revoke_prefix(Role, Prefix) ->
+    send(libsnarl_msg:role_revoke_prefix(Role, Prefix)).
 
 %%%===================================================================
 %%% org Functions
