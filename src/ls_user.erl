@@ -74,7 +74,7 @@
                       ok | not_found |
                       {'error','no_servers'}.
 set(User, Attribute, Value) ->
-    send(libsnarl_msg:set(User, Attribute, Value)).
+    send(libsnarl_msg:set(r(), User, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes for the user.
@@ -85,7 +85,7 @@ set(User, Attribute, Value) ->
                       ok | not_found |
                       {'error','no_servers'}.
 set(User, Attributes) ->
-    send(libsnarl_msg:set(User, Attributes)).
+    send(libsnarl_msg:set(r(), User, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
@@ -97,7 +97,7 @@ set(User, Attributes) ->
                        {error, timeout} |
                        {ok, [fifo:id()]}.
 list() ->
-    send(libsnarl_msg:list()).
+    send(libsnarl_msg:list(r())).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a filtered list for users.
@@ -107,7 +107,7 @@ list() ->
                        {error, timeout} |
                        {ok, [fifo:id()]}.
 list(Reqs, Full) ->
-    send(libsnarl_msg:list(Reqs, Full)).
+    send(libsnarl_msg:list(r(), Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -120,7 +120,7 @@ list(Reqs, Full) ->
                       {error, no_servers} |
                       {ok, fifo:user()}.
 get(User) ->
-    send(libsnarl_msg:get(User)).
+    send(libsnarl_msg:get(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -133,7 +133,7 @@ get(User) ->
                          {error, no_servers} |
                          {ok, fifo:user()}.
 lookup(User) ->
-    send(libsnarl_msg:lookup(User)).
+    send(libsnarl_msg:lookup(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves all user permissions to later test.
@@ -146,7 +146,7 @@ lookup(User) ->
                         not_found |
                         {ok, [fifo:permission()]}.
 cache(User) ->
-    send(libsnarl_msg:cache(User)).
+    send(libsnarl_msg:cache(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new user.
@@ -159,7 +159,7 @@ cache(User) ->
                       duplicate |
                       {ok, UUID::fifo:id()}.
 add(UserName) ->
-    send(libsnarl_msg:add(UserName)).
+    send(libsnarl_msg:add(r(), UserName)).
 
 
 %%--------------------------------------------------------------------
@@ -173,7 +173,7 @@ add(UserName) ->
                       duplicate |
                       {ok, UUID::fifo:id()}.
 add(Creator, UserName) ->
-    send(libsnarl_msg:add(Creator, UserName)).
+    send(libsnarl_msg:add(r(), Creator, UserName)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a user.
@@ -186,7 +186,7 @@ add(Creator, UserName) ->
                          not_found |
                          ok.
 delete(User) ->
-    send(libsnarl_msg:delete(User)).
+    send(libsnarl_msg:delete(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Grants a right of a user.
@@ -202,7 +202,7 @@ delete(User) ->
                         not_found |
                         ok.
 grant(User, Permission) ->
-    send(libsnarl_msg:grant(User, Permission)).
+    send(libsnarl_msg:grant(r(), User, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a user.
@@ -217,7 +217,7 @@ grant(User, Permission) ->
                          not_found |
                          ok.
 revoke(User, Permission) ->
-    send(libsnarl_msg:revoke(User, Permission)).
+    send(libsnarl_msg:revoke(r(), User, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a user.
@@ -232,7 +232,7 @@ revoke(User, Permission) ->
                                 not_found |
                                 ok.
 revoke_prefix(User, Prefix) ->
-    send(libsnarl_msg:revoke_prefix(User, Prefix)).
+    send(libsnarl_msg:revoke_prefix(r(), User, Prefix)).
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a user.
@@ -257,14 +257,14 @@ passwd(User, Pass) ->
                        not_found |
                        ok.
 join(User, Role) ->
-    send(libsnarl_msg:join(User, Role)).
+    send(libsnarl_msg:join(r(), User, Role)).
 
 -spec key_find(KeyID::binary()) ->
                            {error, no_servers} |
                            not_found |
                            {ok, UUID::fifo:id()}.
 key_find(KeyID) ->
-    send(libsnarl_msg:key_find(KeyID)).
+    send(libsnarl_msg:key_find(r(), KeyID)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a key to the users SSH keys.
@@ -275,7 +275,7 @@ key_find(KeyID) ->
                           not_found |
                           ok.
 key_add(User, KeyID, Key) ->
-    send(libsnarl_msg:key_add(User, KeyID, Key)).
+    send(libsnarl_msg:key_add(r(), User, KeyID, Key)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a key from the users SSH keys.
@@ -286,7 +286,7 @@ key_add(User, KeyID, Key) ->
                              not_found |
                              ok.
 key_revoke(User, KeyID) ->
-    send(libsnarl_msg:key_revoke(User, KeyID)).
+    send(libsnarl_msg:key_revoke(r(), User, KeyID)).
 
 %%--------------------------------------------------------------------
 %% @doc Returns a list of all SSH keys for a user.
@@ -297,7 +297,7 @@ key_revoke(User, KeyID) ->
                        not_found |
                        {ok, [{KeyID::binary(), Key::binary()}]}.
 keys(User) ->
-    send(libsnarl_msg:keys(User)).
+    send(libsnarl_msg:keys(r(), User)).
 
 
 %%--------------------------------------------------------------------
@@ -309,7 +309,7 @@ keys(User) ->
                               not_found |
                               ok.
 yubikey_add(User, OTP) ->
-    send(libsnarl_msg:yubikey_add(User, OTP)).
+    send(libsnarl_msg:yubikey_add(r(), User, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a key from the users SSH keys.
@@ -320,7 +320,7 @@ yubikey_add(User, OTP) ->
                              not_found |
                              ok.
 yubikey_remove(User, KeyID) ->
-    send(libsnarl_msg:yubikey_remove(User, KeyID)).
+    send(libsnarl_msg:yubikey_remove(r(), User, KeyID)).
 
 %%--------------------------------------------------------------------
 %% @doc Returns a list of all SSH keys for a user.
@@ -331,7 +331,7 @@ yubikey_remove(User, KeyID) ->
                            not_found |
                            {ok, [KeyID::binary()]}.
 yubikeys(User) ->
-    send(libsnarl_msg:yubikeys(User)).
+    send(libsnarl_msg:yubikeys(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a role.
@@ -345,7 +345,7 @@ yubikeys(User) ->
                         not_found |
                         ok.
 leave(User, Role) ->
-    send(libsnarl_msg:leave(User, Role)).
+    send(libsnarl_msg:leave(r(), User, Role)).
 
 %%--------------------------------------------------------------------
 %% @doc Lets a user join the org.
@@ -356,7 +356,7 @@ leave(User, Role) ->
                            not_found |
                            ok.
 join_org(User, Org) ->
-    send(libsnarl_msg:join_org(User, Org)).
+    send(libsnarl_msg:join_org(r(), User, Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Lets a user leave the org.
@@ -367,7 +367,7 @@ join_org(User, Org) ->
                             not_found |
                             ok.
 leave_org(User, Org) ->
-    send(libsnarl_msg:leave_org(User, Org)).
+    send(libsnarl_msg:leave_org(r(), User, Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets a org as active for a user.
@@ -378,7 +378,7 @@ leave_org(User, Org) ->
                              not_found |
                              ok.
 select_org(User, Org) ->
-    send(libsnarl_msg:select_org(User, Org)).
+    send(libsnarl_msg:select_org(r(), User, Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Fetches the active org.
@@ -389,7 +389,7 @@ select_org(User, Org) ->
                              not_found |
                              {ok, Org::fifo:org_id() | binary()}.
 active_org(User) ->
-    send(libsnarl_msg:active_org(User)).
+    send(libsnarl_msg:active_org(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Fetches all orgs.
@@ -400,7 +400,7 @@ active_org(User) ->
                        not_found |
                        {ok, [Org::fifo:org_id() | binary()]}.
 orgs(User) ->
-    send(libsnarl_msg:orgs(User)).
+    send(libsnarl_msg:orgs(r(), User)).
 
 %%%===================================================================
 %%% Internal Functions
@@ -424,3 +424,6 @@ send(Msg) ->
         E ->
             E
     end.
+
+r() ->
+    applicaiton:get_env(libsnarl, realm, <<"default">>).

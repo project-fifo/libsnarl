@@ -116,7 +116,7 @@ version() ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass) ->
-    send(libsnarl_msg:auth(User, Pass)).
+    send(libsnarl_msg:auth(r(), User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
@@ -128,7 +128,7 @@ auth(User, Pass) ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass, OTP) ->
-    send(libsnarl_msg:auth(User, Pass, OTP)).
+    send(libsnarl_msg:auth(r(), User, Pass, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
@@ -141,7 +141,7 @@ auth(User, Pass, OTP) ->
                      true |
                      false.
 allowed(User, Permission) ->
-    send(libsnarl_msg:allowed(User, Permission)).
+    send(libsnarl_msg:allowed(r(), User, Permission)).
 
 %%%===================================================================
 %%% Token Functions
@@ -159,7 +159,7 @@ allowed(User, Permission) ->
                           not_found |
                           ok.
 token_delete(Token) ->
-    send(libsnarl_msg:token_delete(Token)).
+    send(libsnarl_msg:token_delete(r(), Token)).
 
 %%%===================================================================
 %%% Internal Functions
@@ -183,3 +183,6 @@ send(Msg) ->
         E ->
             E
     end.
+
+r() ->
+    applicaiton:get_env(libsnarl, realm, <<"default">>).

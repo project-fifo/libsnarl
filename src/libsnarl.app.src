@@ -10,5 +10,5 @@
 		  mdns_client_lib
                  ]},
   {mod, { libsnarl_app, []}},
-  {env, [{domain, ".local"}]}
+  {env, [{domain, ".local"}, {realm, <<"default">>}]}
  ]}.

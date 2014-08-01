@@ -40,7 +40,7 @@
                                                {'error','no_servers'}.
 set(Org, Attribute, Value) when
       is_binary(Org) ->
-    send(libsnarl_msg:set(Org, Attribute, Value)).
+    send(libsnarl_msg:set(r(), Org, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes on the org.
@@ -52,7 +52,7 @@ set(Org, Attribute, Value) when
                      {'error','no_servers'}.
 set(Org, Attributes) when
       is_binary(Org) ->
-    send(libsnarl_msg:set(Org, Attributes)).
+    send(libsnarl_msg:set(r(), Org, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.
@@ -62,7 +62,7 @@ set(Org, Attributes) when
                       {error, no_servers} |
                       {ok, [fifo:id()]}.
 list() ->
-    send(libsnarl_msg:list()).
+    send(libsnarl_msg:list(r())).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a filtered list for orgs.
@@ -72,7 +72,7 @@ list() ->
                       {error, timeout} |
                       {ok, [fifo:id()]}.
 list(Reqs, Full) ->
-    send(libsnarl_msg:list(Reqs, Full)).
+    send(libsnarl_msg:list(r(), Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
@@ -85,7 +85,7 @@ list(Reqs, Full) ->
                      {error, no_servers} |
                      {ok, fifo:org()}.
 get(Org) ->
-    send(libsnarl_msg:get(Org)).
+    send(libsnarl_msg:get(r(), Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new org.
@@ -98,7 +98,7 @@ get(Org) ->
                      duplicate |
                      ok.
 add(Org) ->
-    send(libsnarl_msg:add(Org)).
+    send(libsnarl_msg:add(r(), Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a org.
@@ -111,7 +111,7 @@ add(Org) ->
                         not_found |
                         ok.
 delete(Org) ->
-    send(libsnarl_msg:delete(Org)).
+    send(libsnarl_msg:delete(r(), Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Grants a right of a org.
@@ -126,7 +126,7 @@ delete(Org) ->
                              not_found |
                              ok.
 add_trigger(Org, Trigger) ->
-    send(libsnarl_msg:add_trigger(Org, Trigger)).
+    send(libsnarl_msg:add_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a org.
@@ -141,7 +141,7 @@ add_trigger(Org, Trigger) ->
                                 not_found |
                                 ok.
 remove_trigger(Org, Trigger) ->
-    send(libsnarl_msg:remove_trigger(Org, Trigger)).
+    send(libsnarl_msg:remove_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a org.
@@ -157,7 +157,7 @@ remove_trigger(Org, Trigger) ->
                                  not_found |
                                  ok.
 execute_trigger(Org, Event, Payload) ->
-    send(libsnarl_msg:execute_trigger(Org, Event, Payload)).
+    send(libsnarl_msg:execute_trigger(r(), Org, Event, Payload)).
 
 %%%===================================================================
 %%% Internal Functions
@@ -181,3 +181,6 @@ send(Msg) ->
         E ->
             E
     end.
+
+r() ->
+    applicaiton:get_env(libsnarl, realm, <<"default">>).
