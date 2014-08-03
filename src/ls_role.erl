@@ -45,7 +45,7 @@
                                                  {'error','no_servers'}.
 set(Role, Attribute, Value) when
       is_binary(Role) ->
-    send(libsnarl_msg:set(Role, Attribute, Value)).
+    send(libsnarl_msg:role_set(Role, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes on the role.
@@ -57,7 +57,7 @@ set(Role, Attribute, Value) when
                        {'error','no_servers'}.
 set(Role, Attributes) when
       is_binary(Role) ->
-    send(libsnarl_msg:set(Role, Attributes)).
+    send(libsnarl_msg:role_set(Role, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all role id's.
@@ -69,7 +69,7 @@ set(Role, Attributes) when
                         {error, no_servers} |
                         {ok, [fifo:id()]}.
 list() ->
-    send(libsnarl_msg:list()).
+    send(libsnarl_msg:role_list()).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a filtered list for roles.
@@ -79,7 +79,7 @@ list() ->
                         {error, timeout} |
                         {ok, [fifo:id()]}.
 list(Reqs, Full) ->
-    send(libsnarl_msg:list(Reqs, Full)).
+    send(libsnarl_msg:role_list(Reqs, Full)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves role data from the server.
@@ -92,7 +92,7 @@ list(Reqs, Full) ->
                        {error, no_servers} |
                        {ok, fifo:role()}.
 get(Role) ->
-    send(libsnarl_msg:get(Role)).
+    send(libsnarl_msg:role_get(Role)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new role.
@@ -105,7 +105,7 @@ get(Role) ->
                        duplicate |
                        ok.
 add(Role) ->
-    send(libsnarl_msg:add(Role)).
+    send(libsnarl_msg:role_add(Role)).
 
 %%--------------------------------------------------------------------
 %% @doc Deletes a role.
@@ -118,7 +118,7 @@ add(Role) ->
                           not_found |
                           ok.
 delete(Role) ->
-    send(libsnarl_msg:delete(Role)).
+    send(libsnarl_msg:role_delete(Role)).
 
 %%--------------------------------------------------------------------
 %% @doc Grants a right of a role.
@@ -133,7 +133,7 @@ delete(Role) ->
                          not_found |
                          ok.
 grant(Role, Permission) ->
-    send(libsnarl_msg:grant(Role, Permission)).
+    send(libsnarl_msg:role_grant(Role, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a right of a role.
@@ -148,7 +148,7 @@ grant(Role, Permission) ->
                           not_found |
                           ok.
 revoke(Role, Permission) ->
-    send(libsnarl_msg:revoke(Role, Permission)).
+    send(libsnarl_msg:role_revoke(Role, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a role.
@@ -163,7 +163,7 @@ revoke(Role, Permission) ->
                                  not_found |
                                  ok.
 revoke_prefix(Role, Prefix) ->
-    send(libsnarl_msg:revoke_prefix(Role, Prefix)).
+    send(libsnarl_msg:role_revoke_prefix(Role, Prefix)).
 
 %%%===================================================================
 %%% Internal Functions
