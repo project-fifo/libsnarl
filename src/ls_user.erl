@@ -1,4 +1,4 @@
-:-module(ls_user).
+-module(ls_user).
 
 -export([
          add/1, add/2,
