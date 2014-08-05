@@ -40,7 +40,7 @@
                                                {'error','no_servers'}.
 set(Org, Attribute, Value) when
       is_binary(Org) ->
-    send(libsnarl_msg:set(r(), Org, Attribute, Value)).
+    send(libsnarl_msg:org_set(r(), Org, Attribute, Value)).
 
 %%--------------------------------------------------------------------
 %% @doc Sets multiple attributes on the org.
