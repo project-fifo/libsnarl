@@ -185,4 +185,4 @@ send(Msg) ->
     end.
 
 r() ->
-    applicaiton:get_env(libsnarl, realm, <<"default">>).
+    application:get_env(libsnarl, realm, <<"default">>).
