@@ -1,0 +1,12 @@
+%% -*- erlang -*-
+%% @doc The default realm to use for snarl calls.
+{mapping, "libsnarl.realm", "libsnarl.realm",
+ [{default, "default"},
+  {datatype, string}]}.
+
+{translation,
+ "libsnarl.realm",
+ fun(Conf) ->
+         list_to_binary(cuttlefish:conf_get("libsnarl.realm", Conf))
+ end
+}.
