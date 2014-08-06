@@ -55,7 +55,7 @@
                   {ok, {Resources::fifo:object(),
                         Warnings::fifo:object()}}.
 status() ->
-    send({cloud, status}).
+    send({cloud, status, r()}).
 
 %%--------------------------------------------------------------------
 %% @private
