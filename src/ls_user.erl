@@ -246,7 +246,7 @@ revoke_prefix(User, Prefix) ->
                          not_found |
                          ok.
 passwd(User, Pass) ->
-    send(libsnarl_msg:user_passwd(User, Pass)).
+    send(libsnarl_msg:user_passwd(r(), User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a user to a role.
