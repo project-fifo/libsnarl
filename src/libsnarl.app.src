@@ -7,7 +7,7 @@
                   kernel,
                   stdlib,
                   libsnarlmatch,
-		  mdns_client_lib
+                  mdns_client_lib
                  ]},
   {mod, { libsnarl_app, []}},
   {env, [{domain, ".local"}, {realm, <<"default">>}]}

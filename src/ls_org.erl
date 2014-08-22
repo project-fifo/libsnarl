@@ -34,7 +34,7 @@
 %% @doc Sets an attribute on the org.
 %% @end
 %%--------------------------------------------------------------------
--spec set(Org::fifo:id(),
+-spec set(Org::fifo:org_id(),
               Attribute::fifo:keys(),
               Value::fifo:value() | delete) -> ok | not_found |
                                                {'error','no_servers'}.
@@ -46,7 +46,7 @@ set(Org, Attribute, Value) when
 %% @doc Sets multiple attributes on the org.
 %% @end
 %%--------------------------------------------------------------------
--spec set(Org::fifo:id(),
+-spec set(Org::fifo:org_id(),
               Attributes::fifo:attr_list()) ->
                      ok | not_found |
                      {'error','no_servers'}.
@@ -60,7 +60,7 @@ set(Org, Attributes) when
 %%--------------------------------------------------------------------
 -spec list() ->
                       {error, no_servers} |
-                      {ok, [fifo:id()]}.
+                      {ok, [fifo:org_id()]}.
 list() ->
     send(libsnarl_msg:org_list(r())).
 
@@ -70,7 +70,7 @@ list() ->
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
                       {error, timeout} |
-                      {ok, [fifo:id()]}.
+                      {ok, [fifo:org_id()]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:org_list(r(), Reqs, Full)).
 
@@ -80,7 +80,7 @@ list(Reqs, Full) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec get(Org::fifo:id()) ->
+-spec get(Org::fifo:org_id()) ->
                      not_found |
                      {error, no_servers} |
                      {ok, fifo:org()}.
@@ -93,7 +93,7 @@ get(Org) ->
 %%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec add(Org::fifo:id()) ->
+-spec add(Org::fifo:org_id()) ->
                      {error, no_servers} |
                      duplicate |
                      ok.
@@ -106,7 +106,7 @@ add(Org) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec delete(Org::fifo:id()) ->
+-spec delete(Org::fifo:org_id()) ->
                         {error, no_servers} |
                         not_found |
                         ok.
@@ -120,7 +120,7 @@ delete(Org) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec add_trigger(Org::fifo:id(),
+-spec add_trigger(Org::fifo:org_id(),
                       Trigger::fifo:trigger()) ->
                              {error, no_servers} |
                              not_found |
@@ -135,7 +135,7 @@ add_trigger(Org, Trigger) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec remove_trigger(Org::fifo:id(),
+-spec remove_trigger(Org::fifo:org_id(),
                          Trigger::fifo:trigger()) ->
                                 {error, no_servers} |
                                 not_found |
@@ -150,7 +150,7 @@ remove_trigger(Org, Trigger) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec execute_trigger(Org::fifo:id(),
+-spec execute_trigger(Org::fifo:org_id(),
                           Event::fifo:event(),
                           Payload::term()) ->
                                  {error, no_servers} |
@@ -170,7 +170,7 @@ execute_trigger(Org, Event, Payload) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec send(Msg::fifo:snarl_message()) ->
+-spec send(Msg::fifo:snarl_org_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.

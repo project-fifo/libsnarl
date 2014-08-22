@@ -39,7 +39,7 @@
 %% @doc Sets an attribute on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec set(Role::fifo:id(),
+-spec set(Role::fifo:role_id(),
                 Attribute::fifo:keys(),
                 Value::fifo:value() | delete) -> ok | not_found |
                                                  {'error','no_servers'}.
@@ -51,7 +51,7 @@ set(Role, Attribute, Value) when
 %% @doc Sets multiple attributes on the role.
 %% @end
 %%--------------------------------------------------------------------
--spec set(Role::fifo:id(),
+-spec set(Role::fifo:role_id(),
                 Attributes::fifo:attr_list()) ->
                        ok | not_found |
                        {'error','no_servers'}.
@@ -67,7 +67,7 @@ set(Role, Attributes) when
 %%--------------------------------------------------------------------
 -spec list() ->
                         {error, no_servers} |
-                        {ok, [fifo:id()]}.
+                        {ok, [fifo:role_id()]}.
 list() ->
     send(libsnarl_msg:role_list(r())).
 
@@ -77,7 +77,7 @@ list() ->
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
                         {error, timeout} |
-                        {ok, [fifo:id()]}.
+                        {ok, [fifo:role_id()]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:role_list(r(), Reqs, Full)).
 
@@ -87,7 +87,7 @@ list(Reqs, Full) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec get(Role::fifo:id()) ->
+-spec get(Role::fifo:role_id()) ->
                        not_found |
                        {error, no_servers} |
                        {ok, fifo:role()}.
@@ -100,7 +100,7 @@ get(Role) ->
 %%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec add(Role::fifo:id()) ->
+-spec add(Role::fifo:role_id()) ->
                        {error, no_servers} |
                        duplicate |
                        ok.
@@ -113,7 +113,7 @@ add(Role) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec delete(Role::fifo:id()) ->
+-spec delete(Role::fifo:role_id()) ->
                           {error, no_servers} |
                           not_found |
                           ok.
@@ -127,7 +127,7 @@ delete(Role) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec grant(Role::fifo:id(),
+-spec grant(Role::fifo:role_id(),
                   Permission::fifo:permission()) ->
                          {error, no_servers} |
                          not_found |
@@ -142,7 +142,7 @@ grant(Role, Permission) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec revoke(Role::fifo:id(),
+-spec revoke(Role::fifo:role_id(),
                    Permission::fifo:permission()) ->
                           {error, no_servers} |
                           not_found |
@@ -157,7 +157,7 @@ revoke(Role, Permission) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec revoke_prefix(Role::fifo:id(),
+-spec revoke_prefix(Role::fifo:role_id(),
                           Prefix::fifo:permission()) ->
                                  {error, no_servers} |
                                  not_found |
@@ -176,7 +176,7 @@ revoke_prefix(Role, Prefix) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec send(Msg::fifo:snarl_message()) ->
+-spec send(Msg::fifo:snarl_role_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.

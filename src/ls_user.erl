@@ -68,11 +68,11 @@
 %% @doc Sets a attribute for the user.
 %% @end
 %%--------------------------------------------------------------------
--spec set(User::fifo:id(),
-               Attribute::fifo:keys(),
-               Value::fifo:value() | delete) ->
-                      ok | not_found |
-                      {'error','no_servers'}.
+-spec set(User::fifo:user_id(),
+          Attribute::fifo:keys(),
+          Value::fifo:value() | delete) ->
+                 ok | not_found |
+                 {'error','no_servers'}.
 set(User, Attribute, Value) ->
     send(libsnarl_msg:user_set(r(), User, Attribute, Value)).
 
@@ -81,9 +81,9 @@ set(User, Attribute, Value) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec set(User::fifo:uuid(),
-               Attributes::fifo:attr_list()) ->
-                      ok | not_found |
-                      {'error','no_servers'}.
+          Attributes::fifo:attr_list()) ->
+                 ok | not_found |
+                 {'error','no_servers'}.
 set(User, Attributes) ->
     send(libsnarl_msg:user_set(r(), User, Attributes)).
 
@@ -94,8 +94,8 @@ set(User, Attributes) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                       {error, timeout} |
-                       {ok, [fifo:id()]}.
+                  {error, timeout} |
+                  {ok, [fifo:user_id()]}.
 list() ->
     send(libsnarl_msg:user_list(r())).
 
@@ -104,8 +104,8 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                       {error, timeout} |
-                       {ok, [fifo:id()]}.
+                  {error, timeout} |
+                  {ok, [{integer(), fifo:user_id() | fifo:user()}]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:user_list(r(), Reqs, Full)).
 
@@ -115,10 +115,10 @@ list(Reqs, Full) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec get(User::fifo:id()) ->
-                      not_found |
-                      {error, no_servers} |
-                      {ok, fifo:user()}.
+-spec get(User::fifo:user_id()) ->
+                 not_found |
+                 {error, no_servers} |
+                 {ok, fifo:user()}.
 get(User) ->
     send(libsnarl_msg:user_get(r(), User)).
 
@@ -128,10 +128,10 @@ get(User) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec lookup(User::fifo:id()) ->
-                         not_found |
-                         {error, no_servers} |
-                         {ok, fifo:user()}.
+-spec lookup(User::fifo:user_id()) ->
+                    not_found |
+                    {error, no_servers} |
+                    {ok, fifo:user()}.
 lookup(User) ->
     send(libsnarl_msg:user_lookup(r(), User)).
 
@@ -141,10 +141,10 @@ lookup(User) ->
 %%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
--spec cache(User::fifo:id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        {ok, [fifo:permission()]}.
+-spec cache(User::fifo:user_id()) ->
+                   {error, no_servers} |
+                   not_found |
+                   {ok, [fifo:permission()]}.
 cache(User) ->
     send(libsnarl_msg:user_cache(r(), User)).
 
@@ -155,9 +155,9 @@ cache(User) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec add(UserName::binary()) ->
-                      {error, no_servers} |
-                      duplicate |
-                      {ok, UUID::fifo:id()}.
+                 {error, no_servers} |
+                 duplicate |
+                 {ok, UUID::fifo:user_id()}.
 add(UserName) ->
     send(libsnarl_msg:user_add(r(), UserName)).
 
@@ -167,11 +167,11 @@ add(UserName) ->
 %%      Org events in the process
 %% @end
 %%--------------------------------------------------------------------
--spec add(Creator::fifo:id(),
-               UserName::binary()) ->
-                      {error, no_servers} |
-                      duplicate |
-                      {ok, UUID::fifo:id()}.
+-spec add(Creator::fifo:user_id(),
+          UserName::binary()) ->
+                 {error, no_servers} |
+                 duplicate |
+                 {ok, UUID::fifo:user_id()}.
 add(Creator, UserName) ->
     send(libsnarl_msg:user_add(r(), Creator, UserName)).
 
@@ -181,10 +181,10 @@ add(Creator, UserName) ->
 %%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec delete(User::fifo:id()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+-spec delete(User::fifo:user_id()) ->
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 delete(User) ->
     send(libsnarl_msg:user_delete(r(), User)).
 
@@ -196,11 +196,11 @@ delete(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec grant(User::fifo:id(),
-                 Permission::fifo:permission()) ->
-                        {error, no_servers} |
-                        not_found |
-                        ok.
+-spec grant(User::fifo:user_id(),
+            Permission::fifo:permission()) ->
+                   {error, no_servers} |
+                   not_found |
+                   ok.
 grant(User, Permission) ->
     send(libsnarl_msg:user_grant(r(), User, Permission)).
 
@@ -211,11 +211,11 @@ grant(User, Permission) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec revoke(User::fifo:id(),
-                  Permission::fifo:permission()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+-spec revoke(User::fifo:user_id(),
+             Permission::fifo:permission()) ->
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 revoke(User, Permission) ->
     send(libsnarl_msg:user_revoke(r(), User, Permission)).
 
@@ -226,11 +226,11 @@ revoke(User, Permission) ->
 %%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
--spec revoke_prefix(User::fifo:id(),
-                         Prefix::fifo:permission()) ->
-                                {error, no_servers} |
-                                not_found |
-                                ok.
+-spec revoke_prefix(User::fifo:user_id(),
+                    Prefix::fifo:permission()) ->
+                           {error, no_servers} |
+                           not_found |
+                           ok.
 revoke_prefix(User, Prefix) ->
     send(libsnarl_msg:user_revoke_prefix(r(), User, Prefix)).
 
@@ -241,10 +241,10 @@ revoke_prefix(User, Prefix) ->
 %%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
--spec passwd(User::fifo:id(), Pass::binary()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+-spec passwd(User::fifo:user_id(), Pass::binary()) ->
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 passwd(User, Pass) ->
     send(libsnarl_msg:user_passwd(r(), User, Pass)).
 
@@ -252,17 +252,17 @@ passwd(User, Pass) ->
 %% @doc Adds a user to a role.
 %% @end
 %%--------------------------------------------------------------------
--spec join(User::fifo:id(), Role::fifo:role_id()) ->
-                       {error, no_servers} |
-                       not_found |
-                       ok.
+-spec join(User::fifo:user_id(), Role::fifo:role_id()) ->
+                  {error, no_servers} |
+                  not_found |
+                  ok.
 join(User, Role) ->
     send(libsnarl_msg:user_join(r(), User, Role)).
 
 -spec key_find(KeyID::binary()) ->
-                           {error, no_servers} |
-                           not_found |
-                           {ok, UUID::fifo:id()}.
+                      {error, no_servers} |
+                      not_found |
+                      {ok, UUID::fifo:user_id()}.
 key_find(KeyID) ->
     send(libsnarl_msg:user_key_find(r(), KeyID)).
 
@@ -270,10 +270,10 @@ key_find(KeyID) ->
 %% @doc Adds a key to the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
--spec key_add(User::fifo:id(), KeyID::binary(), Key::binary()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+-spec key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
+                     {error, no_servers} |
+                     not_found |
+                     ok.
 key_add(User, KeyID, Key) ->
     send(libsnarl_msg:user_key_add(r(), User, KeyID, Key)).
 
@@ -281,10 +281,10 @@ key_add(User, KeyID, Key) ->
 %% @doc Removes a key from the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
--spec key_revoke(User::fifo:id(), KeyID::binary()) ->
-                             {error, no_servers} |
-                             not_found |
-                             ok.
+-spec key_revoke(User::fifo:user_id(), KeyID::binary()) ->
+                        {error, no_servers} |
+                        not_found |
+                        ok.
 key_revoke(User, KeyID) ->
     send(libsnarl_msg:user_key_revoke(r(), User, KeyID)).
 
@@ -292,10 +292,10 @@ key_revoke(User, KeyID) ->
 %% @doc Returns a list of all SSH keys for a user.
 %% @end
 %%--------------------------------------------------------------------
--spec keys(User::fifo:id()) ->
-                       {error, no_servers} |
-                       not_found |
-                       {ok, [{KeyID::binary(), Key::binary()}]}.
+-spec keys(User::fifo:user_id()) ->
+                  {error, no_servers} |
+                  not_found |
+                  {ok, [{KeyID::binary(), Key::binary()}]}.
 keys(User) ->
     send(libsnarl_msg:user_keys(r(), User)).
 
@@ -304,10 +304,10 @@ keys(User) ->
 %% @doc Adds a key to the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
--spec yubikey_add(User::fifo:id(), OTP::binary()) ->
-                              {error, no_servers} |
-                              not_found |
-                              ok.
+-spec yubikey_add(User::fifo:user_id(), OTP::binary()) ->
+                         {error, no_servers} |
+                         not_found |
+                         ok.
 yubikey_add(User, OTP) ->
     send(libsnarl_msg:user_yubikey_add(r(), User, OTP)).
 
@@ -315,10 +315,10 @@ yubikey_add(User, OTP) ->
 %% @doc Removes a key from the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
--spec yubikey_remove(User::fifo:id(), KeyID::binary()) ->
-                             {error, no_servers} |
-                             not_found |
-                             ok.
+-spec yubikey_remove(User::fifo:user_id(), KeyID::binary()) ->
+                            {error, no_servers} |
+                            not_found |
+                            ok.
 yubikey_remove(User, KeyID) ->
     send(libsnarl_msg:user_yubikey_remove(r(), User, KeyID)).
 
@@ -326,10 +326,10 @@ yubikey_remove(User, KeyID) ->
 %% @doc Returns a list of all SSH keys for a user.
 %% @end
 %%--------------------------------------------------------------------
--spec yubikeys(User::fifo:id()) ->
-                           {error, no_servers} |
-                           not_found |
-                           {ok, [KeyID::binary()]}.
+-spec yubikeys(User::fifo:user_id()) ->
+                      {error, no_servers} |
+                      not_found |
+                      {ok, [KeyID::binary()]}.
 yubikeys(User) ->
     send(libsnarl_msg:user_yubikeys(r(), User)).
 
@@ -340,10 +340,10 @@ yubikeys(User) ->
 %%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
--spec leave(User::fifo:id(), Role::fifo:role_id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        ok.
+-spec leave(User::fifo:user_id(), Role::fifo:role_id()) ->
+                   {error, no_servers} |
+                   not_found |
+                   ok.
 leave(User, Role) ->
     send(libsnarl_msg:user_leave(r(), User, Role)).
 
@@ -351,10 +351,10 @@ leave(User, Role) ->
 %% @doc Lets a user join the org.
 %% @end
 %%--------------------------------------------------------------------
--spec join_org(User::fifo:id(), Org::fifo:org_id()) ->
-                           {error, no_servers} |
-                           not_found |
-                           ok.
+-spec join_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                      {error, no_servers} |
+                      not_found |
+                      ok.
 join_org(User, Org) ->
     send(libsnarl_msg:user_join_org(r(), User, Org)).
 
@@ -362,10 +362,10 @@ join_org(User, Org) ->
 %% @doc Lets a user leave the org.
 %% @end
 %%--------------------------------------------------------------------
--spec leave_org(User::fifo:id(), Org::fifo:org_id()) ->
-                            {error, no_servers} |
-                            not_found |
-                            ok.
+-spec leave_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                       {error, no_servers} |
+                       not_found |
+                       ok.
 leave_org(User, Org) ->
     send(libsnarl_msg:user_leave_org(r(), User, Org)).
 
@@ -373,10 +373,10 @@ leave_org(User, Org) ->
 %% @doc Sets a org as active for a user.
 %% @end
 %%--------------------------------------------------------------------
--spec select_org(User::fifo:id(), Org::fifo:org_id()) ->
-                             {error, no_servers} |
-                             not_found |
-                             ok.
+-spec select_org(User::fifo:user_id(), Org::fifo:org_id()) ->
+                        {error, no_servers} |
+                        not_found |
+                        ok.
 select_org(User, Org) ->
     send(libsnarl_msg:user_select_org(r(), User, Org)).
 
@@ -384,10 +384,10 @@ select_org(User, Org) ->
 %% @doc Fetches the active org.
 %% @end
 %%--------------------------------------------------------------------
--spec active_org(User::fifo:id()) ->
-                             {error, no_servers} |
-                             not_found |
-                             {ok, Org::fifo:org_id() | binary()}.
+-spec active_org(User::fifo:user_id()) ->
+                        {error, no_servers} |
+                        not_found |
+                        {ok, Org::fifo:org_id() | binary()}.
 active_org(User) ->
     send(libsnarl_msg:user_active_org(r(), User)).
 
@@ -395,10 +395,10 @@ active_org(User) ->
 %% @doc Fetches all orgs.
 %% @end
 %%--------------------------------------------------------------------
--spec orgs(User::fifo:id()) ->
-                       {error, no_servers} |
-                       not_found |
-                       {ok, [Org::fifo:org_id() | binary()]}.
+-spec orgs(User::fifo:user_id()) ->
+                  {error, no_servers} |
+                  not_found |
+                  {ok, [Org::fifo:org_id() | binary()]}.
 orgs(User) ->
     send(libsnarl_msg:user_orgs(r(), User)).
 
@@ -413,7 +413,7 @@ orgs(User) ->
 %% @end
 %%--------------------------------------------------------------------
 
--spec send(Msg::fifo:snarl_message()) ->
+-spec send(Msg::fifo:snarl_user_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.
