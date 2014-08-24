@@ -9,9 +9,7 @@
          list/0,
          list/2,
          revoke/2,
-         revoke_prefix/2,
-         set/2,
-         set/3
+         revoke_prefix/2
         ]).
 
 %%%===================================================================
@@ -26,38 +24,12 @@
               list/0,
               list/2,
               revoke/2,
-              revoke_prefix/2,
-              set/2,
-              set/3
+              revoke_prefix/2
              ]).
 
 %%%===================================================================
 %%% Role Functions
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Sets an attribute on the role.
-%% @end
-%%--------------------------------------------------------------------
--spec set(Role::fifo:role_id(),
-                Attribute::fifo:keys(),
-                Value::fifo:value() | delete) -> ok | not_found |
-                                                 {'error','no_servers'}.
-set(Role, Attribute, Value) when
-      is_binary(Role) ->
-    send(libsnarl_msg:role_set(r(), Role, Attribute, Value)).
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the role.
-%% @end
-%%--------------------------------------------------------------------
--spec set(Role::fifo:role_id(),
-                Attributes::fifo:attr_list()) ->
-                       ok | not_found |
-                       {'error','no_servers'}.
-set(Role, Attributes) when
-      is_binary(Role) ->
-    send(libsnarl_msg:role_set(r(), Role, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all role id's.

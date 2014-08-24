@@ -31,8 +31,6 @@
          user_passwd/3,
          user_revoke/3,
          user_revoke_prefix/3,
-         user_set/3,
-         user_set/4,
          user_active_org/2,
          user_orgs/2,
          user_join_org/3,
@@ -48,9 +46,7 @@
          role_list/1,
          role_list/3,
          role_revoke/3,
-         role_revoke_prefix/3,
-         role_set/3,
-         role_set/4
+         role_revoke_prefix/3
         ]).
 
 -export([
@@ -61,9 +57,7 @@
          org_list/1,
          org_list/3,
          org_remove_trigger/3,
-         org_execute_trigger/4,
-         org_set/3,
-         org_set/4
+         org_execute_trigger/4
         ]).
 
 -define(User, <<User:36/binary>>).
@@ -129,34 +123,6 @@ token_delete(Realm, <<Token:36/binary>>) when
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Sets a attribute for the user.
-%% @end
-%%--------------------------------------------------------------------
--spec user_set(Realm::binary(),
-               User::fifo:user_id(),
-               Attribute::fifo:keys(),
-               Value::fifo:value()  | delete) ->
-                      {user, set, Realm::binary(), User::fifo:user_id(),
-                       Attribute::fifo:keys(),
-                       Value::fifo:value()  | delete}.
-user_set(Realm, ?User, Attribute, Value) when
-      is_binary(Realm) ->
-    {user, set, Realm, User, Attribute, Value}.
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes for the user.
-%% @end
-%%--------------------------------------------------------------------
--spec user_set(Realm::binary(), User::fifo:user_id(),
-               Attributes::fifo:attr_list()) ->
-                      {user, set, Realm::binary(),
-                       User::fifo:uuid(),
-                       Attributes::fifo:attr_list()}.
-user_set(Realm, ?User, Attributes) when
-      is_binary(Realm) ->
-    {user, set, Realm, User, Attributes}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
@@ -418,36 +384,6 @@ user_select_org(Realm, ?User, ?Org) when
 %%%===================================================================
 
 %%--------------------------------------------------------------------
-%% @doc Sets an attribute on the role.
-%% @end
-%%--------------------------------------------------------------------
--spec role_set(Realm::binary(), Role::fifo:role_id(),
-               Attribute::fifo:keys(),
-               Value::fifo:value() | delete) ->
-                      {role, set, Realm::binary(),
-                       Role::fifo:role_id(),
-                       Attribute::fifo:keys(),
-                       Value::fifo:value() | delete}.
-
-role_set(Realm, ?Role, Attribute, Value) when
-      is_binary(Realm) ->
-    {role, set, Realm, Role, Attribute, Value}.
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the role.
-%% @end
-%%--------------------------------------------------------------------
--spec role_set(Realm::binary(), Role::fifo:role_id(),
-               Attributes::fifo:attr_list()) ->
-                      {role, set, Realm::binary(),
-                       Role::fifo:role_id(),
-                       Attributes::fifo:attr_list()}.
-role_set(Realm, ?Role, Attributes) when
-      is_list(Attributes),
-      is_binary(Realm) ->
-    {role, set, Realm, Role, Attributes}.
-
-%%--------------------------------------------------------------------
 %% @doc Retrievs a list of all role id's.
 %% @end
 %%--------------------------------------------------------------------
@@ -549,36 +485,6 @@ role_revoke_prefix(Realm, ?Role, Prefix) when
 %%%===================================================================
 %%% Org Functions
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Sets an attribute on the org.
-%% @end
-%%--------------------------------------------------------------------
--spec org_set(Realm::binary(), Org::fifo:org_id(),
-              Attribute::fifo:keys(),
-              Value::fifo:value() | delete) ->
-                     {org, set, Realm::binary(),
-                      Org::fifo:org_id(),
-                      Attribute::fifo:keys(),
-                      Value::fifo:value() | delete}.
-
-org_set(Realm, ?Org, Attribute, Value) when
-      is_binary(Realm) ->
-    {org, set, Realm, Org, Attribute, Value}.
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the org.
-%% @end
-%%--------------------------------------------------------------------
--spec org_set(Realm::binary(), Org::fifo:org_id(),
-              Attributes::fifo:attr_list()) ->
-                     {org, set, Realm::binary(),
-                      Org::fifo:org_id(),
-                      Attributes::fifo:attr_list()}.
-org_set(Realm, ?Org, Attributes) when
-      is_binary(Realm),
-      is_list(Attributes) ->
-    {org, set, Realm, Org, Attributes}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.

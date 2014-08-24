@@ -8,9 +8,7 @@
          list/0,
          list/2,
          remove_trigger/2,
-         execute_trigger/3,
-         set/2,
-         set/3
+         execute_trigger/3
         ]).
 
 -ignore_xref([
@@ -21,38 +19,12 @@
               list/0,
               list/2,
               remove_trigger/2,
-              execute_trigger/3,
-              set/2,
-              set/3
+              execute_trigger/3
              ]).
 
 %%%===================================================================
 %%% org Functions
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Sets an attribute on the org.
-%% @end
-%%--------------------------------------------------------------------
--spec set(Org::fifo:org_id(),
-              Attribute::fifo:keys(),
-              Value::fifo:value() | delete) -> ok | not_found |
-                                               {'error','no_servers'}.
-set(Org, Attribute, Value) when
-      is_binary(Org) ->
-    send(libsnarl_msg:org_set(r(), Org, Attribute, Value)).
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes on the org.
-%% @end
-%%--------------------------------------------------------------------
--spec set(Org::fifo:org_id(),
-              Attributes::fifo:attr_list()) ->
-                     ok | not_found |
-                     {'error','no_servers'}.
-set(Org, Attributes) when
-      is_binary(Org) ->
-    send(libsnarl_msg:org_set(r(), Org, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.

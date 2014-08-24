@@ -21,8 +21,6 @@
          passwd/2,
          revoke/2,
          revoke_prefix/2,
-         set/2,
-         set/3,
          active_org/1,
          orgs/1,
          join_org/2,
@@ -51,8 +49,6 @@
               passwd/2,
               revoke/2,
               revoke_prefix/2,
-              set/2,
-              set/3,
               active_org/1,
               orgs/1,
               join_org/2,
@@ -63,29 +59,6 @@
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Sets a attribute for the user.
-%% @end
-%%--------------------------------------------------------------------
--spec set(User::fifo:user_id(),
-          Attribute::fifo:keys(),
-          Value::fifo:value() | delete) ->
-                 ok | not_found |
-                 {'error','no_servers'}.
-set(User, Attribute, Value) ->
-    send(libsnarl_msg:user_set(r(), User, Attribute, Value)).
-
-%%--------------------------------------------------------------------
-%% @doc Sets multiple attributes for the user.
-%% @end
-%%--------------------------------------------------------------------
--spec set(User::fifo:uuid(),
-          Attributes::fifo:attr_list()) ->
-                 ok | not_found |
-                 {'error','no_servers'}.
-set(User, Attributes) ->
-    send(libsnarl_msg:user_set(r(), User, Attributes)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
