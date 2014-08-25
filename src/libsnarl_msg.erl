@@ -35,7 +35,8 @@
          user_orgs/2,
          user_join_org/3,
          user_leave_org/3,
-         user_select_org/3
+         user_select_org/3,
+         user_set_metadata/3
         ]).
 
 -export([
@@ -46,7 +47,8 @@
          role_list/1,
          role_list/3,
          role_revoke/3,
-         role_revoke_prefix/3
+         role_revoke_prefix/3,
+         role_set_metadata/3
         ]).
 
 -export([
@@ -57,7 +59,8 @@
          org_list/1,
          org_list/3,
          org_remove_trigger/3,
-         org_execute_trigger/4
+         org_execute_trigger/4,
+         org_set_metadata/3
         ]).
 
 -define(User, <<User:36/binary>>).
@@ -124,6 +127,16 @@ token_delete(Realm, <<Token:36/binary>>) when
 %%% User Functions
 %%%===================================================================
 
+-spec user_set_metadata(Ream::binary(), User::fifo:user_id(),
+                        Attrs::fifo:attr_list()) ->
+                               {user, set_metadata, Realm::binary(),
+                                User::fifo:user_id(), Attrs::fifo:attr_list()}.
+
+user_set_metadata(Realm, User, Attrs) when
+      is_binary(Realm),
+      is_binary(User),
+      is_list(Attrs) ->
+    {user, set_metadata, Realm, User, Attrs}.
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
 %% @spec user_list() ->
@@ -383,6 +396,17 @@ user_select_org(Realm, ?User, ?Org) when
 %%% Role Functions
 %%%===================================================================
 
+-spec role_set_metadata(Ream::binary(), Role::fifo:role_id(),
+                        Attrs::fifo:attr_list()) ->
+                               {role, set_metadata, Realm::binary(),
+                                Role::fifo:role_id(), Attrs::fifo:attr_list()}.
+
+role_set_metadata(Realm, Role, Attrs) when
+      is_binary(Realm),
+      is_binary(Role),
+      is_list(Attrs) ->
+    {role, set_metadata, Realm, Role, Attrs}.
+
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all role id's.
 %% @end
@@ -485,6 +509,17 @@ role_revoke_prefix(Realm, ?Role, Prefix) when
 %%%===================================================================
 %%% Org Functions
 %%%===================================================================
+
+-spec org_set_metadata(Ream::binary(), Org::fifo:org_id(),
+                        Attrs::fifo:attr_list()) ->
+                               {org, set_metadata, Realm::binary(),
+                                Org::fifo:org_id(), Attrs::fifo:attr_list()}.
+
+org_set_metadata(Realm, Org, Attrs) when
+      is_binary(Realm),
+      is_binary(Org),
+      is_list(Attrs) ->
+    {org, set_metadata, Realm, Org, Attrs}.
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.

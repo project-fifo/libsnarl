@@ -25,7 +25,8 @@
          orgs/1,
          join_org/2,
          leave_org/2,
-         select_org/2
+         select_org/2,
+         set_metadata/2
         ]).
 
 -ignore_xref([
@@ -53,12 +54,19 @@
               orgs/1,
               join_org/2,
               leave_org/2,
-              select_org/2
+              select_org/2,
+              set_metadata/2
              ]).
 
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
+
+-spec set_metadata(User::fifo:user_id(), Attrs::fifo:attr_list()) ->
+                          {error, no_servers} |
+                          ok.
+set_metadata(User, Attrs) ->
+    send(libsnarl_msg:user_set_metadata(r(), User, Attrs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
@@ -78,7 +86,9 @@ list() ->
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
                   {error, timeout} |
-                  {ok, [{integer(), fifo:user_id() | fifo:user()}]}.
+                  {ok, [{integer(), fifo:user_id()}]} |
+                  {ok, [{integer(), fifo:user()}]}.
+
 list(Reqs, Full) ->
     send(libsnarl_msg:user_list(r(), Reqs, Full)).
 

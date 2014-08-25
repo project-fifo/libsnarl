@@ -9,7 +9,8 @@
          list/0,
          list/2,
          revoke/2,
-         revoke_prefix/2
+         revoke_prefix/2,
+         set_metadata/2
         ]).
 
 %%%===================================================================
@@ -24,12 +25,19 @@
               list/0,
               list/2,
               revoke/2,
-              revoke_prefix/2
+              revoke_prefix/2,
+              set_metadata/2
              ]).
 
 %%%===================================================================
 %%% Role Functions
 %%%===================================================================
+
+-spec set_metadata(Role::fifo:role_id(), Attrs::fifo:attr_list()) ->
+                          {error, no_servers} |
+                          ok.
+set_metadata(Role, Attrs) ->
+    send(libsnarl_msg:role_set_metadata(r(), Role, Attrs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all role id's.
@@ -49,7 +57,8 @@ list() ->
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
                         {error, timeout} |
-                        {ok, [fifo:role_id()]}.
+                        {ok, [{Rank::integer(), fifo:role_id()}]} |
+                        {ok, [{Rank::integer(), fifo:role()}]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:role_list(r(), Reqs, Full)).
 

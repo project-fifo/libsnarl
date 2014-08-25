@@ -7,6 +7,7 @@
          add_trigger/2,
          list/0,
          list/2,
+         set_metadata/2,
          remove_trigger/2,
          execute_trigger/3
         ]).
@@ -19,12 +20,19 @@
               list/0,
               list/2,
               remove_trigger/2,
-              execute_trigger/3
+              execute_trigger/3,
+              set_metadata/2
              ]).
 
 %%%===================================================================
 %%% org Functions
 %%%===================================================================
+
+-spec set_metadata(User::fifo:user_id(), Attrs::fifo:attr_list()) ->
+                          {error, no_servers} |
+                          ok.
+set_metadata(Org, Attrs) ->
+    send(libsnarl_msg:org_set_metadata(r(), Org, Attrs)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all org id's.
@@ -42,7 +50,9 @@ list() ->
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
                       {error, timeout} |
-                      {ok, [fifo:org_id()]}.
+                      {ok, [{Rank::integer(), fifo:org_id()}]} |
+                      {ok, [{Rank::integer(), fifo:org()}]}.
+
 list(Reqs, Full) ->
     send(libsnarl_msg:org_list(r(), Reqs, Full)).
 
