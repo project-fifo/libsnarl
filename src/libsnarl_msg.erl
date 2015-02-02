@@ -15,6 +15,7 @@
          user_cache/2,
          user_delete/2,
          user_get/2,
+         user_make_token/2,
          user_grant/3,
          user_join/3,
          user_key_find/2,
@@ -163,6 +164,7 @@ user_list(Realm, Reqs, Full) when
       is_binary(Realm) ->
     {user, list, Realm, Reqs, Full}.
 
+
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
 %% @end
@@ -176,6 +178,17 @@ user_get(Realm, ?Token) when
 user_get(Realm, ?User) when
       is_binary(Realm) ->
     {user, get, Realm, User}.
+
+%%--------------------------------------------------------------------
+%% @doc Creates a token for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec user_make_token(Realm::binary(), User::fifo:user_id()) ->
+                      {user, token, Realm::binary(), User::fifo:user_id()}.
+
+user_make_token(Realm, ?User) when
+      is_binary(Realm) ->
+    {user, token, Realm, User}.
 
 
 %%--------------------------------------------------------------------

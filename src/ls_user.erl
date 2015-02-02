@@ -5,6 +5,7 @@
          cache/1,
          delete/1,
          get/1,
+         make_token/1,
          grant/2,
          join/2,
          key_find/1,
@@ -34,6 +35,7 @@
               cache/1,
               delete/1,
               get/1,
+              make_token/1,
               grant/2,
               join/2,
               key_find/1,
@@ -104,6 +106,16 @@ list(Reqs, Full) ->
                  {ok, fifo:user()}.
 get(User) ->
     send(libsnarl_msg:user_get(r(), User)).
+
+%%--------------------------------------------------------------------
+%% @doc Creates a token for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec make_token(User::fifo:user_id()) ->
+                        not_found |
+                        {ok, fifo:token()}.
+make_token(User) ->
+    send(libsnarl_msg:user_make_token(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
