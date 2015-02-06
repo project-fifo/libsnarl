@@ -1,14 +1,14 @@
 {application, libsnarl,
  [
-  {description, ""},
-  {vsn, "0.2.12"},
+  {description, "snarl interface library"},
+  {vsn, "0.3.10"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib,
                   libsnarlmatch,
-		  mdns_client_lib
+                  mdns_client_lib
                  ]},
   {mod, { libsnarl_app, []}},
-  {env, [{domain, ".local"}]}
+  {env, [{domain, ".local"}, {realm, <<"default">>}]}
  ]}.
