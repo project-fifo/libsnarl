@@ -3,3 +3,4 @@
 ^lager_trunc_io.erl:74:
 ^lager_trunc_io.erl:98:
 ^mdns_discovery_connect_node_handler.erl:30:
+^meck.erl:573:
