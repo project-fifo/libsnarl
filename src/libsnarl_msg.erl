@@ -63,8 +63,26 @@
          org_execute_trigger/4,
          org_resource_action/6,
          org_set_metadata/3
-
         ]).
+
+-export([authorize_password_otp/5]).
+-export([authorize_password_otp/6]).
+-export([authorize_password_otp/7]).
+-export([authorize_password/4]).
+-export([authorize_password/5]).
+-export([authorize_password/6]).
+-export([authorize_client_credentials/4]).
+-export([authorize_code_grant/4]).
+-export([authorize_code_request/6]).
+-export([authorize_code_request_otp/7]).
+-export([issue_code/2]).
+-export([issue_token/2]).
+-export([issue_token_and_refresh/2]).
+-export([verify_access_token/2]).
+-export([verify_access_code/2]).
+-export([verify_access_code/3]).
+-export([refresh_access_token/4]).
+
 
 -define(User, <<User:36/binary>>).
 -define(Role, <<Role:36/binary>>).
@@ -638,6 +656,79 @@ org_execute_trigger(Realm, ?Org, Event, Payload) when
 
 org_resource_action(Realm, ?Org, Resource, TimeStamp, Action, Opts) ->
     {org, resource_action, Realm, Org, Resource, TimeStamp, Action, Opts}.
+
+%%%===================================================================
+%%% OAuth2 Functions
+%%%===================================================================
+
+%%-export([authorize_password_otp/3]).
+authorize_password_otp(Realm, User, Password, OTP, Scope) ->
+    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Scope}.
+
+%%-export([authorize_password_otp/4]).
+authorize_password_otp(Realm, User, Password, OTP, Client, Scope) ->
+    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Scope}.
+
+%%-export([authorize_password_otp/5]).
+
+authorize_password_otp(Realm, User, Password, OTP, Client, RedirUri, Scope) ->
+    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, RedirUri, Scope}.
+
+%%-export([authorize_password/3]).
+authorize_password(Realm, User, Password, Scope) ->
+    {oauth2, authorize_password, Realm, User, Password, Scope}.
+
+%%-export([authorize_password/4]).
+authorize_password(Realm, User, Password, Client, Scope) ->
+    {oauth2, authorize_password, Realm, User, Password, Client, Scope}.
+
+%%-export([authorize_password/5]).
+authorize_password(Realm, User, Password, Client, RedirUri, Scope) ->
+    {oauth2, authorize_password, Realm, User, Password, Client, RedirUri, Scope}.
+
+%% -export([authorize_client_credentials/3]).
+authorize_client_credentials(Realm, Client, Secret, Scope) ->
+    {oauth2, authorize_client_credentials, Realm, Client, Secret, Scope}.
+
+%% -export([authorize_code_grant/4]).
+authorize_code_grant(Realm, Client, Code, RedirUri) ->
+    {oauth2, authorize_code_grant, Realm, Client, Code, RedirUri}.
+
+%% -export([authorize_code_request/5]).
+authorize_code_request(Realm, User, Pass, Client, RedirUri, Scope) ->
+    {oauth2, authorize_code_request, Realm, User, Pass, Client, RedirUri, Scope}.
+
+%% -export([authorize_code_request/5]).
+authorize_code_request_otp(Realm, User, Pass, Otp, Client, RedirUri, Scope) ->
+    {oauth2, authorize_code_request_otp, Realm, User, Pass, Otp, Client, RedirUri, Scope}.
+
+%% -export([issue_code/2]).
+issue_code(Realm, Auth) ->
+    {oauth2, issue_code, Realm, Auth}.
+
+%% -export([issue_token/2]).
+issue_token(Realm, Auth) ->
+    {oauth2, issue_token, Realm, Auth}.
+
+%% -export([issue_token_and_refresh/2]).
+issue_token_and_refresh(Realm, Auth) ->
+    {oauth2, issue_token_and_refresh, Realm, Auth}.
+
+%% -export([verify_access_token/2]).
+verify_access_token(Realm, Token) ->
+    {oauth2, verify_access_token, Realm, Token}.
+
+%% -export([verify_access_code/2]).
+verify_access_code(Realm, AccessCode) ->
+    {oauth2, verify_access_code, Realm, AccessCode}.
+
+%% -export([verify_access_code/3]).
+verify_access_code(Realm, AccessCode, Client) ->
+    {oauth2, verify_access_code, Realm, AccessCode, Client}.
+
+%% -export([refresh_access_token/4]).
+refresh_access_token(Realm, Client, RefreshToken, Scope) ->
+    {oauth2, refresh_access_token, Realm, Client, RefreshToken, Scope}.
 
 %%%===================================================================
 %%% Internal Functions
