@@ -1,11 +1,11 @@
 -module(ls_oauth).
 
 -export([authorize_password_otp/4]).
--export([authorize_password_otp/5]).
 -export([authorize_password_otp/6]).
+-export([authorize_password_otp/7]).
 -export([authorize_password/3]).
--export([authorize_password/4]).
 -export([authorize_password/5]).
+-export([authorize_password/6]).
 -export([authorize_client_credentials/3]).
 -export([authorize_code_grant/4]).
 -export([authorize_code_request/5]).
@@ -27,25 +27,25 @@ authorize_password_otp(User, Password, OTP, Scope) ->
     send(libsnarl_msg:authorize_password_otp(r(), User, Password, OTP, Scope)).
 
 %%-export([authorize_password_otp/4]).
-authorize_password_otp(User, Password, OTP, Client, Scope) ->
-    send(libsnarl_msg:authorize_password_otp(r(), User, Password, OTP, Client, Scope)).
+authorize_password_otp(User, Password, OTP, Client, Secret, Scope) ->
+    send(libsnarl_msg:authorize_password_otp(r(), User, Password, OTP, Client, Secret, Scope)).
 
 %%-export([authorize_password_otp/5]).
 
-authorize_password_otp(User, Password, OTP, Client, RedirUri, Scope) ->
-    send(libsnarl_msg:authorize_password_otp(r(), User, Password, OTP, Client, RedirUri, Scope)).
+authorize_password_otp(User, Password, OTP, Client, Secret, RedirUri, Scope) ->
+    send(libsnarl_msg:authorize_password_otp(r(), User, Password, OTP, Client, Secret, RedirUri, Scope)).
 
 %%-export([authorize_password/3]).
 authorize_password(User, Password, Scope) ->
     send(libsnarl_msg:authorize_password(r(), User, Password, Scope)).
 
 %%-export([authorize_password/4]).
-authorize_password(User, Password, Client, Scope) ->
-    send(libsnarl_msg:authorize_password(r(), User, Password, Client, Scope)).
+authorize_password(User, Password, Client, Secret, Scope) ->
+    send(libsnarl_msg:authorize_password(r(), User, Password, Client, Secret, Scope)).
 
 %%-export([authorize_password/5]).
-authorize_password(User, Password, Client, RedirUri, Scope) ->
-    send(libsnarl_msg:authorize_password(r(), User, Password, Client, RedirUri, Scope)).
+authorize_password(User, Password, Client, Secret, RedirUri, Scope) ->
+    send(libsnarl_msg:authorize_password(r(), User, Password, Client, Secret, RedirUri, Scope)).
 
 %% -export([authorize_client_credentials/3]).
 authorize_client_credentials(Client, Secret, Scope) ->

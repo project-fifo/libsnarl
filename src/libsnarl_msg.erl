@@ -66,11 +66,11 @@
         ]).
 
 -export([authorize_password_otp/5]).
--export([authorize_password_otp/6]).
 -export([authorize_password_otp/7]).
+-export([authorize_password_otp/8]).
 -export([authorize_password/4]).
--export([authorize_password/5]).
 -export([authorize_password/6]).
+-export([authorize_password/7]).
 -export([authorize_client_credentials/4]).
 -export([authorize_code_grant/5]).
 -export([authorize_code_request/6]).
@@ -666,25 +666,25 @@ authorize_password_otp(Realm, User, Password, OTP, Scope) ->
     {oauth2, authorize_password_otp, Realm, User, Password, OTP, Scope}.
 
 %%-export([authorize_password_otp/4]).
-authorize_password_otp(Realm, User, Password, OTP, Client, Scope) ->
-    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Scope}.
+authorize_password_otp(Realm, User, Password, OTP, Client, Secret, Scope) ->
+    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Secret, Scope}.
 
 %%-export([authorize_password_otp/5]).
 
-authorize_password_otp(Realm, User, Password, OTP, Client, RedirUri, Scope) ->
-    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, RedirUri, Scope}.
+authorize_password_otp(Realm, User, Password, OTP, Client, Secret, RedirUri, Scope) ->
+    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Secret, RedirUri, Scope}.
 
 %%-export([authorize_password/3]).
 authorize_password(Realm, User, Password, Scope) ->
     {oauth2, authorize_password, Realm, User, Password, Scope}.
 
 %%-export([authorize_password/4]).
-authorize_password(Realm, User, Password, Client, Scope) ->
-    {oauth2, authorize_password, Realm, User, Password, Client, Scope}.
+authorize_password(Realm, User, Password, Client, Secret, Scope) ->
+    {oauth2, authorize_password, Realm, User, Password, Client, Secret, Scope}.
 
 %%-export([authorize_password/5]).
-authorize_password(Realm, User, Password, Client, RedirUri, Scope) ->
-    {oauth2, authorize_password, Realm, User, Password, Client, RedirUri, Scope}.
+authorize_password(Realm, User, Password, Client, Secret, RedirUri, Scope) ->
+    {oauth2, authorize_password, Realm, User, Password, Client, Secret, RedirUri, Scope}.
 
 %% -export([authorize_client_credentials/3]).
 authorize_client_credentials(Realm, Client, Secret, Scope) ->
