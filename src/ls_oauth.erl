@@ -7,7 +7,7 @@
 -export([authorize_password/4]).
 -export([authorize_password/5]).
 -export([authorize_client_credentials/3]).
--export([authorize_code_grant/3]).
+-export([authorize_code_grant/4]).
 -export([authorize_code_request/5]).
 -export([authorize_code_request_otp/6]).
 -export([issue_code/1]).
@@ -52,8 +52,8 @@ authorize_client_credentials(Client, Secret, Scope) ->
     send(libsnarl_msg:authorize_client_credentials(r(), Client, Secret, Scope)).
 
 %% -export([authorize_code_grant/4]).
-authorize_code_grant(Client, Code, RedirUri) ->
-    send(libsnarl_msg:authorize_code_grant(r(), Client, Code, RedirUri)).
+authorize_code_grant(Client, Secret, Code, RedirUri) ->
+    send(libsnarl_msg:authorize_code_grant(r(), Client, Secret, Code, RedirUri)).
 
 %% -export([authorize_code_request/5]).
 authorize_code_request(User, Pass, Client, RedirUri, Scope) ->

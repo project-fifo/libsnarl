@@ -72,7 +72,7 @@
 -export([authorize_password/5]).
 -export([authorize_password/6]).
 -export([authorize_client_credentials/4]).
--export([authorize_code_grant/4]).
+-export([authorize_code_grant/5]).
 -export([authorize_code_request/6]).
 -export([authorize_code_request_otp/7]).
 -export([issue_code/2]).
@@ -691,8 +691,8 @@ authorize_client_credentials(Realm, Client, Secret, Scope) ->
     {oauth2, authorize_client_credentials, Realm, Client, Secret, Scope}.
 
 %% -export([authorize_code_grant/4]).
-authorize_code_grant(Realm, Client, Code, RedirUri) ->
-    {oauth2, authorize_code_grant, Realm, Client, Code, RedirUri}.
+authorize_code_grant(Realm, Client, ClientSecret, Code, RedirUri) ->
+    {oauth2, authorize_code_grant, Realm, Client, ClientSecret, Code, RedirUri}.
 
 %% -export([authorize_code_request/5]).
 authorize_code_request(Realm, User, Pass, Client, RedirUri, Scope) ->
