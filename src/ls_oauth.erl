@@ -16,7 +16,7 @@
 -export([verify_access_token/1]).
 -export([verify_access_code/1]).
 -export([verify_access_code/2]).
--export([refresh_access_token/3]).
+-export([refresh_access_token/4]).
 
 %%%===================================================================
 %%% User Functions
@@ -88,8 +88,8 @@ verify_access_code(AccessCode, Client) ->
     send(libsnarl_msg:verify_access_code(r(), AccessCode, Client)).
 
 %% -export([refresh_access_token/4]).
-refresh_access_token(Client, RefreshToken, Scope) ->
-    send(libsnarl_msg:refresh_access_token(r(), Client, RefreshToken, Scope)).
+refresh_access_token(Client, ClientSecret, RefreshToken, Scope) ->
+    send(libsnarl_msg:refresh_access_token(r(), Client, ClientSecret, RefreshToken, Scope)).
 
 -spec send(Msg::fifo:snarl_user_message()) ->
                   atom() |
