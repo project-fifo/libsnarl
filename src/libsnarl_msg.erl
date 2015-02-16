@@ -65,23 +65,19 @@
          org_set_metadata/3
         ]).
 
--export([authorize_password_otp/5]).
--export([authorize_password_otp/7]).
--export([authorize_password_otp/8]).
+-export([authorize_password/3]).
 -export([authorize_password/4]).
--export([authorize_password/6]).
--export([authorize_password/7]).
--export([authorize_client_credentials/4]).
--export([authorize_code_grant/5]).
--export([authorize_code_request/6]).
--export([authorize_code_request_otp/7]).
+-export([authorize_password/5]).
+-export([authorize_client_credentials/3]).
+-export([authorize_code_grant/4]).
+-export([authorize_code_request/5]).
 -export([issue_code/2]).
 -export([issue_token/2]).
 -export([issue_token_and_refresh/2]).
 -export([verify_access_token/2]).
 -export([verify_access_code/2]).
 -export([verify_access_code/3]).
--export([refresh_access_token/5]).
+-export([refresh_access_token/4]).
 
 
 -define(User, <<User:36/binary>>).
@@ -661,46 +657,29 @@ org_resource_action(Realm, ?Org, Resource, TimeStamp, Action, Opts) ->
 %%% OAuth2 Functions
 %%%===================================================================
 
-%%-export([authorize_password_otp/3]).
-authorize_password_otp(Realm, User, Password, OTP, Scope) ->
-    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Scope}.
-
-%%-export([authorize_password_otp/4]).
-authorize_password_otp(Realm, User, Password, OTP, Client, Secret, Scope) ->
-    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Secret, Scope}.
-
-%%-export([authorize_password_otp/5]).
-
-authorize_password_otp(Realm, User, Password, OTP, Client, Secret, RedirUri, Scope) ->
-    {oauth2, authorize_password_otp, Realm, User, Password, OTP, Client, Secret, RedirUri, Scope}.
-
 %%-export([authorize_password/3]).
-authorize_password(Realm, User, Password, Scope) ->
-    {oauth2, authorize_password, Realm, User, Password, Scope}.
+authorize_password(Realm, User, Scope) ->
+    {oauth2, authorize_password, Realm, User, Scope}.
 
 %%-export([authorize_password/4]).
-authorize_password(Realm, User, Password, Client, Secret, Scope) ->
-    {oauth2, authorize_password, Realm, User, Password, Client, Secret, Scope}.
+authorize_password(Realm, User, Client, Scope) ->
+    {oauth2, authorize_password, Realm, User, Client, Scope}.
 
 %%-export([authorize_password/5]).
-authorize_password(Realm, User, Password, Client, Secret, RedirUri, Scope) ->
-    {oauth2, authorize_password, Realm, User, Password, Client, Secret, RedirUri, Scope}.
+authorize_password(Realm, User, Client, RedirUri, Scope) ->
+    {oauth2, authorize_password, Realm, User, Client, RedirUri, Scope}.
 
 %% -export([authorize_client_credentials/3]).
-authorize_client_credentials(Realm, Client, Secret, Scope) ->
-    {oauth2, authorize_client_credentials, Realm, Client, Secret, Scope}.
+authorize_client_credentials(Realm, Client, Scope) ->
+    {oauth2, authorize_client_credentials, Realm, Client, Scope}.
 
 %% -export([authorize_code_grant/4]).
-authorize_code_grant(Realm, Client, ClientSecret, Code, RedirUri) ->
-    {oauth2, authorize_code_grant, Realm, Client, ClientSecret, Code, RedirUri}.
+authorize_code_grant(Realm, Client, Code, RedirUri) ->
+    {oauth2, authorize_code_grant, Realm, Client, Code, RedirUri}.
 
 %% -export([authorize_code_request/5]).
-authorize_code_request(Realm, User, Pass, Client, RedirUri, Scope) ->
-    {oauth2, authorize_code_request, Realm, User, Pass, Client, RedirUri, Scope}.
-
-%% -export([authorize_code_request/5]).
-authorize_code_request_otp(Realm, User, Pass, Otp, Client, RedirUri, Scope) ->
-    {oauth2, authorize_code_request_otp, Realm, User, Pass, Otp, Client, RedirUri, Scope}.
+authorize_code_request(Realm, User, Client, RedirUri, Scope) ->
+    {oauth2, authorize_code_request, Realm, User, Client, RedirUri, Scope}.
 
 %% -export([issue_code/2]).
 issue_code(Realm, Auth) ->
@@ -727,8 +706,8 @@ verify_access_code(Realm, AccessCode, Client) ->
     {oauth2, verify_access_code, Realm, AccessCode, Client}.
 
 %% -export([refresh_access_token/4]).
-refresh_access_token(Realm, Client, ClientSecret, RefreshToken, Scope) ->
-    {oauth2, refresh_access_token, Realm, Client, ClientSecret, RefreshToken, Scope}.
+refresh_access_token(Realm, Client, RefreshToken, Scope) ->
+    {oauth2, refresh_access_token, Realm, Client, RefreshToken, Scope}.
 
 %%%===================================================================
 %%% Internal Functions
