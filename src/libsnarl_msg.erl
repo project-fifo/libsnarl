@@ -41,6 +41,24 @@
         ]).
 
 -export([
+         client_add/2, client_add/3,
+         client_delete/2,
+         client_get/2,
+         client_grant/3,
+         client_join/3,
+         client_uri_add/3,
+         client_uri_remove/3,
+         client_leave/3,
+         client_list/1,
+         client_list/3,
+         client_lookup/2,
+         client_secret/3,
+         client_revoke/3,
+         client_revoke_prefix/3,
+         client_set_metadata/3
+        ]).
+
+-export([
          role_add/2,
          role_delete/2,
          role_get/2,
@@ -81,9 +99,10 @@
 
 
 -define(User, <<User:36/binary>>).
+-define(Client, <<Client:36/binary>>).
 -define(Role, <<Role:36/binary>>).
 -define(Org, <<Org:36/binary>>).
--define(Token, {token, <<_:36/binary>>} = Token).
+-define(Token, {token, <<_/binary>>} = Token).
 
 
 %%%===================================================================
@@ -652,6 +671,189 @@ org_execute_trigger(Realm, ?Org, Event, Payload) when
 
 org_resource_action(Realm, ?Org, Resource, TimeStamp, Action, Opts) ->
     {org, resource_action, Realm, Org, Resource, TimeStamp, Action, Opts}.
+
+%%%===================================================================
+%%% Client Functions
+%%%===================================================================
+
+-spec client_set_metadata(Ream::binary(), Client::fifo:client_id(),
+                        Attrs::fifo:attr_list()) ->
+                               {client, set_metadata, Realm::binary(),
+                                Client::fifo:client_id(), Attrs::fifo:attr_list()}.
+
+client_set_metadata(Realm, Client, Attrs) when
+      is_binary(Realm),
+      is_binary(Client),
+      is_list(Attrs) ->
+    {client, set_metadata, Realm, Client, Attrs}.
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all client id's.
+%% @spec client_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec client_list(Realm::binary()) ->
+                       {client, list, Realm::binary()}.
+client_list(Realm) when
+      is_binary(Realm) ->
+    {client, list, Realm}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrievs a list of all client id's.
+%% @spec client_list() ->
+%%                 [term()]
+%% @end
+%%--------------------------------------------------------------------
+-spec client_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
+                       {client, list, Realm::binary(), Reqs::[fifo:matcher()], boolean()}.
+client_list(Realm, Reqs, Full) when
+      is_binary(Realm) ->
+    {client, list, Realm, Reqs, Full}.
+
+
+%%--------------------------------------------------------------------
+%% @doc Retrieves client data from the server.
+%% @end
+%%--------------------------------------------------------------------
+-spec client_get(Realm::binary(), Client::fifo:client_token_id()) ->
+                      {client, get, Realm::binary(), Client::fifo:client_token_id()}.
+client_get(Realm, ?Token) when
+      is_binary(Realm) ->
+    {client, get, Realm, Token};
+
+client_get(Realm, ?Client) when
+      is_binary(Realm) ->
+    {client, get, Realm, Client}.
+
+%%--------------------------------------------------------------------
+%% @doc Retrieves client data from the server.
+%% @end
+%%--------------------------------------------------------------------
+-spec client_lookup(Realm::binary(), Login::binary()) ->
+                         {client, lookup, Realm::binary(), Login::binary()}.
+client_lookup(Realm, Login) when
+      is_binary(Realm),
+      is_binary(Login) ->
+    {client, lookup, Realm, Login}.
+
+-spec client_add(Realm::binary(), ClientName::binary()) ->
+                      {client, add, Realm::binary(), ClientName::binary()}.
+client_add(Realm, ClientName) when
+      is_binary(Realm),
+      is_binary(ClientName) ->
+    {client, add, Realm, ClientName}.
+
+-spec client_add(Realm::binary(), Creator::fifo:client_id(),
+               ClientName::binary()) ->
+                      {client, add, Realm::binary(), Creator::fifo:client_id(), ClientName::binary()}.
+client_add(Realm, Creator, ClientName) when
+      is_binary(Realm),
+      is_binary(Creator),
+      is_binary(ClientName) ->
+    {client, add, Realm, Creator, ClientName}.
+
+%%--------------------------------------------------------------------
+%% @doc Deletes a client.
+%% @end
+%%--------------------------------------------------------------------
+-spec client_delete(Realm::binary(), Client::fifo:client_id()) ->
+                         {client, delete, Realm::binary(), Client::fifo:client_id()}.
+client_delete(Realm, Client) when
+      is_binary(Realm),
+      is_binary(Client) ->
+    {client, delete, Realm, Client}.
+
+%%--------------------------------------------------------------------
+%% @doc Grants a right of a client.
+%% @end
+%%--------------------------------------------------------------------
+
+-spec client_grant(Realm::binary(), Client::fifo:client_id(),
+                 Permission::fifo:permission()) ->
+                        {client, grant, Realm::binary(),
+                         Client::fifo:client_id(),
+                         Permission::fifo:permission()}.
+client_grant(Realm, Client, Permission) when
+      is_binary(Realm),
+      is_binary(Client) ->
+    {client, grant, Realm, Client, Permission}.
+
+%%--------------------------------------------------------------------
+%% @doc Revokes a right of a client.
+%% @end
+%%--------------------------------------------------------------------
+-spec client_revoke(Realm::binary(), Client::fifo:client_id(),
+                  Permission::fifo:permission()) ->
+                         {client, revoke, Realm::binary(),
+                          Client::fifo:client_id(),
+                          Permission::fifo:permission()}.
+client_revoke(Realm, Client, Permission) when
+      is_binary(Realm),
+      is_binary(Client) ->
+    {client, revoke, Realm, Client, Permission}.
+
+%%--------------------------------------------------------------------
+%% @doc Revokes all right with a certain prefix from a client.
+%% @end
+%%--------------------------------------------------------------------
+-spec client_revoke_prefix(Realm::binary(), Client::fifo:client_id(),
+                         Prefix::fifo:permission()) ->
+                                {client, revoke_prefix, Realm::binary(),
+                                 Client::fifo:client_id(),
+                                 Permission::fifo:permission()}.
+client_revoke_prefix(Realm, ?Client, Prefix) when
+      is_binary(Realm),
+      is_list(Prefix) ->
+    {client, revoke_prefix, Realm, Client, Prefix}.
+
+%%--------------------------------------------------------------------
+%% @doc Changes the Password of a client.
+%% @spec client_secret(Client::binary(), Pass::binary()) ->
+%%           ok |
+%%           {error, not_found|no_servers}
+%% @end
+%%--------------------------------------------------------------------
+-spec client_secret(Realm::binary(), Client::fifo:client_id(), SEcret::binary()) ->
+                           {client, secret, Realm::binary(),
+                            Client::fifo:client_id(), Secret::binary()}.
+client_secret(Realm, ?Client, Secret) when
+      is_binary(Realm),
+      is_binary(Secret) ->
+    {client, secret, Realm, Client, Secret}.
+
+%%--------------------------------------------------------------------
+%% @doc Adds a client to a role.
+%% @end
+%%--------------------------------------------------------------------
+
+-spec client_join(Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()) ->
+                       {client, join, Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()}.
+client_join(Realm, ?Client, ?Role) when
+      is_binary(Realm) ->
+    {client, join, Realm, Client, Role}.
+
+-spec client_leave(Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()) ->
+                        {client, leave, Realm::binary(),
+                         Client::fifo:client_id(),
+                         Role::fifo:role_id()}.
+
+client_leave(Realm, ?Client, ?Role) when
+      is_binary(Realm) ->
+    {client, leave, Realm, Client, Role}.
+
+-spec client_uri_add(Realm::binary(), Client::fifo:client_id(), KeyID::binary()) ->
+                              {client, uris, add, Realm::binary(), Client::fifo:client_id(), KeyID::binary()}.
+client_uri_add(Realm, ?Client, KeyID)when
+      is_binary(Realm),
+      is_binary(KeyID) ->
+    {client, uris, add, Realm, Client, KeyID}.
+
+-spec client_uri_remove(Realm::binary(), Client::fifo:client_id(), KeyID::binary()) ->
+                                 {client, uris, remove, Realm::binary(), Client::fifo:client_id(), KeyID::binary()}.
+client_uri_remove(Realm, ?Client, KeyID) when
+      is_binary(Realm),
+      is_binary(KeyID) ->
+    {client, uris, remove, Realm, Client, KeyID}.
 
 %%%===================================================================
 %%% OAuth2 Functions
