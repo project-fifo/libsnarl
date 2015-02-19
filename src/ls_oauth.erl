@@ -7,6 +7,7 @@
 -export([authorize_code_grant/3]).
 -export([authorize_code_request/4]).
 -export([issue_code/1]).
+-export([scope/0]).
 -export([issue_token/1]).
 -export([issue_token_and_refresh/1]).
 -export([verify_access_token/1]).
@@ -69,6 +70,9 @@ verify_access_code(AccessCode, Client) ->
 %% -export([refresh_access_token/4]).
 refresh_access_token(Client, RefreshToken, Scope) ->
     send(libsnarl_msg:refresh_access_token(r(), Client, RefreshToken, Scope)).
+
+scope() ->
+    send(libsnarl_msg:scope(r())).
 
 -spec send(Msg::fifo:snarl_user_message()) ->
                   atom() |
