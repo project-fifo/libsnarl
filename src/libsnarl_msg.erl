@@ -97,6 +97,7 @@
 -export([verify_access_code/3]).
 -export([refresh_access_token/4]).
 -export([scope/1]).
+-export([scope/2]).
 
 
 -define(User, <<User:36/binary>>).
@@ -914,6 +915,9 @@ refresh_access_token(Realm, Client, RefreshToken, Scope) ->
 
 scope(Realm) ->
     {oauth2, scope, Realm}.
+
+scope(Realm, Subscope) ->
+    {oauth2, scope, Realm, Subscope}.
 
 %%%===================================================================
 %%% Internal Functions
