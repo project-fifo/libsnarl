@@ -23,6 +23,7 @@
          user_key_revoke/3,
          user_keys/2,
          user_yubikey_add/3,
+         user_yubikey_check/3,
          user_yubikey_remove/3,
          user_yubikeys/2,
          user_leave/3,
@@ -389,6 +390,14 @@ user_yubikey_add(Realm, ?User, KeyID)when
       is_binary(Realm),
       is_binary(KeyID) ->
     {user, yubikeys, add, Realm, User, KeyID}.
+
+-spec user_yubikey_check(Realm::binary(), User::fifo:user_id(), OTP::binary()) ->
+                              {user, yubikeys, add, Realm::binary(), User::fifo:user_id(), OTP::binary()}.
+
+user_yubikey_check(Realm, ?User, OTP) when
+      is_binary(Realm),
+      is_binary(OTP) ->
+    {user, yubikeys, check, Realm, User, OTP}.
 
 -spec user_yubikey_remove(Realm::binary(), User::fifo:user_id(), KeyID::binary()) ->
                                  {user, yubikeys, remove, Realm::binary(), User::fifo:user_id(), KeyID::binary()}.
