@@ -123,15 +123,6 @@ auth(Realm, Login, Pass) when
       is_binary(Pass)->
     {user, auth, Realm, Login, Pass}.
 
--spec auth(Realm::binary(), Login::binary(), Pass::binary(), OTP::binary()|basic) ->
-                  {user, auth, Realm::binary(), Login::binary(), Pass::binary(),
-                   OTP::binary() | basic}.
-auth(Realm, Login, Pass, basic) when
-      is_binary(Realm),
-      is_binary(Login),
-      is_binary(Pass) ->
-    {user, auth, Realm, Login, Pass, basic};
-
 auth(Realm, Login, Pass, OTP) when
       is_binary(Realm),
       is_binary(Login),
