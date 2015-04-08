@@ -7,7 +7,10 @@
         ]).
 
 -export([
-         token_delete/2
+         token_delete/2,
+         token_get/2,
+         token_add/3,
+         token_add/4
         ]).
 
 -export([
@@ -156,11 +159,36 @@ allowed(Realm, ?User, Permission)
 %%% Token Functions
 %%%===================================================================
 
--spec token_delete(Realm::binary(), Token::fifo:token()) ->
+-spec token_delete(Realm::binary(), Token::binary()) ->
                           {token, delete, Realm::binary(), Token::fifo:token()}.
-token_delete(Realm, <<Token:36/binary>>) when
+token_delete(Realm, Token) when
       is_binary(Realm) ->
     {token, delete, Realm, Token}.
+
+-spec token_get(Realm::binary(), Token::binary()) ->
+                       {token, get, Realm::binary(), Token::term()}.
+
+token_get(Realm, Token) when
+      is_binary(Realm) ->
+    {token, get, Realm, Token}.
+
+-spec token_add(Realm::binary(), Token::binary(), Timeout::integer(),
+                Data::term()) ->
+                       {token, add, Realm::binary(), Token::term(),
+                        Timeout::integer(), Data::term()}.
+
+token_add(Realm, Token, Timeout, Data) when
+      is_binary(Realm), is_integer(Timeout), Timeout > 0 ->
+    {token, add, Realm, Token, Timeout, Data}.
+
+-spec token_add(Realm::binary(), Timeout::integer(), Data::term()) ->
+                       {token, add, Realm::binary(), Token::term(),
+                        Timeout::integer(), Data::term()}.
+
+token_add(Realm, Timeout, Data) when
+      is_binary(Realm), is_integer(Timeout), Timeout > 0 ->
+    {token, add, Realm, Timeout, Data}.
+
 
 %%%===================================================================
 %%% User Functions

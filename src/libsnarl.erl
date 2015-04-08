@@ -15,11 +15,6 @@
          keystr_to_id/1
         ]).
 
--export([
-         token_delete/1
-        ]).
-
-
 %%%===================================================================
 %%% Ignore
 %%%===================================================================
@@ -39,9 +34,6 @@
               keystr_to_id/1
              ]).
 
--ignore_xref([
-              token_delete/1
-             ]).
 
 %%%===================================================================
 %%% Generatl Functions
@@ -142,25 +134,6 @@ auth(User, Pass, OTP) ->
                      false.
 allowed(User, Permission) ->
     send(libsnarl_msg:allowed(r(), User, Permission)).
-
-%%%===================================================================
-%%% Token Functions
-%%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Deletes a user.
-%% @spec token_delete(Token::binary()) ->
-%%                    {error, not_found|no_servers} | ok
-%% @end
-%%--------------------------------------------------------------------
-
--spec token_delete(Token::fifo:token()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
-token_delete(Token) ->
-    send(libsnarl_msg:token_delete(r(), Token)).
-
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
