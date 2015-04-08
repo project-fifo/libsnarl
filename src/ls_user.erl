@@ -13,6 +13,7 @@
          key_revoke/2,
          keys/1,
          yubikey_add/2,
+         yubikey_check/2,
          yubikey_remove/2,
          yubikeys/1,
          leave/2,
@@ -43,6 +44,7 @@
               key_revoke/2,
               keys/1,
               yubikey_add/2,
+              yubikey_check/2,
               yubikey_remove/2,
               yubikeys/1,
               leave/2,
@@ -305,6 +307,17 @@ keys(User) ->
                          ok.
 yubikey_add(User, OTP) ->
     send(libsnarl_msg:user_yubikey_add(r(), User, OTP)).
+
+%%--------------------------------------------------------------------
+%% @doc Checks a Yubikey OTP.
+%% @end
+%%--------------------------------------------------------------------
+-spec yubikey_check(User::fifo:user_id(), OTP::binary()) ->
+                         {error, no_servers} |
+                         not_found |
+                         ok.
+yubikey_check(User, OTP) ->
+    send(libsnarl_msg:user_yubikey_check(r(), User, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a key from the users SSH keys.
