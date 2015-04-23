@@ -13,6 +13,7 @@
 %% API
 -export([start_link/0,
 	 call/1,
+	 call/2,
 	 cast/1,
 	 servers/0]).
 
@@ -53,6 +54,9 @@ start_link() ->
 
 call(Msg) ->
     gen_server:call(?SERVER, {call, Msg}).
+
+call(Msg, Timeout) ->
+    gen_server:call(?SERVER, {call, Msg, Timeout}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -122,6 +126,13 @@ handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
 handle_call({call, Msg}, From, #state{zmq_worker = Pid} = State) ->
     spawn(fun() ->
 		  Reply = mdns_client_lib:call(Pid, Msg),
+		  gen_server:reply(From, Reply)
+	  end),
+    {noreply, State};
+
+handle_call({call, Msg, Timeout}, From, #state{zmq_worker = Pid} = State) ->
+    spawn(fun() ->
+		  Reply = mdns_client_lib:call(Pid, Msg, Timeout),
 		  gen_server:reply(From, Reply)
 	  end),
     {noreply, State};

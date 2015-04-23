@@ -35,6 +35,8 @@
              ]).
 
 
+-define(SLOW_TIMEOUT, 3000).
+
 %%%===================================================================
 %%% Generatl Functions
 %%%===================================================================
@@ -108,7 +110,7 @@ version() ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass) ->
-    send(libsnarl_msg:auth(r(), User, Pass)).
+    send_slow(libsnarl_msg:auth(r(), User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
@@ -120,7 +122,7 @@ auth(User, Pass) ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass, OTP) ->
-    send(libsnarl_msg:auth(r(), User, Pass, OTP)).
+    send_slow(libsnarl_msg:auth(r(), User, Pass, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
@@ -156,6 +158,15 @@ send(Msg) ->
         E ->
             E
     end.
+
+send_slow(Msg) ->
+    case libsnarl_server:call(Msg, ?SLOW_TIMEOUT) of
+        {reply, Reply} ->
+            Reply;
+        E ->
+            E
+    end.
+
 
 r() ->
     application:get_env(libsnarl, realm, <<"default">>).

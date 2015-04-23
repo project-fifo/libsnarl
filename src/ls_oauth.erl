@@ -15,6 +15,7 @@
 -export([verify_access_code/1]).
 -export([verify_access_code/2]).
 -export([refresh_access_token/3]).
+-define(SLOW_TIMEOUT, 3000).
 
 %%%===================================================================
 %%% User Functions
@@ -22,19 +23,19 @@
 
 %%-export([authorize_password/3]).
 authorize_password(User, Scope) ->
-    send(libsnarl_msg:authorize_password(r(), User, Scope)).
+    send_slow(libsnarl_msg:authorize_password(r(), User, Scope)).
 
 %%-export([authorize_password/4]).
 authorize_password(User, Client, Scope) ->
-    send(libsnarl_msg:authorize_password(r(), User, Client, Scope)).
+    send_slow(libsnarl_msg:authorize_password(r(), User, Client, Scope)).
 
 %%-export([authorize_password/5]).
 authorize_password(User, Client, RedirUri, Scope) ->
-    send(libsnarl_msg:authorize_password(r(), User, Client, RedirUri, Scope)).
+    send_slow(libsnarl_msg:authorize_password(r(), User, Client, RedirUri, Scope)).
 
 %% -export([authorize_client_credentials/3]).
 authorize_client_credentials(Client, Scope) ->
-    send(libsnarl_msg:authorize_client_credentials(r(), Client, Scope)).
+    send_slow(libsnarl_msg:authorize_client_credentials(r(), Client, Scope)).
 
 %% -export([authorize_code_grant/4]).
 authorize_code_grant(Client, Code, RedirUri) ->
@@ -42,7 +43,7 @@ authorize_code_grant(Client, Code, RedirUri) ->
 
 %% -export([authorize_code_request/5]).
 authorize_code_request(User, Client, RedirUri, Scope) ->
-    send(libsnarl_msg:authorize_code_request(r(), User, Client, RedirUri, Scope)).
+    send_slow(libsnarl_msg:authorize_code_request(r(), User, Client, RedirUri, Scope)).
 
 %% -export([issue_code/2]).
 issue_code(Auth) ->
@@ -85,6 +86,14 @@ scope(Subscope) ->
 
 send(Msg) ->
     case libsnarl_server:call(Msg) of
+        {reply, Reply} ->
+            Reply;
+        E ->
+            E
+    end.
+
+send_slow(Msg) ->
+    case libsnarl_server:call(Msg, ?SLOW_TIMEOUT) of
         {reply, Reply} ->
             Reply;
         E ->
