@@ -1,14 +1,11 @@
-REBAR = $(shell pwd)/rebar
+REBAR = $(shell pwd)/rebar3
 
 .PHONY: deps rel package
 
-all: deps compile
+all: compile
 
 compile:
 	$(REBAR) compile
-
-deps:
-	$(REBAR) get-deps
 
 clean:
 	$(REBAR) clean
@@ -17,20 +14,20 @@ distclean: clean
 	$(REBAR) delete-deps
 
 test: compile
-	$(REBAR) skip_deps=true eunit
+	$(REBAR) eunit
 
 ###
 ### Docs
 ###
 docs:
-	$(REBAR) skip_deps=true doc
+	$(REBAR) doc
 
 ##
 ## Developer targets
 ##
 
 xref:
-	$(REBAR) xref skip_deps=true
+	$(REBAR) xref
 
 console: all
 	erl -pa ebin deps/*/ebin -s libsnarl
