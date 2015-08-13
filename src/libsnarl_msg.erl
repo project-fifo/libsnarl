@@ -87,6 +87,15 @@
          org_set_metadata/3
         ]).
 
+-export([
+         acc_create/5,
+         acc_update/5,
+         acc_restroy/5,
+         acc_get/2,
+         acc_get/3,
+         acc_get/4
+         ]).
+
 -export([authorize_password/3]).
 -export([authorize_password/4]).
 -export([authorize_password/5]).
@@ -946,6 +955,29 @@ scope(Realm) ->
 
 scope(Realm, Subscope) ->
     {oauth2, scope, Realm, Subscope}.
+
+%%%===================================================================
+%%% Accounting Functions
+%%%===================================================================
+
+
+acc_create(Realm, Org, Resource, Time, Metadata) ->
+    {accounting, create, Realm, Org, Resource, Time, Metadata}.
+
+acc_update(Realm, Org, Resource, Time, Metadata) ->
+    {accounting, update, Realm, Org, Resource, Time, Metadata}.
+
+acc_restroy(Realm, Org, Resource, Time, Metadata) ->
+    {accounting, destroy, Realm, Org, Resource, Time, Metadata}.
+
+acc_get(Realm, Org) ->
+    {accounting, get, Realm, Org}.
+
+acc_get(Realm, Org, Resource) ->
+    {accounting, get, Realm, Org, Resource}.
+
+acc_get(Realm, Org, Start, End) ->
+    {accounting, get, Realm, Org, Start, End}.
 
 %%%===================================================================
 %%% Internal Functions

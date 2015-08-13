@@ -7,7 +7,6 @@
          add_trigger/2,
          list/0,
          list/2,
-         resource_action/5,
          set_metadata/2,
          remove_trigger/2,
          execute_trigger/3
@@ -21,7 +20,6 @@
               list/0,
               list/2,
               remove_trigger/2,
-              resource_action/5,
               execute_trigger/3,
               set_metadata/2
              ]).
@@ -143,17 +141,6 @@ remove_trigger(Org, Trigger) ->
 execute_trigger(Org, Event, Payload) ->
     send(libsnarl_msg:org_execute_trigger(r(), Org, Event, Payload)).
 
-
--spec resource_action(Org::fifo:org_id(), Resource::binary(),
-                      TimeStamp::pos_integer(), Action::atom(),
-                      Opts::proplists:proplist()) -> 
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
-
-resource_action(Org, Resource, TimeStamp, Action, Opts) ->
-        send(libsnarl_msg:org_resource_action(r(), Org, Resource, TimeStamp,
-                                              Action, Opts)).
 
 %%%===================================================================
 %%% Internal Functions
