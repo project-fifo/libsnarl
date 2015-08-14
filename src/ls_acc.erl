@@ -80,7 +80,7 @@ destroy(Org, Resource, Time, Metadata)
                         Resource::binary(), Metadata::term()}]}.
 get(Org)
   when is_binary(Org) ->
-    send(libsnarl_msg:get(r(), Org)).
+    send(libsnarl_msg:acc_get(r(), Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Gets all entries related to a resource and organisation.
@@ -93,7 +93,7 @@ get(Org)
 get(Org, Resource)
   when is_binary(Org),
        is_binary(Resource) ->
-    send(libsnarl_msg:get(r(), Org, Resource)).
+    send(libsnarl_msg:acc_get(r(), Org, Resource)).
 
 
 %%--------------------------------------------------------------------
@@ -115,7 +115,7 @@ get(Org, Start, End)
        is_integer(End),
         Start > 0,
         End > Start ->
-    send(libsnarl_msg:get(r(), Org, Start, End)).
+    send(libsnarl_msg:acc_get(r(), Org, Start, End)).
 
 %%%===================================================================
 %%% Internal Functions
