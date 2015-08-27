@@ -90,7 +90,7 @@
 -export([
          acc_create/5,
          acc_update/5,
-         acc_restroy/5,
+         acc_destroy/5,
          acc_get/2,
          acc_get/3,
          acc_get/4
@@ -967,7 +967,7 @@ acc_create(Realm, Org, Resource, Time, Metadata) ->
 acc_update(Realm, Org, Resource, Time, Metadata) ->
     {accounting, update, Realm, Org, Resource, Time, Metadata}.
 
-acc_restroy(Realm, Org, Resource, Time, Metadata) ->
+acc_destroy(Realm, Org, Resource, Time, Metadata) ->
     {accounting, destroy, Realm, Org, Resource, Time, Metadata}.
 
 acc_get(Realm, Org) ->
