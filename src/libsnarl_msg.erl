@@ -24,11 +24,9 @@
          user_key_find/2,
          user_key_add/4,
          user_key_revoke/3,
-         user_keys/2,
          user_yubikey_add/3,
          user_yubikey_check/3,
          user_yubikey_remove/3,
-         user_yubikeys/2,
          user_leave/3,
          user_list/1,
          user_list/3,
@@ -36,12 +34,12 @@
          user_passwd/3,
          user_revoke/3,
          user_revoke_prefix/3,
-         user_active_org/2,
-         user_orgs/2,
          user_join_org/3,
          user_leave_org/3,
          user_select_org/3,
-         user_set_metadata/3
+         user_set_metadata/3,
+         user_api_token/4,
+         user_revoke_token/3
         ]).
 
 -export([
@@ -193,6 +191,10 @@ token_add(Realm, Timeout, Data) when
 %%%===================================================================
 %%% User Functions
 %%%===================================================================
+%%--------------------------------------------------------------------
+%% @doc Sets user metadata.
+%% @end
+%%--------------------------------------------------------------------
 
 -spec user_set_metadata(Ream::binary(), User::fifo:user_id(),
                         Attrs::fifo:attr_list()) ->
@@ -406,12 +408,6 @@ user_key_revoke(Realm, ?User, KeyID)when
       is_binary(KeyID) ->
     {user, keys, revoke, Realm, User, KeyID}.
 
--spec user_keys(Realm::binary(), User::fifo:user_id()) ->
-                       {user, keys, get, Realm::binary(), User::fifo:user_id()}.
-user_keys(Realm, ?User) when
-      is_binary(Realm) ->
-    {user, keys, get, Realm, User}.
-
 -spec user_yubikey_add(Realm::binary(), User::fifo:user_id(), KeyID::binary()) ->
                               {user, yubikeys, add, Realm::binary(), User::fifo:user_id(), KeyID::binary()}.
 user_yubikey_add(Realm, ?User, KeyID)when
@@ -434,12 +430,6 @@ user_yubikey_remove(Realm, ?User, KeyID) when
       is_binary(KeyID) ->
     {user, yubikeys, remove, Realm, User, KeyID}.
 
--spec user_yubikeys(Realm::binary(), User::fifo:user_id()) ->
-                           {user, yubikeys, get, Realm::binary(), User::fifo:user_id()}.
-user_yubikeys(Realm, ?User) when
-      is_binary(Realm) ->
-    {user, yubikeys, get, Realm, User}.
-
 -spec user_join_org(Realm::binary(), User::fifo:user_id(), Org::fifo:org_id()) ->
                            {user, org, join, Realm::binary(),
                             User::fifo:user_id(),
@@ -447,20 +437,6 @@ user_yubikeys(Realm, ?User) when
 user_join_org(Realm, ?User, ?Org) when
       is_binary(Realm) ->
     {user, org, join, Realm, User, Org}.
-
--spec user_orgs(Realm::binary(), User::fifo:user_id()) ->
-                       {user, org, get, Realm::binary(),
-                        User::fifo:user_id()}.
-user_orgs(Realm, ?User) when
-      is_binary(Realm) ->
-    {user, org, get, Realm, User}.
-
--spec user_active_org(Realm::binary(), User::fifo:user_id()) ->
-                             {user, org, active, Realm::binary(),
-                              User::fifo:user_id()}.
-user_active_org(Realm, ?User) when
-      is_binary(Realm) ->
-    {user, org, active, Realm, User}.
 
 -spec user_leave_org(Realm::binary(), User::fifo:user_id(), Org::fifo:org_id()) ->
                             {user, org, leave, Realm::binary(),
@@ -478,6 +454,41 @@ user_select_org(Realm, ?User, ?Org) when
       is_binary(Realm) ->
     {user, org, select, Realm, User, Org}.
 
+%%--------------------------------------------------------------------
+%% @doc Creates a API token
+%% @end
+%%--------------------------------------------------------------------
+
+-spec user_api_token(Ream::binary(), User::fifo:user_id(),
+                     Scope::[binary()], Comment::binary()) ->
+                            {user, api_token, Realm::binary(),
+                             User::fifo:user_id(), Scope::[binary()],
+                             Comment::binary()}.
+
+user_api_token(Realm, User, Scope, Comment) when
+      is_binary(Realm),
+      is_binary(User),
+      is_list(Scope),
+      is_binary(Comment) ->
+{user, api_token, Realm, User, Scope, Comment}.
+
+
+%%--------------------------------------------------------------------
+%% @doc Revokes a token with a given tokenID (not by the token itself)
+%% @end
+%%--------------------------------------------------------------------
+
+-spec user_revoke_token(Reeam::binary(), User::fifo:user_id(),
+                     TokenID::binary()) ->
+                            {user, revoke_token, Realm::binary(),
+                             User::fifo:user_id(),
+                             TokenID::binary()}.
+
+user_revoke_token(Realm, User, TokenID) when
+      is_binary(Realm),
+      is_binary(User),
+      is_binary(TokenID) ->
+    {user, revoke_token, Realm, User, TokenID}.
 
 %%%===================================================================
 %%% Role Functions

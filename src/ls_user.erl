@@ -11,11 +11,9 @@
          key_find/1,
          key_add/3,
          key_revoke/2,
-         keys/1,
          yubikey_add/2,
          yubikey_check/2,
          yubikey_remove/2,
-         yubikeys/1,
          leave/2,
          list/0,
          list/2,
@@ -23,12 +21,12 @@
          passwd/2,
          revoke/2,
          revoke_prefix/2,
-         active_org/1,
-         orgs/1,
          join_org/2,
          leave_org/2,
          select_org/2,
-         set_metadata/2
+         set_metadata/2,
+         api_token/3,
+         revoke_token/2
         ]).
 
 -ignore_xref([
@@ -42,11 +40,9 @@
               key_find/1,
               key_add/3,
               key_revoke/2,
-              keys/1,
               yubikey_add/2,
               yubikey_check/2,
               yubikey_remove/2,
-              yubikeys/1,
               leave/2,
               list/0,
               list/2,
@@ -54,12 +50,12 @@
               passwd/2,
               revoke/2,
               revoke_prefix/2,
-              active_org/1,
-              orgs/1,
               join_org/2,
               leave_org/2,
               select_org/2,
-              set_metadata/2
+              set_metadata/2,
+              api_token/3,
+              revoke_token/2
              ]).
 
 %%%===================================================================
@@ -286,18 +282,6 @@ key_revoke(User, KeyID) ->
     send(libsnarl_msg:user_key_revoke(r(), User, KeyID)).
 
 %%--------------------------------------------------------------------
-%% @doc Returns a list of all SSH keys for a user.
-%% @end
-%%--------------------------------------------------------------------
--spec keys(User::fifo:user_id()) ->
-                  {error, no_servers} |
-                  not_found |
-                  {ok, [{KeyID::binary(), Key::binary()}]}.
-keys(User) ->
-    send(libsnarl_msg:user_keys(r(), User)).
-
-
-%%--------------------------------------------------------------------
 %% @doc Adds a key to the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
@@ -330,16 +314,6 @@ yubikey_check(User, OTP) ->
 yubikey_remove(User, KeyID) ->
     send(libsnarl_msg:user_yubikey_remove(r(), User, KeyID)).
 
-%%--------------------------------------------------------------------
-%% @doc Returns a list of all SSH keys for a user.
-%% @end
-%%--------------------------------------------------------------------
--spec yubikeys(User::fifo:user_id()) ->
-                      {error, no_servers} |
-                      not_found |
-                      {ok, [KeyID::binary()]}.
-yubikeys(User) ->
-    send(libsnarl_msg:user_yubikeys(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a role.
@@ -389,26 +363,26 @@ select_org(User, Org) ->
     send(libsnarl_msg:user_select_org(r(), User, Org)).
 
 %%--------------------------------------------------------------------
-%% @doc Fetches the active org.
+%% @doc Generates an API token for a user.
 %% @end
 %%--------------------------------------------------------------------
--spec active_org(User::fifo:user_id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        {ok, Org::fifo:org_id() | binary()}.
-active_org(User) ->
-    send(libsnarl_msg:user_active_org(r(), User)).
+-spec api_token(User::fifo:user_id(), Scope::[binary()], Comment::binary()) ->
+                       {error, no_servers} |
+                       not_found |
+                       {ok, TokenID::binary(), Token::binary()}.
+api_token(User, Scope, Comment) ->
+    send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
 
 %%--------------------------------------------------------------------
-%% @doc Fetches all orgs.
+%% @doc Revokes a token from  a user from a TokenID
 %% @end
 %%--------------------------------------------------------------------
--spec orgs(User::fifo:user_id()) ->
-                  {error, no_servers} |
-                  not_found |
-                  {ok, [Org::fifo:org_id() | binary()]}.
-orgs(User) ->
-    send(libsnarl_msg:user_orgs(r(), User)).
+-spec revoke_token(User::fifo:user_id(), TokenID::binary()) ->
+                          {error, no_servers} |
+                          not_found |
+                          ok.
+revoke_token(User, TokenID) ->
+    send(libsnarl_msg:user_revoke_token(r(), User, TokenID)).
 
 %%%===================================================================
 %%% Internal Functions
