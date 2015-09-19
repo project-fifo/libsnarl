@@ -368,9 +368,11 @@ select_org(User, Org) ->
 %%--------------------------------------------------------------------
 -spec api_token(User::fifo:user_id(), Scope::[binary()], Comment::binary()) ->
                        {error, no_servers} |
+                       {error, bad_scope} |
                        not_found |
                        {ok, TokenID::binary(), Token::binary()}.
 api_token(User, Scope, Comment) ->
+
     send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
 
 %%--------------------------------------------------------------------
