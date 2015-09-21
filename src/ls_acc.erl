@@ -128,7 +128,7 @@ get(Org, Start, End)
 %% @end
 %%--------------------------------------------------------------------
 
--spec send(Msg::fifo:snarl_org_message()) ->
+-spec send(Msg::fifo:snarl_acc_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.

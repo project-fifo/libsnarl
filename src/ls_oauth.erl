@@ -79,7 +79,7 @@ scope() ->
 scope(Subscope) ->
     send(libsnarl_msg:scope(r(), Subscope)).
 
--spec send(Msg::fifo:snarl_user_message()) ->
+-spec send(Msg::fifo:snarl_oauth_message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.
