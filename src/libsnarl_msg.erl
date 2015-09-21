@@ -179,9 +179,9 @@ token_add(Realm, Token, Timeout, Data) when
       is_binary(Realm), is_integer(Timeout), Timeout > 0 ->
     {token, add, Realm, Token, Timeout, Data}.
 
--spec token_add(Realm::binary(), Timeout::integer(), Data::term()) ->
-                       {token, add, Realm::binary(), Token::term(),
-                        Timeout::integer(), Data::term()}.
+-spec token_add(Realm::binary(), Timeout::pos_integer(), Data::term()) ->
+                       {token, add, Realm::binary(),
+                        Timeout::pos_integer(), Data::term()}.
 
 token_add(Realm, Timeout, Data) when
       is_binary(Realm), is_integer(Timeout), Timeout > 0 ->
@@ -416,7 +416,7 @@ user_yubikey_add(Realm, ?User, KeyID)when
     {user, yubikeys, add, Realm, User, KeyID}.
 
 -spec user_yubikey_check(Realm::binary(), User::fifo:user_id(), OTP::binary()) ->
-                              {user, yubikeys, add, Realm::binary(), User::fifo:user_id(), OTP::binary()}.
+                              {user, yubikeys, check, Realm::binary(), User::fifo:user_id(), OTP::binary()}.
 
 user_yubikey_check(Realm, ?User, OTP) when
       is_binary(Realm),
