@@ -146,8 +146,16 @@ allowed(User, Permission) ->
 %% @spec send(Msg::term()) -> {ok, Reply::term()} | {error, no_server}
 %% @end
 %%--------------------------------------------------------------------
+-type message() ::
+        fifo:snarl_message() |
+        fifo:snarl_user_message() |
+        fifo:snarl_org_message() |
+        fifo:snarl_role_message() |
+        fifo:snarl_token_message() |
+        fifo:snarl_acc_message() |
+        fifo:snarl_oauth_message().
 
--spec send(Msg::fifo:snarl_message()) ->
+-spec send(Msg::message()) ->
                   atom() |
                   {ok, Reply::term()} |
                   {error, no_server}.

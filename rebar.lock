@@ -4,7 +4,7 @@
   1},
  {<<"fifo_spec">>,
   {git,"https://github.com/project-fifo/fifo_spec.git",
-       {ref,"9ac1faf3f323862ad5a4cae9440e2899a3db193e"}},
+       {ref,"a162f25fa0175b600bc1d705f220f6b8068bf3e6"}},
   0},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.6">>},1},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"1.4.5">>},2},
