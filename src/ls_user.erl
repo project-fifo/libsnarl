@@ -298,9 +298,10 @@ yubikey_add(User, OTP) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec yubikey_check(User::fifo:user_id(), OTP::binary()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+                           {error, no_servers} |
+                           not_found |
+                           {otp_required, yubikey, UUID :: fifo:user_id()} |
+                           {ok, UUID :: fifo:user_id()}.
 yubikey_check(User, OTP) ->
     send(libsnarl_msg:user_yubikey_check(r(), User, OTP)).
 
