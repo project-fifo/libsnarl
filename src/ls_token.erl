@@ -40,7 +40,7 @@ delete(Token) ->
 
 -spec get(Token::term()) ->
                  {error, no_servers} |
-                 {ok, Token :: binary()}.
+                 {ok, TokenData :: term()}.
 get(Token) ->
     send(libsnarl_msg:token_get(r(), Token)).
 
