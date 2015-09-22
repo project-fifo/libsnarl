@@ -53,7 +53,7 @@ set_metadata(Client, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                  {error, timeout} |
+                  {error, no_servers} |
                   {ok, [fifo:client_id()]}.
 list() ->
     send(libsnarl_msg:client_list(r())).
@@ -63,7 +63,7 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                  {error, timeout} |
+                  {error, no_servers} |
                   {ok, [{integer(), fifo:client_id()}]} |
                   {ok, [{integer(), fifo:client()}]}.
 
@@ -255,9 +255,11 @@ leave(Client, Role) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_client_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

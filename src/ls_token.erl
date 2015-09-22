@@ -78,9 +78,10 @@ add(Token, Timeout, Data) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

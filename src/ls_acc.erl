@@ -124,14 +124,14 @@ get(Org, Start, End)
 %%--------------------------------------------------------------------
 %% @private
 %% @doc Sends a message.
-%% @spec send(Msg::term()) -> {ok, Reply::term()} | {error, no_server}
+%% @spec send(Msg::term()) -> {ok, Reply::term()} | {error, no_servers}
 %% @end
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_acc_message()) ->
                   atom() |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

@@ -60,8 +60,8 @@ status() ->
 -spec start() ->
                    ok.
 start() ->
-    application:start(libsnarlmatch),
-    application:start(mdns_client_lib),
+    ok = application:start(libsnarlmatch),
+    ok = application:start(mdns_client_lib),
     application:start(libsnarl).
 
 
@@ -97,8 +97,7 @@ servers() ->
 -spec version() -> {ok, binary()} |
                    {error, no_servers}.
 version() ->
-    ServerVersion = send(version),
-    ServerVersion.
+    send(version).
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
@@ -147,18 +146,14 @@ allowed(User, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 -type message() ::
-        fifo:snarl_message() |
-        fifo:snarl_user_message() |
-        fifo:snarl_org_message() |
-        fifo:snarl_role_message() |
-        fifo:snarl_token_message() |
-        fifo:snarl_acc_message() |
-        fifo:snarl_oauth_message().
+        fifo:snarl_message().
 
 -spec send(Msg::message()) ->
-                  atom() |
+                  not_found |
+                  true |
+                  false |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

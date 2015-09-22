@@ -52,9 +52,17 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 
+-spec call(Msg :: tuple() | atom()) ->
+                  {error, no_servers} |
+                  {error, term()} |
+                  {reply, Reply :: term()}.
 call(Msg) ->
     gen_server:call(?SERVER, {call, Msg}).
 
+-spec call(Msg :: tuple() | atom(), Timeout :: pos_integer()) ->
+                  {error, no_servers} |
+                  {error, term()} |
+                  {reply, Reply :: term()}.
 call(Msg, Timeout) ->
     gen_server:call(?SERVER, {call, Msg, Timeout}).
 

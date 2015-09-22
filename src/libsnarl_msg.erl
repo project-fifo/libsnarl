@@ -385,8 +385,8 @@ user_leave(Realm, ?User, ?Role) when
       is_binary(Realm) ->
     {user, leave, Realm, User, Role}.
 
--spec user_key_find(Realm::binary(), KeyID::binary()) ->
-                           {user, keys, find, Realm::binary(), KeyID::binary()}.
+-spec user_key_find(Realm::binary(), KeyID::<<_:128>>) ->
+                           {user, keys, find, Realm::binary(), KeyID::<<_:128>>}.
 
 user_key_find(Realm, <<KeyID:16/binary>>) when
       is_binary(Realm) ->

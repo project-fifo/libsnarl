@@ -39,8 +39,8 @@ set_metadata(Org, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                      {error, no_servers} |
-                      {ok, [fifo:org_id()]}.
+                  {error, no_servers} |
+                  {ok, [fifo:org_id()]}.
 list() ->
     send(libsnarl_msg:org_list(r())).
 
@@ -49,9 +49,9 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                      {error, timeout} |
-                      {ok, [{Rank::integer(), fifo:org_id()}]} |
-                      {ok, [{Rank::integer(), fifo:org()}]}.
+                  {error, no_servers} |
+                  {ok, [{Rank::integer(), fifo:org_id()}]} |
+                  {ok, [{Rank::integer(), fifo:org()}]}.
 
 list(Reqs, Full) ->
     send(libsnarl_msg:org_list(r(), Reqs, Full)).
@@ -63,9 +63,9 @@ list(Reqs, Full) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec get(Org::fifo:org_id()) ->
-                     not_found |
-                     {error, no_servers} |
-                     {ok, fifo:org()}.
+                 not_found |
+                 {error, no_servers} |
+                 {ok, fifo:org()}.
 get(Org) ->
     send(libsnarl_msg:org_get(r(), Org)).
 
@@ -76,9 +76,9 @@ get(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec add(Org::fifo:org_id()) ->
-                     {error, no_servers} |
-                     duplicate |
-                     ok.
+                 {error, no_servers} |
+                 duplicate |
+                 ok.
 add(Org) ->
     send(libsnarl_msg:org_add(r(), Org)).
 
@@ -89,9 +89,9 @@ add(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec delete(Org::fifo:org_id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        ok.
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 delete(Org) ->
     send(libsnarl_msg:org_delete(r(), Org)).
 
@@ -103,10 +103,10 @@ delete(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec add_trigger(Org::fifo:org_id(),
-                      Trigger::fifo:trigger()) ->
-                             {error, no_servers} |
-                             not_found |
-                             ok.
+                  Trigger::fifo:trigger()) ->
+                         {error, no_servers} |
+                         not_found |
+                         ok.
 add_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_add_trigger(r(), Org, Trigger)).
 
@@ -118,10 +118,10 @@ add_trigger(Org, Trigger) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec remove_trigger(Org::fifo:org_id(),
-                         Trigger::fifo:trigger()) ->
-                                {error, no_servers} |
-                                not_found |
-                                ok.
+                     Trigger::fifo:trigger()) ->
+                            {error, no_servers} |
+                            not_found |
+                            ok.
 remove_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_remove_trigger(r(), Org, Trigger)).
 
@@ -133,11 +133,11 @@ remove_trigger(Org, Trigger) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec execute_trigger(Org::fifo:org_id(),
-                          Event::fifo:event(),
-                          Payload::term()) ->
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
+                      Event::fifo:event(),
+                      Payload::term()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
 execute_trigger(Org, Event, Payload) ->
     send(libsnarl_msg:org_execute_trigger(r(), Org, Event, Payload)).
 
@@ -154,9 +154,11 @@ execute_trigger(Org, Event, Payload) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_org_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

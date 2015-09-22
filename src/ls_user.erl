@@ -399,6 +399,8 @@ revoke_token(User, TokenID) ->
 
 -spec send(Msg::fifo:snarl_user_message()) ->
                   atom() |
+                  ok |
+                  not_found |
                   {ok, Reply::term()} |
                   {error, no_server} |
                   {error, Reason::term()}.

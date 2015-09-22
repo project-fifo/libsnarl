@@ -56,9 +56,9 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                        {error, timeout} |
-                        {ok, [{Rank::integer(), fifo:role_id()}]} |
-                        {ok, [{Rank::integer(), fifo:role()}]}.
+                  {error, no_servers} |
+                  {ok, [{Rank::integer(), fifo:role_id()}]} |
+                  {ok, [{Rank::integer(), fifo:role()}]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:role_list(r(), Reqs, Full)).
 
@@ -158,9 +158,11 @@ revoke_prefix(Role, Prefix) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_role_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->
