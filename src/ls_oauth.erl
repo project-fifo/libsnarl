@@ -79,7 +79,7 @@ refresh_access_token(Client, RefreshToken, Scope) ->
 scope() ->
     send(libsnarl_msg:scope(r())).
 
--spec scope(Subscope::binary()) ->
+-spec scope(Subscope :: binary() | fifo:scope_list()) ->
                    {ok, [fifo:scope_map()]} |
                    {error, no_servers}.
 scope(Subscope) ->
