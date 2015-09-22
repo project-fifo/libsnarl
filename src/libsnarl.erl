@@ -106,7 +106,7 @@ version() ->
 %%--------------------------------------------------------------------
 -spec auth(User::fifo:user_id(), Pass::binary()) ->
                   not_found |
-                  {ok, {token, fifo:user_id()}} |
+                  {ok, fifo:user_id()} |
                   {error, no_servers}.
 auth(User, Pass) ->
     send_slow(libsnarl_msg:auth(r(), User, Pass)).
