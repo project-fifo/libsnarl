@@ -39,8 +39,8 @@ delete(Token) ->
 %%--------------------------------------------------------------------
 
 -spec get(Token::term()) ->
-                       {error, no_servers} |
-                       ok.
+                 {error, no_servers} |
+                 {ok, Token :: binary()}.
 get(Token) ->
     send(libsnarl_msg:token_get(r(), Token)).
 
@@ -50,8 +50,9 @@ get(Token) ->
 %%--------------------------------------------------------------------
 
 -spec add(Timeout::integer(), Data::term()) ->
-                       {error, no_servers} |
-                       ok.
+                 {error, no_servers} |
+                 {ok, Token :: binary()}.
+
 add(Timeout, Data) ->
     send(libsnarl_msg:token_add(r(), Timeout, Data)).
 
@@ -61,8 +62,8 @@ add(Timeout, Data) ->
 %%--------------------------------------------------------------------
 
 -spec add(Token::term(), Timeout::integer(), Data::term()) ->
-                       {error, no_servers} |
-                       ok.
+                 {error, no_servers} |
+                 {ok, Token :: binary()}.
 add(Token, Timeout, Data) ->
     send(libsnarl_msg:token_add(r(), Token, Timeout, Data)).
 
