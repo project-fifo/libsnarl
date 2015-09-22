@@ -73,9 +73,15 @@ verify_access_code(AccessCode, Client) ->
 refresh_access_token(Client, RefreshToken, Scope) ->
     send(libsnarl_msg:refresh_access_token(r(), Client, RefreshToken, Scope)).
 
+-spec scope() ->
+                   {ok, [fifo:scope_map()]} |
+                   {error, no_servers}.
 scope() ->
     send(libsnarl_msg:scope(r())).
 
+-spec scope(Subscope::binary()) ->
+                   {ok, [fifo:scope_map()]} |
+                   {error, no_servers}.
 scope(Subscope) ->
     send(libsnarl_msg:scope(r(), Subscope)).
 
