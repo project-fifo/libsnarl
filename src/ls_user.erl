@@ -370,7 +370,7 @@ select_org(User, Org) ->
                        {error, no_servers} |
                        {error, bad_scope} |
                        not_found |
-                       {ok, TokenID::binary(), Token::binary()}.
+                       {ok, {TokenID::binary(), Token::binary()}}.
 api_token(User, Scope, Comment) ->
 
     send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
@@ -400,7 +400,8 @@ revoke_token(User, TokenID) ->
 -spec send(Msg::fifo:snarl_user_message()) ->
                   atom() |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_server} |
+                  {error, Reason::term()}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->
