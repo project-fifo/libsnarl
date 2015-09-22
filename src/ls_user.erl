@@ -265,6 +265,7 @@ key_find(KeyID) ->
 %%--------------------------------------------------------------------
 -spec key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
                      {error, no_servers} |
+                     duplicate |
                      not_found |
                      ok.
 key_add(User, KeyID, Key) ->
@@ -398,7 +399,7 @@ revoke_token(User, TokenID) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_user_message()) ->
-                  atom() |
+                  duplicate |
                   ok |
                   not_found |
                   {ok, Reply::term()} |
