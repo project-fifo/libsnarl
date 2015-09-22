@@ -58,6 +58,10 @@ issue_token_and_refresh(Auth) ->
     send(libsnarl_msg:issue_token_and_refresh(r(), Auth)).
 
 %% -export([verify_access_token/2]).
+-spec verify_access_token(Token :: binary()) ->
+                                 {ok, Context :: proplists:proplist()} |
+                                 not_found |
+                                 {error,  no_servers}.
 verify_access_token(Token) ->
     send(libsnarl_msg:verify_access_token(r(), Token)).
 
