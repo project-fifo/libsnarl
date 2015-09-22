@@ -78,7 +78,7 @@ get(Org) ->
 -spec add(Org::fifo:org_id()) ->
                  {error, no_servers} |
                  duplicate |
-                 ok.
+                 {ok, UUID :: fifo:org_id()}.
 add(Org) ->
     send(libsnarl_msg:org_add(r(), Org)).
 

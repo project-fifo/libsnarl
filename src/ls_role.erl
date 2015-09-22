@@ -46,8 +46,8 @@ set_metadata(Role, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                        {error, no_servers} |
-                        {ok, [fifo:role_id()]}.
+                  {error, no_servers} |
+                  {ok, [fifo:role_id()]}.
 list() ->
     send(libsnarl_msg:role_list(r())).
 
@@ -69,9 +69,9 @@ list(Reqs, Full) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec get(Role::fifo:role_id()) ->
-                       not_found |
-                       {error, no_servers} |
-                       {ok, fifo:role()}.
+                 not_found |
+                 {error, no_servers} |
+                 {ok, fifo:role()}.
 get(Role) ->
     send(libsnarl_msg:role_get(r(), Role)).
 
@@ -82,9 +82,9 @@ get(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec add(Role::fifo:role_id()) ->
-                       {error, no_servers} |
-                       duplicate |
-                       ok.
+                 {error, no_servers} |
+                 duplicate |
+                 {ok, UUID :: fifo:role_id()}.
 add(Role) ->
     send(libsnarl_msg:role_add(r(), Role)).
 
@@ -95,9 +95,9 @@ add(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec delete(Role::fifo:role_id()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 delete(Role) ->
     send(libsnarl_msg:role_delete(r(), Role)).
 
@@ -109,10 +109,10 @@ delete(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec grant(Role::fifo:role_id(),
-                  Permission::fifo:permission()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+            Permission::fifo:permission()) ->
+                   {error, no_servers} |
+                   not_found |
+                   ok.
 grant(Role, Permission) ->
     send(libsnarl_msg:role_grant(r(), Role, Permission)).
 
@@ -124,10 +124,10 @@ grant(Role, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke(Role::fifo:role_id(),
-                   Permission::fifo:permission()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+             Permission::fifo:permission()) ->
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 revoke(Role, Permission) ->
     send(libsnarl_msg:role_revoke(r(), Role, Permission)).
 
@@ -139,10 +139,10 @@ revoke(Role, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(Role::fifo:role_id(),
-                          Prefix::fifo:permission()) ->
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
+                    Prefix::fifo:permission()) ->
+                           {error, no_servers} |
+                           not_found |
+                           ok.
 revoke_prefix(Role, Prefix) ->
     send(libsnarl_msg:role_revoke_prefix(r(), Role, Prefix)).
 
