@@ -28,7 +28,7 @@
 %%--------------------------------------------------------------------
 
 -spec create(Org::fifo:org_id(), Resource::binary(), Time::pos_integer(),
-             Metadata::fifo:attr_list()) ->
+             Metadata::term()) ->
                     {error, no_servers} |
                     ok.
 create(Org, Resource, Time, Metadata)
