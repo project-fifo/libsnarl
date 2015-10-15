@@ -10,7 +10,7 @@
  {<<"jsx">>,{pkg,<<"jsx">>,<<"1.4.5">>},2},
  {<<"jsxd">>,{pkg,<<"jsxd">>,<<"0.1.10">>},2},
  {<<"lager">>,{pkg,<<"lager">>,<<"2.1.1">>},0},
- {<<"libsnarlmatch">>,{pkg,<<"libsnarlmatch">>,<<"0.1.6">>},0},
+ {<<"libsnarlmatch">>,{pkg,<<"libsnarlmatch">>,<<"0.1.7">>},0},
  {<<"mdns_client">>,{pkg,<<"mdns_client">>,<<"0.1.7">>},1},
  {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.28">>},0},
  {<<"oauth2">>,
