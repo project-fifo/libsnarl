@@ -9,7 +9,9 @@
          list/2,
          set_metadata/2,
          remove_trigger/2,
-         execute_trigger/3
+         execute_trigger/3,
+         resource_inc/3,
+         resource_dec/3
         ]).
 
 -ignore_xref([
@@ -21,7 +23,9 @@
               list/2,
               remove_trigger/2,
               execute_trigger/3,
-              set_metadata/2
+              set_metadata/2,
+              resource_inc/3,
+              resource_dec/3
              ]).
 
 %%%===================================================================
@@ -141,7 +145,31 @@ remove_trigger(Org, Trigger) ->
 execute_trigger(Org, Event, Payload) ->
     send(libsnarl_msg:org_execute_trigger(r(), Org, Event, Payload)).
 
+%%--------------------------------------------------------------------
+%% @doc Adds a value to a orgs resource.
+%% @end
+%%--------------------------------------------------------------------
+-spec resource_inc(Org::fifo:org_id(),
+                   Resource::binary(),
+                   Delta::pos_integer()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+resource_inc(Org, Res, Delta) ->
+    send(libsnarl_msg:org_resource_inc(r(), Org, Res, Delta)).
 
+%%--------------------------------------------------------------------
+%% @doc Substracts a value to a orgs resource.
+%% @end
+%%--------------------------------------------------------------------
+-spec resource_dec(Org::fifo:org_id(),
+                   Resource::binary(),
+                   Delta::pos_integer()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+resource_dec(Org, Res, Delta) ->
+    send(libsnarl_msg:org_resource_dec(r(), Org, Res, Delta)).
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================

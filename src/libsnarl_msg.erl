@@ -81,7 +81,8 @@
          org_list/3,
          org_remove_trigger/3,
          org_execute_trigger/4,
-         org_resource_action/6,
+         org_resource_inc/4,
+         org_resource_dec/4,
          org_set_metadata/3
         ]).
 
@@ -711,16 +712,23 @@ org_execute_trigger(Realm, ?Org, Event, Payload) when
       is_binary(Realm) ->
     {org, trigger, execute, Realm, Org, Event, Payload}.
 
--spec org_resource_action(Realm::binary(), Org::fifo:org_id(), Resource::binary(),
-                      TimeStamp::pos_integer(), Action::atom(),
-                      Opts::proplists:proplist()) ->
-                             {org, resource_action, Realm::binary(),
+-spec org_resource_inc(Realm::binary(), Org::fifo:org_id(), Resource::binary(),
+                       Delta::pos_integer()) ->
+                             {org, resource, inc, Realm::binary(),
                               Org::fifo:org_id(), Resource::binary(),
-                              TimeStamp::pos_integer(), Action::atom(),
-                              Opts::proplists:proplist()}.
+                              Delta::pos_integer()}.
 
-org_resource_action(Realm, ?Org, Resource, TimeStamp, Action, Opts) ->
-    {org, resource_action, Realm, Org, Resource, TimeStamp, Action, Opts}.
+org_resource_inc(Realm, ?Org, Resource, Delta) ->
+    {org, resource, inc, Realm, Org, Resource, Delta}.
+
+-spec org_resource_dec(Realm::binary(), Org::fifo:org_id(), Resource::binary(),
+                       Delta::pos_integer()) ->
+                              {org, resource, dec, Realm::binary(),
+                              Org::fifo:org_id(), Resource::binary(),
+                              Delta::pos_integer()}.
+
+org_resource_dec(Realm, ?Org, Resource, Delta) ->
+    {org, resource, dec, Realm, Org, Resource, Delta}.
 
 %%%===================================================================
 %%% Client Functions
