@@ -26,6 +26,7 @@
          select_org/2,
          set_metadata/2,
          api_token/3,
+         sign_csr/4,
          revoke_token/2
         ]).
 
@@ -55,6 +56,7 @@
               select_org/2,
               set_metadata/2,
               api_token/3,
+              ssl_cert_token/4,
               revoke_token/2
              ]).
 
@@ -376,6 +378,20 @@ select_org(User, Org) ->
 api_token(User, Scope, Comment) ->
 
     send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
+
+%%--------------------------------------------------------------------
+%% @doc Generates a Certificate for a CSR.
+%% @end
+%%--------------------------------------------------------------------
+-spec sign_csr(User::fifo:user_id(), Scope::[binary()], Comment::binary(),
+                CSR::binary()) ->
+                       {error, no_servers} |
+                       {error, bad_scope} |
+                       not_found |
+                       {ok, Certificate::binary()}.
+
+sign_csr(User, Scope, Comment, CSR) ->
+    send(libsnarl_msg:user_sign_csr(r(), User, Scope, Comment, CSR)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes a token from  a user from a TokenID
