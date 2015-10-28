@@ -388,7 +388,7 @@ api_token(User, Scope, Comment) ->
                        {error, no_servers} |
                        {error, bad_scope} |
                        not_found |
-                       {ok, Certificate::binary()}.
+                       {ok, {TokenID::binary(), Certificate::binary()}}.
 
 sign_csr(User, Scope, Comment, CSR) ->
     send(libsnarl_msg:user_sign_csr(r(), User, Scope, Comment, CSR)).
