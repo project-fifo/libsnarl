@@ -113,11 +113,11 @@
 -export([scope/2]).
 
 
--define(User, <<User:36/binary>>).
--define(Client, <<Client:36/binary>>).
--define(Role, <<Role:36/binary>>).
--define(Org, <<Org:36/binary>>).
--define(Token, {token, <<_/binary>>} = Token).
+-define(USER, <<User:36/binary>>).
+-define(CLIENT, <<Client:36/binary>>).
+-define(ROLE, <<Role:36/binary>>).
+-define(ORG, <<Org:36/binary>>).
+-define(TOKEN, {token, <<_/binary>>} = Token).
 
 
 %%%===================================================================
@@ -125,7 +125,8 @@
 %%%===================================================================
 
 -spec auth(Realm::binary(), Login::binary(), Pass::binary()) ->
-                  {user, auth, Realm::binary(), Login::binary(), Pass::binary()}.
+                  {user, auth, Realm::binary(), Login::binary(),
+                   Pass::binary()}.
 auth(Realm, Login, Pass) when
       is_binary(Realm),
       is_binary(Login),
@@ -146,12 +147,12 @@ auth(Realm, Login, Pass, OTP) when
                       User::fifo:user_token_id(),
                       Permission::fifo:permission()}.
 
-allowed(Realm, ?Token, Permission) when
+allowed(Realm, ?TOKEN, Permission) when
       is_binary(Realm),
       is_list(Permission) ->
     {user, allowed, Realm, Token, Permission};
 
-allowed(Realm, ?User, Permission)
+allowed(Realm, ?USER, Permission)
   when is_list(Permission) ->
     {user, allowed, Realm, User, Permission}.
 
@@ -227,7 +228,8 @@ user_list(Realm) when
 %% @end
 %%--------------------------------------------------------------------
 -spec user_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
-                       {user, list, Realm::binary(), Reqs::[fifo:matcher()], boolean()}.
+                       {user, list, Realm::binary(),
+                        Reqs::[fifo:matcher()], boolean()}.
 user_list(Realm, Reqs, Full) when
       is_binary(Realm) ->
     {user, list, Realm, Reqs, Full}.
@@ -239,11 +241,11 @@ user_list(Realm, Reqs, Full) when
 %%--------------------------------------------------------------------
 -spec user_get(Realm::binary(), User::fifo:user_token_id()) ->
                       {user, get, Realm::binary(), User::fifo:user_token_id()}.
-user_get(Realm, ?Token) when
+user_get(Realm, ?TOKEN) when
       is_binary(Realm) ->
     {user, get, Realm, Token};
 
-user_get(Realm, ?User) when
+user_get(Realm, ?USER) when
       is_binary(Realm) ->
     {user, get, Realm, User}.
 
@@ -252,9 +254,10 @@ user_get(Realm, ?User) when
 %% @end
 %%--------------------------------------------------------------------
 -spec user_make_token(Realm::binary(), User::fifo:user_id()) ->
-                             {user, token, Realm::binary(), User::fifo:user_id()}.
+                             {user, token, Realm::binary(),
+                              User::fifo:user_id()}.
 
-user_make_token(Realm, ?User) when
+user_make_token(Realm, ?USER) when
       is_binary(Realm) ->
     {user, token, Realm, User}.
 
@@ -275,11 +278,12 @@ user_lookup(Realm, Login) when
 %% @end
 %%--------------------------------------------------------------------
 -spec user_cache(Realm::binary(), User::fifo:user_token_id()) ->
-                        {user, cache, Realm::binary(), User::fifo:user_token_id()}.
-user_cache(Realm, ?Token) when
+                        {user, cache, Realm::binary(),
+                         User::fifo:user_token_id()}.
+user_cache(Realm, ?TOKEN) when
       is_binary(Realm) ->
     {user, cache, Realm, Token};
-user_cache(Realm, ?User) when
+user_cache(Realm, ?USER) when
       is_binary(Realm) ->
     {user, cache, Realm, User}.
 
@@ -292,7 +296,8 @@ user_add(Realm, UserName) when
 
 -spec user_add(Realm::binary(), Creator::fifo:user_id(),
                UserName::binary()) ->
-                      {user, add, Realm::binary(), Creator::fifo:user_id(), UserName::binary()}.
+                      {user, add, Realm::binary(), Creator::fifo:user_id(),
+                       UserName::binary()}.
 user_add(Realm, Creator, UserName) when
       is_binary(Realm),
       is_binary(Creator),
@@ -348,7 +353,7 @@ user_revoke(Realm, User, Permission) when
                                 {user, revoke_prefix, Realm::binary(),
                                  User::fifo:user_id(),
                                  Permission::fifo:permission()}.
-user_revoke_prefix(Realm, ?User, Prefix) when
+user_revoke_prefix(Realm, ?USER, Prefix) when
       is_binary(Realm),
       is_list(Prefix) ->
     {user, revoke_prefix, Realm, User, Prefix}.
@@ -361,8 +366,9 @@ user_revoke_prefix(Realm, ?User, Prefix) when
 %% @end
 %%--------------------------------------------------------------------
 -spec user_passwd(Realm::binary(), User::fifo:user_id(), Pass::binary()) ->
-                         {user, passwd, Realm::binary(), User::fifo:user_id(), Pass::binary()}.
-user_passwd(Realm, ?User, Pass) when
+                         {user, passwd, Realm::binary(), User::fifo:user_id(),
+                          Pass::binary()}.
+user_passwd(Realm, ?USER, Pass) when
       is_binary(Realm),
       is_binary(Pass) ->
     {user, passwd, Realm, User, Pass}.
@@ -373,8 +379,9 @@ user_passwd(Realm, ?User, Pass) when
 %%--------------------------------------------------------------------
 
 -spec user_join(Realm::binary(), User::fifo:user_id(), Role::fifo:role_id()) ->
-                       {user, join, Realm::binary(), User::fifo:user_id(), Role::fifo:role_id()}.
-user_join(Realm, ?User, ?Role) when
+                       {user, join, Realm::binary(), User::fifo:user_id(),
+                        Role::fifo:role_id()}.
+user_join(Realm, ?USER, ?ROLE) when
       is_binary(Realm) ->
     {user, join, Realm, User, Role}.
 
@@ -383,76 +390,90 @@ user_join(Realm, ?User, ?Role) when
                          User::fifo:user_id(),
                          Role::fifo:role_id()}.
 
-user_leave(Realm, ?User, ?Role) when
+user_leave(Realm, ?USER, ?ROLE) when
       is_binary(Realm) ->
     {user, leave, Realm, User, Role}.
 
 -spec user_key_find(Realm::binary(), KeyID::<<_:128>>) ->
-                           {user, keys, find, Realm::binary(), KeyID::<<_:128>>}.
+                           {user, keys, find, Realm::binary(),
+                            KeyID::<<_:128>>}.
 
 user_key_find(Realm, <<KeyID:16/binary>>) when
       is_binary(Realm) ->
     {user, keys, find, Realm, KeyID}.
 
 
--spec user_key_add(Realm::binary(), User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
-                          {user, keys, add, Realm::binary(), User::fifo:user_id(), KeyID::binary(), Key::binary()}.
-user_key_add(Realm, ?User, KeyID, Key)when
+-spec user_key_add(Realm::binary(), User::fifo:user_id(), KeyID::binary(),
+                   Key::binary()) ->
+                          {user, keys, add, Realm::binary(),
+                           User::fifo:user_id(), KeyID::binary(),
+                           Key::binary()}.
+user_key_add(Realm, ?USER, KeyID, Key)when
       is_binary(Realm),
       is_binary(KeyID),
       is_binary(Key) ->
     {user, keys, add, Realm, User, KeyID, Key}.
 
 -spec user_key_revoke(Realm::binary(), User::fifo:user_id(), KeyID::binary()) ->
-                             {user, keys, revoke, Realm::binary(), User::fifo:user_id(), KeyID::binary()}.
-user_key_revoke(Realm, ?User, KeyID)when
+                             {user, keys, revoke, Realm::binary(),
+                              User::fifo:user_id(), KeyID::binary()}.
+user_key_revoke(Realm, ?USER, KeyID)when
       is_binary(Realm),
       is_binary(KeyID) ->
     {user, keys, revoke, Realm, User, KeyID}.
 
--spec user_yubikey_add(Realm::binary(), User::fifo:user_id(), KeyID::binary()) ->
-                              {user, yubikeys, add, Realm::binary(), User::fifo:user_id(), KeyID::binary()}.
-user_yubikey_add(Realm, ?User, KeyID)when
+-spec user_yubikey_add(Realm::binary(), User::fifo:user_id(),
+                       KeyID::binary()) ->
+                              {user, yubikeys, add, Realm::binary(),
+                               User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_add(Realm, ?USER, KeyID)when
       is_binary(Realm),
       is_binary(KeyID) ->
     {user, yubikeys, add, Realm, User, KeyID}.
 
--spec user_yubikey_check(Realm::binary(), User::fifo:user_id(), OTP::binary()) ->
-                                {user, yubikeys, check, Realm::binary(), User::fifo:user_id(), OTP::binary()}.
+-spec user_yubikey_check(Realm::binary(), User::fifo:user_id(),
+                         OTP::binary()) ->
+                                {user, yubikeys, check, Realm::binary(),
+                                 User::fifo:user_id(), OTP::binary()}.
 
-user_yubikey_check(Realm, ?User, OTP) when
+user_yubikey_check(Realm, ?USER, OTP) when
       is_binary(Realm),
       is_binary(OTP) ->
     {user, yubikeys, check, Realm, User, OTP}.
 
--spec user_yubikey_remove(Realm::binary(), User::fifo:user_id(), KeyID::binary()) ->
-                                 {user, yubikeys, remove, Realm::binary(), User::fifo:user_id(), KeyID::binary()}.
-user_yubikey_remove(Realm, ?User, KeyID) when
+-spec user_yubikey_remove(Realm::binary(), User::fifo:user_id(),
+                          KeyID::binary()) ->
+                                 {user, yubikeys, remove, Realm::binary(),
+                                  User::fifo:user_id(), KeyID::binary()}.
+user_yubikey_remove(Realm, ?USER, KeyID) when
       is_binary(Realm),
       is_binary(KeyID) ->
     {user, yubikeys, remove, Realm, User, KeyID}.
 
--spec user_join_org(Realm::binary(), User::fifo:user_id(), Org::fifo:org_id()) ->
+-spec user_join_org(Realm::binary(), User::fifo:user_id(),
+                    Org::fifo:org_id()) ->
                            {user, org, join, Realm::binary(),
                             User::fifo:user_id(),
                             Org::fifo:org_id()}.
-user_join_org(Realm, ?User, ?Org) when
+user_join_org(Realm, ?USER, ?ORG) when
       is_binary(Realm) ->
     {user, org, join, Realm, User, Org}.
 
--spec user_leave_org(Realm::binary(), User::fifo:user_id(), Org::fifo:org_id()) ->
+-spec user_leave_org(Realm::binary(), User::fifo:user_id(),
+                     Org::fifo:org_id()) ->
                             {user, org, leave, Realm::binary(),
                              User::fifo:user_id(),
                              Org::fifo:org_id()}.
-user_leave_org(Realm, ?User, ?Org) when
+user_leave_org(Realm, ?USER, ?ORG) when
       is_binary(Realm) ->
     {user, org, leave, Realm, User, Org}.
 
--spec user_select_org(Realm::binary(), User::fifo:user_id(), Org::fifo:org_id()) ->
+-spec user_select_org(Realm::binary(), User::fifo:user_id(),
+                      Org::fifo:org_id()) ->
                              {user, org, select, Realm::binary(),
                               User::fifo:user_id(),
                               Org::fifo:org_id()}.
-user_select_org(Realm, ?User, ?Org) when
+user_select_org(Realm, ?USER, ?ORG) when
       is_binary(Realm) ->
     {user, org, select, Realm, User, Org}.
 
@@ -480,11 +501,11 @@ user_api_token(Realm, User, Scope, Comment) when
 %%--------------------------------------------------------------------
 
 -spec user_sign_csr(Ream::binary(), User::fifo:user_id(),
-                          Scope::[binary()], Comment::binary(),
-                          CSR::binary()) ->
-                                 {user, sign_csr, Realm::binary(),
-                                  User::fifo:user_id(), Scope::[binary()],
-                                  Comment::binary(), CSR::binary()}.
+                    Scope::[binary()], Comment::binary(),
+                    CSR::binary()) ->
+                           {user, sign_csr, Realm::binary(),
+                            User::fifo:user_id(), Scope::[binary()],
+                            Comment::binary(), CSR::binary()}.
 user_sign_csr(Realm, User, Scope, Comment, CSR) when
       is_binary(Realm),
       is_binary(User),
@@ -555,7 +576,7 @@ role_list(Realm, Reqs, Full) when
 %%--------------------------------------------------------------------
 -spec role_get(Realm::binary(), Role::fifo:role_id()) ->
                       {role, get, Realm::binary(), Role::fifo:role_id()}.
-role_get(Realm, ?Role) when
+role_get(Realm, ?ROLE) when
       is_binary(Realm) ->
     {role, get, Realm, Role}.
 
@@ -576,7 +597,7 @@ role_add(Realm, RoleName) when
 %%--------------------------------------------------------------------
 -spec role_delete(Realm::binary(), Role::fifo:role_id()) ->
                          {role, delete, Realm::binary(), Role::fifo:role_id()}.
-role_delete(Realm, ?Role) when
+role_delete(Realm, ?ROLE) when
       is_binary(Realm) ->
     {role, delete, Realm, Role}.
 
@@ -590,7 +611,7 @@ role_delete(Realm, ?Role) when
                          Role::fifo:role_id(),
                          Permission::fifo:permission()}.
 
-role_grant(Realm, ?Role, Permission) when
+role_grant(Realm, ?ROLE, Permission) when
       is_binary(Realm),
       is_list(Permission) ->
     {role, grant, Realm, Role, Permission}.
@@ -604,7 +625,7 @@ role_grant(Realm, ?Role, Permission) when
                          {role, revoke, Realm::binary(),
                           Role::fifo:role_id(),
                           Permission::fifo:permission()}.
-role_revoke(Realm, ?Role, Permission) when
+role_revoke(Realm, ?ROLE, Permission) when
       is_binary(Realm),
       is_list(Permission) ->
     {role, revoke, Realm, Role, Permission}.
@@ -618,7 +639,7 @@ role_revoke(Realm, ?Role, Permission) when
                                 {role, revoke_prefix, Realm::binary(),
                                  Role::fifo:role_id(),
                                  Permission::fifo:permission()}.
-role_revoke_prefix(Realm, ?Role, Prefix) when
+role_revoke_prefix(Realm, ?ROLE, Prefix) when
       is_binary(Realm),
       is_list(Prefix) ->
     {role, revoke_prefix, Realm, Role, Prefix}.
@@ -662,7 +683,7 @@ org_list(Realm, Reqs, Full) when
 %%--------------------------------------------------------------------
 -spec org_get(Realm::binary(), Org::fifo:org_id()) ->
                      {org, get, Realm::binary(), Org::fifo:org_id()}.
-org_get(Realm, ?Org) when
+org_get(Realm, ?ORG) when
       is_binary(Realm) ->
     {org, get, Realm, Org}.
 
@@ -683,7 +704,7 @@ org_add(Realm, OrgName) when
 %%--------------------------------------------------------------------
 -spec org_delete(Realm::binary(), Org::fifo:org_id()) ->
                         {org, delete, Realm::binary(), Org::fifo:org_id()}.
-org_delete(Realm, ?Org) when
+org_delete(Realm, ?ORG) when
       is_binary(Realm) ->
     {org, delete, Realm, Org}.
 
@@ -697,7 +718,7 @@ org_delete(Realm, ?Org) when
                               Org::fifo:org_id(),
                               Trigger::fifo:trigger()}.
 
-org_add_trigger(Realm, ?Org, Trigger) when
+org_add_trigger(Realm, ?ORG, Trigger) when
       is_binary(Realm) ->
     {org, trigger, add, Realm, Org, Trigger}.
 
@@ -711,7 +732,7 @@ org_add_trigger(Realm, ?Org, Trigger) when
                                  Org::fifo:org_id(),
                                  Trigger::fifo:trigger()}.
 
-org_remove_trigger(Realm, ?Org, Trigger) when
+org_remove_trigger(Realm, ?ORG, Trigger) when
       is_binary(Realm) ->
     {org, trigger, remove, Realm, Org, Trigger}.
 
@@ -727,7 +748,7 @@ org_remove_trigger(Realm, ?Org, Trigger) when
                                   Trigger::fifo:trigger(),
                                   Payload::term()}.
 
-org_execute_trigger(Realm, ?Org, Event, Payload) when
+org_execute_trigger(Realm, ?ORG, Event, Payload) when
       is_binary(Realm) ->
     {org, trigger, execute, Realm, Org, Event, Payload}.
 
@@ -737,7 +758,7 @@ org_execute_trigger(Realm, ?Org, Event, Payload) when
                                Org::fifo:org_id(), Resource::binary(),
                                Delta::pos_integer()}.
 
-org_resource_inc(Realm, ?Org, Resource, Delta) ->
+org_resource_inc(Realm, ?ORG, Resource, Delta) ->
     {org, resource, inc, Realm, Org, Resource, Delta}.
 
 -spec org_resource_dec(Realm::binary(), Org::fifo:org_id(), Resource::binary(),
@@ -746,7 +767,7 @@ org_resource_inc(Realm, ?Org, Resource, Delta) ->
                                Org::fifo:org_id(), Resource::binary(),
                                Delta::pos_integer()}.
 
-org_resource_dec(Realm, ?Org, Resource, Delta) ->
+org_resource_dec(Realm, ?ORG, Resource, Delta) ->
     {org, resource, dec, Realm, Org, Resource, Delta}.
 
 %%%===================================================================
@@ -756,7 +777,8 @@ org_resource_dec(Realm, ?Org, Resource, Delta) ->
 -spec client_set_metadata(Ream::binary(), Client::fifo:client_id(),
                           Attrs::fifo:attr_list()) ->
                                  {client, set_metadata, Realm::binary(),
-                                  Client::fifo:client_id(), Attrs::fifo:attr_list()}.
+                                  Client::fifo:client_id(),
+                                  Attrs::fifo:attr_list()}.
 
 client_set_metadata(Realm, Client, Attrs) when
       is_binary(Realm),
@@ -782,7 +804,8 @@ client_list(Realm) when
 %% @end
 %%--------------------------------------------------------------------
 -spec client_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
-                         {client, list, Realm::binary(), Reqs::[fifo:matcher()], boolean()}.
+                         {client, list, Realm::binary(), Reqs::[fifo:matcher()],
+                          boolean()}.
 client_list(Realm, Reqs, Full) when
       is_binary(Realm) ->
     {client, list, Realm, Reqs, Full}.
@@ -793,12 +816,13 @@ client_list(Realm, Reqs, Full) when
 %% @end
 %%--------------------------------------------------------------------
 -spec client_get(Realm::binary(), Client::fifo:client_token_id()) ->
-                        {client, get, Realm::binary(), Client::fifo:client_token_id()}.
-client_get(Realm, ?Token) when
+                        {client, get, Realm::binary(),
+                         Client::fifo:client_token_id()}.
+client_get(Realm, ?TOKEN) when
       is_binary(Realm) ->
     {client, get, Realm, Token};
 
-client_get(Realm, ?Client) when
+client_get(Realm, ?CLIENT) when
       is_binary(Realm) ->
     {client, get, Realm, Client}.
 
@@ -822,7 +846,8 @@ client_add(Realm, ClientName) when
 
 -spec client_add(Realm::binary(), Creator::fifo:client_id(),
                  ClientName::binary()) ->
-                        {client, add, Realm::binary(), Creator::fifo:client_id(), ClientName::binary()}.
+                        {client, add, Realm::binary(),
+                         Creator::fifo:client_id(), ClientName::binary()}.
 client_add(Realm, Creator, ClientName) when
       is_binary(Realm),
       is_binary(Creator),
@@ -834,7 +859,8 @@ client_add(Realm, Creator, ClientName) when
 %% @end
 %%--------------------------------------------------------------------
 -spec client_delete(Realm::binary(), Client::fifo:client_id()) ->
-                           {client, delete, Realm::binary(), Client::fifo:client_id()}.
+                           {client, delete, Realm::binary(),
+                            Client::fifo:client_id()}.
 client_delete(Realm, Client) when
       is_binary(Realm),
       is_binary(Client) ->
@@ -878,7 +904,7 @@ client_revoke(Realm, Client, Permission) when
                                   {client, revoke_prefix, Realm::binary(),
                                    Client::fifo:client_id(),
                                    Permission::fifo:permission()}.
-client_revoke_prefix(Realm, ?Client, Prefix) when
+client_revoke_prefix(Realm, ?CLIENT, Prefix) when
       is_binary(Realm),
       is_list(Prefix) ->
     {client, revoke_prefix, Realm, Client, Prefix}.
@@ -890,10 +916,11 @@ client_revoke_prefix(Realm, ?Client, Prefix) when
 %%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
--spec client_secret(Realm::binary(), Client::fifo:client_id(), SEcret::binary()) ->
+-spec client_secret(Realm::binary(), Client::fifo:client_id(),
+                    Secret::binary()) ->
                            {client, secret, Realm::binary(),
                             Client::fifo:client_id(), Secret::binary()}.
-client_secret(Realm, ?Client, Secret) when
+client_secret(Realm, ?CLIENT, Secret) when
       is_binary(Realm),
       is_binary(Secret) ->
     {client, secret, Realm, Client, Secret}.
@@ -903,31 +930,38 @@ client_secret(Realm, ?Client, Secret) when
 %% @end
 %%--------------------------------------------------------------------
 
--spec client_join(Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()) ->
-                         {client, join, Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()}.
-client_join(Realm, ?Client, ?Role) when
+-spec client_join(Realm::binary(), Client::fifo:client_id(),
+                  Role::fifo:role_id()) ->
+                         {client, join, Realm::binary(),
+                          Client::fifo:client_id(), Role::fifo:role_id()}.
+client_join(Realm, ?CLIENT, ?ROLE) when
       is_binary(Realm) ->
     {client, join, Realm, Client, Role}.
 
--spec client_leave(Realm::binary(), Client::fifo:client_id(), Role::fifo:role_id()) ->
+-spec client_leave(Realm::binary(), Client::fifo:client_id(),
+                   Role::fifo:role_id()) ->
                           {client, leave, Realm::binary(),
                            Client::fifo:client_id(),
                            Role::fifo:role_id()}.
 
-client_leave(Realm, ?Client, ?Role) when
+client_leave(Realm, ?CLIENT, ?ROLE) when
       is_binary(Realm) ->
     {client, leave, Realm, Client, Role}.
 
--spec client_uri_add(Realm::binary(), Client::fifo:client_id(), KeyID::binary()) ->
-                            {client, uris, add, Realm::binary(), Client::fifo:client_id(), KeyID::binary()}.
-client_uri_add(Realm, ?Client, KeyID)when
+-spec client_uri_add(Realm::binary(), Client::fifo:client_id(),
+                     KeyID::binary()) ->
+                            {client, uris, add, Realm::binary(),
+                             Client::fifo:client_id(), KeyID::binary()}.
+client_uri_add(Realm, ?CLIENT, KeyID)when
       is_binary(Realm),
       is_binary(KeyID) ->
     {client, uris, add, Realm, Client, KeyID}.
 
--spec client_uri_remove(Realm::binary(), Client::fifo:client_id(), KeyID::binary()) ->
-                               {client, uris, remove, Realm::binary(), Client::fifo:client_id(), KeyID::binary()}.
-client_uri_remove(Realm, ?Client, KeyID) when
+-spec client_uri_remove(Realm::binary(), Client::fifo:client_id(),
+                        KeyID::binary()) ->
+                               {client, uris, remove, Realm::binary(),
+                                Client::fifo:client_id(), KeyID::binary()}.
+client_uri_remove(Realm, ?CLIENT, KeyID) when
       is_binary(Realm),
       is_binary(KeyID) ->
     {client, uris, remove, Realm, Client, KeyID}.

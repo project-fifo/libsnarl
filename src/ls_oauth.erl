@@ -31,7 +31,8 @@ authorize_password(User, Client, Scope) ->
 
 %%-export([authorize_password/5]).
 authorize_password(User, Client, RedirUri, Scope) ->
-    send_slow(libsnarl_msg:authorize_password(r(), User, Client, RedirUri, Scope)).
+    send_slow(
+      libsnarl_msg:authorize_password(r(), User, Client, RedirUri, Scope)).
 
 %% -export([authorize_client_credentials/3]).
 authorize_client_credentials(Client, Scope) ->
@@ -43,7 +44,8 @@ authorize_code_grant(Client, Code, RedirUri) ->
 
 %% -export([authorize_code_request/5]).
 authorize_code_request(User, Client, RedirUri, Scope) ->
-    send_slow(libsnarl_msg:authorize_code_request(r(), User, Client, RedirUri, Scope)).
+    send_slow(
+      libsnarl_msg:authorize_code_request(r(), User, Client, RedirUri, Scope)).
 
 %% -export([issue_code/2]).
 issue_code(Auth) ->

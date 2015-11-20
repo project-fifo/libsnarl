@@ -89,7 +89,8 @@ get(Org)
 
 -spec get(Org::fifo:org_id(), Resource::binary()) ->
                  {error, no_servers} |
-                 {ok, [{Time::pos_integer(), create|update|destroy, Metadata::term()}]}.
+                 {ok, [{Time::pos_integer(), create|update|destroy,
+                        Metadata::term()}]}.
 get(Org, Resource)
   when is_binary(Org),
        is_binary(Resource) ->

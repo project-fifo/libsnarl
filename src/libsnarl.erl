@@ -45,7 +45,7 @@
 %% @doc Reads the overall cloud status.
 %% @end
 %%--------------------------------------------------------------------
--spec status() -> {'error','no_servers'} |
+-spec status() -> {'error', 'no_servers'} |
                   {ok, {Resources::fifo:object(),
                         Warnings::fifo:object()}}.
 status() ->
@@ -66,7 +66,9 @@ start() ->
 
 
 keystr_to_id(S) ->
-    << <<D:8>> || {ok, [D], []} <- [io_lib:fread("~16u", P) || P <- re:split(S, ":", [{return, list}])]>>.
+    << <<D:8>> || {ok, [D], []} <-
+                      [io_lib:fread("~16u", P) ||
+                          P <- re:split(S, ":", [{return, list}])]>>.
 
 %%--------------------------------------------------------------------
 %% @doc Tests cached permissions.

@@ -1,0 +1,14 @@
+[0m|- fifo_dt-0.1.57
+|- fifo_spec-0.1.23
+|- goldrush-0.1.7
+|- jsx-1.4.5
+|- jsxd-0.1.10
+|- lager-3.0.2
+|- libsnarl-0.3.34
+|- libsnarlmatch-0.1.7
+|- mdns_client-0.1.7
+|- mdns_client_lib-0.1.29
+|- oauth2-0.6.0
+|- pooler-1.4.0
+|- riak_dt-0.0.0+build.309.refa2986bc
+|- uuid-0.4.7
