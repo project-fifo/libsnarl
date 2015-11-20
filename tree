@@ -7,7 +7,7 @@
 |- libsnarl-0.3.34
 |- libsnarlmatch-0.1.7
 |- mdns_client-0.1.7
-|- mdns_client_lib-0.1.29
+|- mdns_client_lib-0.1.30
 |- oauth2-0.6.0
 |- pooler-1.4.0
 |- riak_dt-0.0.0+build.309.refa2986bc
