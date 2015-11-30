@@ -211,8 +211,6 @@ user_set_metadata(Realm, User, Attrs) when
     {user, set_metadata, Realm, User, Attrs}.
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
-%% @spec user_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec user_list(Realm::binary()) ->
@@ -223,8 +221,6 @@ user_list(Realm) when
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
-%% @spec user_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec user_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
@@ -360,9 +356,6 @@ user_revoke_prefix(Realm, ?USER, Prefix) when
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a user.
-%% @spec user_passwd(User::binary(), Pass::binary()) ->
-%%           ok |
-%%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec user_passwd(Realm::binary(), User::fifo:user_id(), Pass::binary()) ->
@@ -558,8 +551,6 @@ role_list(Realm) when
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all user id's.
-%% @spec role_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec role_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
@@ -787,8 +778,6 @@ client_set_metadata(Realm, Client, Attrs) when
     {client, set_metadata, Realm, Client, Attrs}.
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all client id's.
-%% @spec client_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec client_list(Realm::binary()) ->
@@ -799,8 +788,6 @@ client_list(Realm) when
 
 %%--------------------------------------------------------------------
 %% @doc Retrievs a list of all client id's.
-%% @spec client_list() ->
-%%                 [term()]
 %% @end
 %%--------------------------------------------------------------------
 -spec client_list(Realm::binary(), Reqs::[fifo:matcher()], boolean()) ->
@@ -911,9 +898,6 @@ client_revoke_prefix(Realm, ?CLIENT, Prefix) when
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a client.
-%% @spec client_secret(Client::binary(), Pass::binary()) ->
-%%           ok |
-%%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec client_secret(Realm::binary(), Client::fifo:client_id(),

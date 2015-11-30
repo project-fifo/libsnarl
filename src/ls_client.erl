@@ -169,9 +169,6 @@ revoke(Client, Permission) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a client.
-%% @spec revoke(Client::binary(),
-%%                   Prefix::fifo:permission()) ->
-%%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(Client::fifo:client_id(),
@@ -184,9 +181,6 @@ revoke_prefix(Client, Prefix) ->
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a client.
-%% @spec passwd(Client::binary(), Pass::binary()) ->
-%%           ok |
-%%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec secret(Client::fifo:client_id(), Secret::binary()) ->
@@ -231,9 +225,6 @@ uri_remove(Client, KeyID) ->
 
 %%--------------------------------------------------------------------
 %% @doc Removes a client from a role.
-%% @spec leave(Client::binary()(Role::binary()) ->
-%%          ok |
-%%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec leave(Client::fifo:client_id(), Role::fifo:role_id()) ->

@@ -133,9 +133,6 @@ revoke(Role, Permission) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a role.
-%% @spec revoke(Role::binary(),
-%%                    Prefix::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(Role::fifo:role_id(),

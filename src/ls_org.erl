@@ -62,8 +62,6 @@ list(Reqs, Full) ->
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
-%% @spec get(Org::binary()) ->
-%%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
 -spec get(Org::fifo:org_id()) ->
@@ -75,8 +73,6 @@ get(Org) ->
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new org.
-%% @spec add(Org::binary()) ->
-%%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec add(Org::fifo:org_id()) ->
@@ -100,10 +96,7 @@ delete(Org) ->
     send(libsnarl_msg:org_delete(r(), Org)).
 
 %%--------------------------------------------------------------------
-%% @doc Grants a right of a org.
-%% @spec grant(Org::binary(),
-%%                   Permission::[atom()|binary()|string()]) ->
-%%                   {error, not_found|no_servers} | ok
+%% @doc Adds a trigger to an organisation.
 %% @end
 %%--------------------------------------------------------------------
 -spec add_trigger(Org::fifo:org_id(),
@@ -115,10 +108,7 @@ add_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_add_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes a right of a org.
-%% @spec revoke(Org::binary(),
-%%                    Permission::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
+%% @doc Removes a trigger from an organisation.
 %% @end
 %%--------------------------------------------------------------------
 -spec remove_trigger(Org::fifo:org_id(),
@@ -131,9 +121,6 @@ remove_trigger(Org, Trigger) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a org.
-%% @spec revoke(Org::binary(),
-%%                    Prefix::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec execute_trigger(Org::fifo:org_id(),

@@ -216,9 +216,6 @@ revoke(User, Permission) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a user.
-%% @spec revoke(User::binary(),
-%%                   Prefix::fifo:permission()) ->
-%%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(User::fifo:user_id(),
@@ -321,9 +318,6 @@ yubikey_remove(User, KeyID) ->
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a role.
-%% @spec leave(User::binary()(Role::binary()) ->
-%%          ok |
-%%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec leave(User::fifo:user_id(), Role::fifo:role_id()) ->
