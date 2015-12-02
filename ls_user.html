@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module ls_user</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module ls_user</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#add-1">add/1</a></td><td>Adds a new user.</td></tr>
+<tr><td valign="top"><a href="#add-2">add/2</a></td><td>Adds a new user from perspective of a creator, triggering
+       Org events in the process.</td></tr>
+<tr><td valign="top"><a href="#api_token-3">api_token/3</a></td><td>Generates an API token for a user.</td></tr>
+<tr><td valign="top"><a href="#cache-1">cache/1</a></td><td>Retrieves all user permissions to later test.</td></tr>
+<tr><td valign="top"><a href="#delete-1">delete/1</a></td><td>Deletes a user.</td></tr>
+<tr><td valign="top"><a href="#get-1">get/1</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#grant-2">grant/2</a></td><td>Grants a right of a user.</td></tr>
+<tr><td valign="top"><a href="#join-2">join/2</a></td><td>Adds a user to a role.</td></tr>
+<tr><td valign="top"><a href="#join_org-2">join_org/2</a></td><td>Lets a user join the org.</td></tr>
+<tr><td valign="top"><a href="#key_add-3">key_add/3</a></td><td>Adds a key to the users SSH keys.</td></tr>
+<tr><td valign="top"><a href="#key_find-1">key_find/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#key_revoke-2">key_revoke/2</a></td><td>Removes a key from the users SSH keys.</td></tr>
+<tr><td valign="top"><a href="#leave-2">leave/2</a></td><td>Removes a user from a role.</td></tr>
+<tr><td valign="top"><a href="#leave_org-2">leave_org/2</a></td><td>Lets a user leave the org.</td></tr>
+<tr><td valign="top"><a href="#list-0">list/0</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#list-2">list/2</a></td><td>Retrievs a filtered list for users.</td></tr>
+<tr><td valign="top"><a href="#lookup-1">lookup/1</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#make_token-1">make_token/1</a></td><td>Creates a token for a user.</td></tr>
+<tr><td valign="top"><a href="#passwd-2">passwd/2</a></td><td>Changes the Password of a user.</td></tr>
+<tr><td valign="top"><a href="#revoke-2">revoke/2</a></td><td>Revokes a right of a user.</td></tr>
+<tr><td valign="top"><a href="#revoke_prefix-2">revoke_prefix/2</a></td><td>Revokes all right with a certain prefix from a user.</td></tr>
+<tr><td valign="top"><a href="#revoke_token-2">revoke_token/2</a></td><td>Revokes a token from  a user from a TokenID.</td></tr>
+<tr><td valign="top"><a href="#select_org-2">select_org/2</a></td><td>Sets a org as active for a user.</td></tr>
+<tr><td valign="top"><a href="#set_metadata-2">set_metadata/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#sign_csr-4">sign_csr/4</a></td><td>Generates a Certificate for a CSR.</td></tr>
+<tr><td valign="top"><a href="#yubikey_add-2">yubikey_add/2</a></td><td>Adds a key to the users SSH keys.</td></tr>
+<tr><td valign="top"><a href="#yubikey_check-2">yubikey_check/2</a></td><td>Checks a Yubikey OTP.</td></tr>
+<tr><td valign="top"><a href="#yubikey_remove-2">yubikey_remove/2</a></td><td>Removes a key from the users SSH keys.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="add-1">add/1</a></h3>
+<div class="spec">
+<p><tt>add(User::binary()) -&gt; {error, duplicate} | ok</tt><br></p>
+</div><p>Adds a new user.</p>
+
+<h3 class="function"><a name="add-2">add/2</a></h3>
+<div class="spec">
+<p><tt>add(Creator::<a href="fifo.html#type-user_id">fifo:user_id()</a>, UserName::binary()) -&gt; {error, no_servers} | duplicate | {ok, UUID::<a href="fifo.html#type-user_id">fifo:user_id()</a>}</tt><br></p>
+</div><p>Adds a new user from perspective of a creator, triggering
+       Org events in the process</p>
+
+<h3 class="function"><a name="api_token-3">api_token/3</a></h3>
+<div class="spec">
+<p><tt>api_token(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary()) -&gt; {error, no_servers} | {error, bad_scope} | not_found | {ok, {TokenID::binary(), Token::binary()}}</tt><br></p>
+</div><p>Generates an API token for a user.</p>
+
+<h3 class="function"><a name="cache-1">cache/1</a></h3>
+<div class="spec">
+<p><tt>cache(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves all user permissions to later test.</p>
+
+<h3 class="function"><a name="delete-1">delete/1</a></h3>
+<div class="spec">
+<p><tt>delete(User::binary()) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Deletes a user.</p>
+
+<h3 class="function"><a name="get-1">get/1</a></h3>
+<div class="spec">
+<p><tt>get(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="grant-2">grant/2</a></h3>
+<div class="spec">
+<p><tt>grant(User::binary(), Permission::[atom() | binary() | string()]) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Grants a right of a user.</p>
+
+<h3 class="function"><a name="join-2">join/2</a></h3>
+<div class="spec">
+<p><tt>join(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Adds a user to a role.</p>
+
+<h3 class="function"><a name="join_org-2">join_org/2</a></h3>
+<div class="spec">
+<p><tt>join_org(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Lets a user join the org.</p>
+
+<h3 class="function"><a name="key_add-3">key_add/3</a></h3>
+<div class="spec">
+<p><tt>key_add(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary(), Key::binary()) -&gt; {error, no_servers} | duplicate | not_found | ok</tt><br></p>
+</div><p>Adds a key to the users SSH keys.</p>
+
+<h3 class="function"><a name="key_find-1">key_find/1</a></h3>
+<div class="spec">
+<p><tt>key_find(KeyID::binary()) -&gt; {error, no_servers} | not_found | {ok, UUID::<a href="fifo.html#type-user_id">fifo:user_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="key_revoke-2">key_revoke/2</a></h3>
+<div class="spec">
+<p><tt>key_revoke(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Removes a key from the users SSH keys.</p>
+
+<h3 class="function"><a name="leave-2">leave/2</a></h3>
+<div class="spec">
+<p><tt>leave(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Removes a user from a role.</p>
+
+<h3 class="function"><a name="leave_org-2">leave_org/2</a></h3>
+<div class="spec">
+<p><tt>leave_org(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Lets a user leave the org.</p>
+
+<h3 class="function"><a name="list-0">list/0</a></h3>
+<div class="spec">
+<p><tt>list() -&gt; [term()]</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="list-2">list/2</a></h3>
+<div class="spec">
+<p><tt>list(Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], Full::boolean()) -&gt; {error, timeout} | {ok, [{integer(), <a href="fifo.html#type-user_id">fifo:user_id()</a>}]} | {ok, [{integer(), <a href="fifo.html#type-user">fifo:user()</a>}]}</tt><br></p>
+</div><p>Retrievs a filtered list for users.</p>
+
+<h3 class="function"><a name="lookup-1">lookup/1</a></h3>
+<div class="spec">
+<p><tt>lookup(User::binary()) -&gt; {error, not_found | no_servers} | term()</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="make_token-1">make_token/1</a></h3>
+<div class="spec">
+<p><tt>make_token(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>) -&gt; not_found | {ok, <a href="fifo.html#type-token">fifo:token()</a>}</tt><br></p>
+</div><p>Creates a token for a user.</p>
+
+<h3 class="function"><a name="passwd-2">passwd/2</a></h3>
+<div class="spec">
+<p><tt>passwd(User::binary(), Pass::binary()) -&gt; ok | {error, not_found | no_servers}</tt><br></p>
+</div><p>Changes the Password of a user.</p>
+
+<h3 class="function"><a name="revoke-2">revoke/2</a></h3>
+<div class="spec">
+<p><tt>revoke(User::binary(), Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {error, not_found | no_servers} | ok</tt><br></p>
+</div><p>Revokes a right of a user.</p>
+
+<h3 class="function"><a name="revoke_prefix-2">revoke_prefix/2</a></h3>
+<div class="spec">
+<p><tt>revoke_prefix(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Prefix::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Revokes all right with a certain prefix from a user.</p>
+
+<h3 class="function"><a name="revoke_token-2">revoke_token/2</a></h3>
+<div class="spec">
+<p><tt>revoke_token(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, TokenID::binary()) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Revokes a token from  a user from a TokenID</p>
+
+<h3 class="function"><a name="select_org-2">select_org/2</a></h3>
+<div class="spec">
+<p><tt>select_org(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Sets a org as active for a user.</p>
+
+<h3 class="function"><a name="set_metadata-2">set_metadata/2</a></h3>
+<div class="spec">
+<p><tt>set_metadata(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; {error, no_servers} | ok</tt><br></p>
+</div>
+
+<h3 class="function"><a name="sign_csr-4">sign_csr/4</a></h3>
+<div class="spec">
+<p><tt>sign_csr(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary(), CSR::binary()) -&gt; {error, no_servers} | {error, bad_scope} | not_found | {ok, {TokenID::binary(), Certificate::binary()}}</tt><br></p>
+</div><p>Generates a Certificate for a CSR.</p>
+
+<h3 class="function"><a name="yubikey_add-2">yubikey_add/2</a></h3>
+<div class="spec">
+<p><tt>yubikey_add(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, OTP::binary()) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Adds a key to the users SSH keys.</p>
+
+<h3 class="function"><a name="yubikey_check-2">yubikey_check/2</a></h3>
+<div class="spec">
+<p><tt>yubikey_check(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, OTP::binary()) -&gt; {error, no_servers} | not_found | {otp_required, yubikey, UUID::<a href="fifo.html#type-user_id">fifo:user_id()</a>} | {ok, UUID::<a href="fifo.html#type-user_id">fifo:user_id()</a>}</tt><br></p>
+</div><p>Checks a Yubikey OTP.</p>
+
+<h3 class="function"><a name="yubikey_remove-2">yubikey_remove/2</a></h3>
+<div class="spec">
+<p><tt>yubikey_remove(User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()) -&gt; {error, no_servers} | not_found | ok</tt><br></p>
+</div><p>Removes a key from the users SSH keys.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Dec 2 2015, 12:55:55.</i></p>
+</body>
+</html>

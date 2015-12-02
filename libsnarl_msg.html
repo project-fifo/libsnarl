@@ -1,0 +1,577 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module libsnarl_msg</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module libsnarl_msg</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#acc_create-5">acc_create/5</a></td><td></td></tr>
+<tr><td valign="top"><a href="#acc_destroy-5">acc_destroy/5</a></td><td></td></tr>
+<tr><td valign="top"><a href="#acc_get-2">acc_get/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#acc_get-3">acc_get/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#acc_get-4">acc_get/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#acc_update-5">acc_update/5</a></td><td></td></tr>
+<tr><td valign="top"><a href="#allowed-3">allowed/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#auth-3">auth/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#auth-4">auth/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_client_credentials-3">authorize_client_credentials/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_code_grant-4">authorize_code_grant/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_code_request-5">authorize_code_request/5</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-3">authorize_password/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-4">authorize_password/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-5">authorize_password/5</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_add-2">client_add/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_add-3">client_add/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_delete-2">client_delete/2</a></td><td>Deletes a client.</td></tr>
+<tr><td valign="top"><a href="#client_get-2">client_get/2</a></td><td>Retrieves client data from the server.</td></tr>
+<tr><td valign="top"><a href="#client_grant-3">client_grant/3</a></td><td>Grants a right of a client.</td></tr>
+<tr><td valign="top"><a href="#client_join-3">client_join/3</a></td><td>Adds a client to a role.</td></tr>
+<tr><td valign="top"><a href="#client_leave-3">client_leave/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_list-1">client_list/1</a></td><td>Retrievs a list of all client id's.</td></tr>
+<tr><td valign="top"><a href="#client_list-3">client_list/3</a></td><td>Retrievs a list of all client id's.</td></tr>
+<tr><td valign="top"><a href="#client_lookup-2">client_lookup/2</a></td><td>Retrieves client data from the server.</td></tr>
+<tr><td valign="top"><a href="#client_revoke-3">client_revoke/3</a></td><td>Revokes a right of a client.</td></tr>
+<tr><td valign="top"><a href="#client_revoke_prefix-3">client_revoke_prefix/3</a></td><td>Revokes all right with a certain prefix from a client.</td></tr>
+<tr><td valign="top"><a href="#client_secret-3">client_secret/3</a></td><td>Changes the Password of a client.</td></tr>
+<tr><td valign="top"><a href="#client_set_metadata-3">client_set_metadata/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_uri_add-3">client_uri_add/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#client_uri_remove-3">client_uri_remove/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_code-2">issue_code/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_token-2">issue_token/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_token_and_refresh-2">issue_token_and_refresh/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#org_add-2">org_add/2</a></td><td>Adds a new org.</td></tr>
+<tr><td valign="top"><a href="#org_add_trigger-3">org_add_trigger/3</a></td><td>adds a trigger.</td></tr>
+<tr><td valign="top"><a href="#org_delete-2">org_delete/2</a></td><td>Deletes a org.</td></tr>
+<tr><td valign="top"><a href="#org_execute_trigger-4">org_execute_trigger/4</a></td><td>Executes a trigger.</td></tr>
+<tr><td valign="top"><a href="#org_get-2">org_get/2</a></td><td>Retrieves org data from the server.</td></tr>
+<tr><td valign="top"><a href="#org_list-1">org_list/1</a></td><td>Retrievs a list of all org id's.</td></tr>
+<tr><td valign="top"><a href="#org_list-3">org_list/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#org_remove_trigger-3">org_remove_trigger/3</a></td><td>Removes a trigger.</td></tr>
+<tr><td valign="top"><a href="#org_resource_dec-4">org_resource_dec/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#org_resource_inc-4">org_resource_inc/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#org_set_metadata-3">org_set_metadata/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#refresh_access_token-4">refresh_access_token/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#role_add-2">role_add/2</a></td><td>Adds a new role.</td></tr>
+<tr><td valign="top"><a href="#role_delete-2">role_delete/2</a></td><td>Deletes a role.</td></tr>
+<tr><td valign="top"><a href="#role_get-2">role_get/2</a></td><td>Retrieves role data from the server.</td></tr>
+<tr><td valign="top"><a href="#role_grant-3">role_grant/3</a></td><td>Grants a right of a role.</td></tr>
+<tr><td valign="top"><a href="#role_list-1">role_list/1</a></td><td>Retrievs a list of all role id's.</td></tr>
+<tr><td valign="top"><a href="#role_list-3">role_list/3</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#role_revoke-3">role_revoke/3</a></td><td>Revokes a right of a role.</td></tr>
+<tr><td valign="top"><a href="#role_revoke_prefix-3">role_revoke_prefix/3</a></td><td>Revokes all rights matching a prefix from a role.</td></tr>
+<tr><td valign="top"><a href="#role_set_metadata-3">role_set_metadata/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#scope-1">scope/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#scope-2">scope/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#token_add-3">token_add/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#token_add-4">token_add/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#token_delete-2">token_delete/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#token_get-2">token_get/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_add-2">user_add/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_add-3">user_add/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_api_token-4">user_api_token/4</a></td><td>Creates a API token.</td></tr>
+<tr><td valign="top"><a href="#user_cache-2">user_cache/2</a></td><td>Retrieves all user permissions to later test.</td></tr>
+<tr><td valign="top"><a href="#user_delete-2">user_delete/2</a></td><td>Deletes a user.</td></tr>
+<tr><td valign="top"><a href="#user_get-2">user_get/2</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#user_grant-3">user_grant/3</a></td><td>Grants a right of a user.</td></tr>
+<tr><td valign="top"><a href="#user_join-3">user_join/3</a></td><td>Adds a user to a role.</td></tr>
+<tr><td valign="top"><a href="#user_join_org-3">user_join_org/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_key_add-4">user_key_add/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_key_find-2">user_key_find/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_key_revoke-3">user_key_revoke/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_leave-3">user_leave/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_leave_org-3">user_leave_org/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_list-1">user_list/1</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#user_list-3">user_list/3</a></td><td>Retrievs a list of all user id's.</td></tr>
+<tr><td valign="top"><a href="#user_lookup-2">user_lookup/2</a></td><td>Retrieves user data from the server.</td></tr>
+<tr><td valign="top"><a href="#user_make_token-2">user_make_token/2</a></td><td>Creates a token for a user.</td></tr>
+<tr><td valign="top"><a href="#user_passwd-3">user_passwd/3</a></td><td>Changes the Password of a user.</td></tr>
+<tr><td valign="top"><a href="#user_revoke-3">user_revoke/3</a></td><td>Revokes a right of a user.</td></tr>
+<tr><td valign="top"><a href="#user_revoke_prefix-3">user_revoke_prefix/3</a></td><td>Revokes all right with a certain prefix from a user.</td></tr>
+<tr><td valign="top"><a href="#user_revoke_token-3">user_revoke_token/3</a></td><td>Revokes a token with a given tokenID (not by the token itself).</td></tr>
+<tr><td valign="top"><a href="#user_select_org-3">user_select_org/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_set_metadata-3">user_set_metadata/3</a></td><td>Sets user metadata.</td></tr>
+<tr><td valign="top"><a href="#user_sign_csr-5">user_sign_csr/5</a></td><td>Signs a CSR requests and returns a certificate.</td></tr>
+<tr><td valign="top"><a href="#user_yubikey_add-3">user_yubikey_add/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_yubikey_check-3">user_yubikey_check/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#user_yubikey_remove-3">user_yubikey_remove/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_code-2">verify_access_code/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_code-3">verify_access_code/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_token-2">verify_access_token/2</a></td><td></td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="acc_create-5">acc_create/5</a></h3>
+<div class="spec">
+<p><tt>acc_create(Realm, Org, Resource, Time, Metadata) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="acc_destroy-5">acc_destroy/5</a></h3>
+<div class="spec">
+<p><tt>acc_destroy(Realm, Org, Resource, Time, Metadata) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="acc_get-2">acc_get/2</a></h3>
+<div class="spec">
+<p><tt>acc_get(Realm, Org) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="acc_get-3">acc_get/3</a></h3>
+<div class="spec">
+<p><tt>acc_get(Realm, Org, Resource) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="acc_get-4">acc_get/4</a></h3>
+<div class="spec">
+<p><tt>acc_get(Realm, Org, Start, End) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="acc_update-5">acc_update/5</a></h3>
+<div class="spec">
+<p><tt>acc_update(Realm, Org, Resource, Time, Metadata) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="allowed-3">allowed/3</a></h3>
+<div class="spec">
+<p><tt>allowed(Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {user, allowed, Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="auth-3">auth/3</a></h3>
+<div class="spec">
+<p><tt>auth(Realm::binary(), Login::binary(), Pass::binary()) -&gt; {user, auth, Realm::binary(), Login::binary(), Pass::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="auth-4">auth/4</a></h3>
+<div class="spec">
+<p><tt>auth(Realm, Login, Pass, OTP) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_client_credentials-3">authorize_client_credentials/3</a></h3>
+<div class="spec">
+<p><tt>authorize_client_credentials(Realm, Client, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_code_grant-4">authorize_code_grant/4</a></h3>
+<div class="spec">
+<p><tt>authorize_code_grant(Realm, Client, Code, RedirUri) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_code_request-5">authorize_code_request/5</a></h3>
+<div class="spec">
+<p><tt>authorize_code_request(Realm, User, Client, RedirUri, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-3">authorize_password/3</a></h3>
+<div class="spec">
+<p><tt>authorize_password(Realm, User, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-4">authorize_password/4</a></h3>
+<div class="spec">
+<p><tt>authorize_password(Realm, User, Client, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-5">authorize_password/5</a></h3>
+<div class="spec">
+<p><tt>authorize_password(Realm, User, Client, RedirUri, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="client_add-2">client_add/2</a></h3>
+<div class="spec">
+<p><tt>client_add(Realm::binary(), ClientName::binary()) -&gt; {client, add, Realm::binary(), ClientName::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="client_add-3">client_add/3</a></h3>
+<div class="spec">
+<p><tt>client_add(Realm::binary(), Creator::<a href="fifo.html#type-client_id">fifo:client_id()</a>, ClientName::binary()) -&gt; {client, add, Realm::binary(), Creator::<a href="fifo.html#type-client_id">fifo:client_id()</a>, ClientName::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="client_delete-2">client_delete/2</a></h3>
+<div class="spec">
+<p><tt>client_delete(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>) -&gt; {client, delete, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>}</tt><br></p>
+</div><p>Deletes a client.</p>
+
+<h3 class="function"><a name="client_get-2">client_get/2</a></h3>
+<div class="spec">
+<p><tt>client_get(Realm::binary(), Client::<a href="fifo.html#type-client_token_id">fifo:client_token_id()</a>) -&gt; {client, get, Realm::binary(), Client::<a href="fifo.html#type-client_token_id">fifo:client_token_id()</a>}</tt><br></p>
+</div><p>Retrieves client data from the server.</p>
+
+<h3 class="function"><a name="client_grant-3">client_grant/3</a></h3>
+<div class="spec">
+<p><tt>client_grant(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {client, grant, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Grants a right of a client.</p>
+
+<h3 class="function"><a name="client_join-3">client_join/3</a></h3>
+<div class="spec">
+<p><tt>client_join(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {client, join, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div><p>Adds a client to a role.</p>
+
+<h3 class="function"><a name="client_leave-3">client_leave/3</a></h3>
+<div class="spec">
+<p><tt>client_leave(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {client, leave, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="client_list-1">client_list/1</a></h3>
+<div class="spec">
+<p><tt>client_list(Realm::binary()) -&gt; {client, list, Realm::binary()}</tt><br></p>
+</div><p>Retrievs a list of all client id's.</p>
+
+<h3 class="function"><a name="client_list-3">client_list/3</a></h3>
+<div class="spec">
+<p><tt>client_list(Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], Full::boolean()) -&gt; {client, list, Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], boolean()}</tt><br></p>
+</div><p>Retrievs a list of all client id's.</p>
+
+<h3 class="function"><a name="client_lookup-2">client_lookup/2</a></h3>
+<div class="spec">
+<p><tt>client_lookup(Realm::binary(), Login::binary()) -&gt; {client, lookup, Realm::binary(), Login::binary()}</tt><br></p>
+</div><p>Retrieves client data from the server.</p>
+
+<h3 class="function"><a name="client_revoke-3">client_revoke/3</a></h3>
+<div class="spec">
+<p><tt>client_revoke(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {client, revoke, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes a right of a client.</p>
+
+<h3 class="function"><a name="client_revoke_prefix-3">client_revoke_prefix/3</a></h3>
+<div class="spec">
+<p><tt>client_revoke_prefix(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Prefix::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {client, revoke_prefix, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes all right with a certain prefix from a client.</p>
+
+<h3 class="function"><a name="client_secret-3">client_secret/3</a></h3>
+<div class="spec">
+<p><tt>client_secret(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Secret::binary()) -&gt; {client, secret, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Secret::binary()}</tt><br></p>
+</div><p>Changes the Password of a client.</p>
+
+<h3 class="function"><a name="client_set_metadata-3">client_set_metadata/3</a></h3>
+<div class="spec">
+<p><tt>client_set_metadata(Ream::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; {client, set_metadata, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="client_uri_add-3">client_uri_add/3</a></h3>
+<div class="spec">
+<p><tt>client_uri_add(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, KeyID::binary()) -&gt; {client, uris, add, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, KeyID::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="client_uri_remove-3">client_uri_remove/3</a></h3>
+<div class="spec">
+<p><tt>client_uri_remove(Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, KeyID::binary()) -&gt; {client, uris, remove, Realm::binary(), Client::<a href="fifo.html#type-client_id">fifo:client_id()</a>, KeyID::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="issue_code-2">issue_code/2</a></h3>
+<div class="spec">
+<p><tt>issue_code(Realm, Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="issue_token-2">issue_token/2</a></h3>
+<div class="spec">
+<p><tt>issue_token(Realm, Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="issue_token_and_refresh-2">issue_token_and_refresh/2</a></h3>
+<div class="spec">
+<p><tt>issue_token_and_refresh(Realm, Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="org_add-2">org_add/2</a></h3>
+<div class="spec">
+<p><tt>org_add(Realm::binary(), OrgName::binary()) -&gt; {org, add, Realm::binary(), OrgName::binary()}</tt><br></p>
+</div><p>Adds a new org.</p>
+
+<h3 class="function"><a name="org_add_trigger-3">org_add_trigger/3</a></h3>
+<div class="spec">
+<p><tt>org_add_trigger(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Trigger::<a href="fifo.html#type-trigger">fifo:trigger()</a>) -&gt; {org, trigger, add, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Trigger::<a href="fifo.html#type-trigger">fifo:trigger()</a>}</tt><br></p>
+</div><p>adds a trigger.</p>
+
+<h3 class="function"><a name="org_delete-2">org_delete/2</a></h3>
+<div class="spec">
+<p><tt>org_delete(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {org, delete, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>}</tt><br></p>
+</div><p>Deletes a org.</p>
+
+<h3 class="function"><a name="org_execute_trigger-4">org_execute_trigger/4</a></h3>
+<div class="spec">
+<p><tt>org_execute_trigger(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Event::<a href="fifo.html#type-event">fifo:event()</a>, Payload::term()) -&gt; {org, trigger, execute, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Trigger::<a href="fifo.html#type-trigger">fifo:trigger()</a>, Payload::term()}</tt><br></p>
+</div><p>Executes a trigger.</p>
+
+<h3 class="function"><a name="org_get-2">org_get/2</a></h3>
+<div class="spec">
+<p><tt>org_get(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {org, get, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>}</tt><br></p>
+</div><p>Retrieves org data from the server.</p>
+
+<h3 class="function"><a name="org_list-1">org_list/1</a></h3>
+<div class="spec">
+<p><tt>org_list(Realm::binary()) -&gt; {org, list, Realm::binary()}</tt><br></p>
+</div><p>Retrievs a list of all org id's.</p>
+
+<h3 class="function"><a name="org_list-3">org_list/3</a></h3>
+<div class="spec">
+<p><tt>org_list(Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], Full::boolean()) -&gt; {org, list, Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], boolean()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="org_remove_trigger-3">org_remove_trigger/3</a></h3>
+<div class="spec">
+<p><tt>org_remove_trigger(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Trigger::<a href="fifo.html#type-trigger">fifo:trigger()</a>) -&gt; {org, trigger, remove, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Trigger::<a href="fifo.html#type-trigger">fifo:trigger()</a>}</tt><br></p>
+</div><p>Removes a trigger.</p>
+
+<h3 class="function"><a name="org_resource_dec-4">org_resource_dec/4</a></h3>
+<div class="spec">
+<p><tt>org_resource_dec(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Resource::binary(), Delta::pos_integer()) -&gt; {org, resource, dec, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Resource::binary(), Delta::pos_integer()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="org_resource_inc-4">org_resource_inc/4</a></h3>
+<div class="spec">
+<p><tt>org_resource_inc(Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Resource::binary(), Delta::pos_integer()) -&gt; {org, resource, inc, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Resource::binary(), Delta::pos_integer()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="org_set_metadata-3">org_set_metadata/3</a></h3>
+<div class="spec">
+<p><tt>org_set_metadata(Ream::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; {org, set_metadata, Realm::binary(), Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="refresh_access_token-4">refresh_access_token/4</a></h3>
+<div class="spec">
+<p><tt>refresh_access_token(Realm, Client, RefreshToken, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="role_add-2">role_add/2</a></h3>
+<div class="spec">
+<p><tt>role_add(Realm::binary(), RoleName::binary()) -&gt; {role, add, Realm::binary(), RoleName::binary()}</tt><br></p>
+</div><p>Adds a new role.</p>
+
+<h3 class="function"><a name="role_delete-2">role_delete/2</a></h3>
+<div class="spec">
+<p><tt>role_delete(Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {role, delete, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div><p>Deletes a role.</p>
+
+<h3 class="function"><a name="role_get-2">role_get/2</a></h3>
+<div class="spec">
+<p><tt>role_get(Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {role, get, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div><p>Retrieves role data from the server.</p>
+
+<h3 class="function"><a name="role_grant-3">role_grant/3</a></h3>
+<div class="spec">
+<p><tt>role_grant(Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {role, grant, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Grants a right of a role.</p>
+
+<h3 class="function"><a name="role_list-1">role_list/1</a></h3>
+<div class="spec">
+<p><tt>role_list(Realm::binary()) -&gt; {role, list, Realm::binary()}</tt><br></p>
+</div><p>Retrievs a list of all role id's.</p>
+
+<h3 class="function"><a name="role_list-3">role_list/3</a></h3>
+<div class="spec">
+<p><tt>role_list(Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], Full::boolean()) -&gt; {role, list, Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], boolean()}</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="role_revoke-3">role_revoke/3</a></h3>
+<div class="spec">
+<p><tt>role_revoke(Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {role, revoke, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes a right of a role.</p>
+
+<h3 class="function"><a name="role_revoke_prefix-3">role_revoke_prefix/3</a></h3>
+<div class="spec">
+<p><tt>role_revoke_prefix(Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Prefix::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {role, revoke_prefix, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes all rights matching a prefix from a role.</p>
+
+<h3 class="function"><a name="role_set_metadata-3">role_set_metadata/3</a></h3>
+<div class="spec">
+<p><tt>role_set_metadata(Ream::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; {role, set_metadata, Realm::binary(), Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="scope-1">scope/1</a></h3>
+<div class="spec">
+<p><tt>scope(Realm) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="scope-2">scope/2</a></h3>
+<div class="spec">
+<p><tt>scope(Realm, Subscope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="token_add-3">token_add/3</a></h3>
+<div class="spec">
+<p><tt>token_add(Realm::binary(), Timeout::pos_integer(), Data::term()) -&gt; {token, add, Realm::binary(), Timeout::pos_integer(), Data::term()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="token_add-4">token_add/4</a></h3>
+<div class="spec">
+<p><tt>token_add(Realm::binary(), Token::binary(), Timeout::integer(), Data::term()) -&gt; {token, add, Realm::binary(), Token::term(), Timeout::integer(), Data::term()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="token_delete-2">token_delete/2</a></h3>
+<div class="spec">
+<p><tt>token_delete(Realm::binary(), Token::binary()) -&gt; {token, delete, Realm::binary(), Token::<a href="fifo.html#type-token">fifo:token()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="token_get-2">token_get/2</a></h3>
+<div class="spec">
+<p><tt>token_get(Realm::binary(), Token::binary()) -&gt; {token, get, Realm::binary(), Token::term()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_add-2">user_add/2</a></h3>
+<div class="spec">
+<p><tt>user_add(Realm::binary(), UserName::binary()) -&gt; {user, add, Realm::binary(), UserName::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_add-3">user_add/3</a></h3>
+<div class="spec">
+<p><tt>user_add(Realm::binary(), Creator::<a href="fifo.html#type-user_id">fifo:user_id()</a>, UserName::binary()) -&gt; {user, add, Realm::binary(), Creator::<a href="fifo.html#type-user_id">fifo:user_id()</a>, UserName::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_api_token-4">user_api_token/4</a></h3>
+<div class="spec">
+<p><tt>user_api_token(Ream::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary()) -&gt; {user, api_token, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary()}</tt><br></p>
+</div><p>Creates a API token</p>
+
+<h3 class="function"><a name="user_cache-2">user_cache/2</a></h3>
+<div class="spec">
+<p><tt>user_cache(Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>) -&gt; {user, cache, Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>}</tt><br></p>
+</div><p>Retrieves all user permissions to later test.</p>
+
+<h3 class="function"><a name="user_delete-2">user_delete/2</a></h3>
+<div class="spec">
+<p><tt>user_delete(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>) -&gt; {user, delete, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>}</tt><br></p>
+</div><p>Deletes a user.</p>
+
+<h3 class="function"><a name="user_get-2">user_get/2</a></h3>
+<div class="spec">
+<p><tt>user_get(Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>) -&gt; {user, get, Realm::binary(), User::<a href="fifo.html#type-user_token_id">fifo:user_token_id()</a>}</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="user_grant-3">user_grant/3</a></h3>
+<div class="spec">
+<p><tt>user_grant(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {user, grant, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Grants a right of a user.</p>
+
+<h3 class="function"><a name="user_join-3">user_join/3</a></h3>
+<div class="spec">
+<p><tt>user_join(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {user, join, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div><p>Adds a user to a role.</p>
+
+<h3 class="function"><a name="user_join_org-3">user_join_org/3</a></h3>
+<div class="spec">
+<p><tt>user_join_org(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {user, org, join, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_key_add-4">user_key_add/4</a></h3>
+<div class="spec">
+<p><tt>user_key_add(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary(), Key::binary()) -&gt; {user, keys, add, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary(), Key::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_key_find-2">user_key_find/2</a></h3>
+<div class="spec">
+<p><tt>user_key_find(Realm::binary(), KeyID::&lt;&lt;_:128&gt;&gt;) -&gt; {user, keys, find, Realm::binary(), KeyID::&lt;&lt;_:128&gt;&gt;}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_key_revoke-3">user_key_revoke/3</a></h3>
+<div class="spec">
+<p><tt>user_key_revoke(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()) -&gt; {user, keys, revoke, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_leave-3">user_leave/3</a></h3>
+<div class="spec">
+<p><tt>user_leave(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>) -&gt; {user, leave, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Role::<a href="fifo.html#type-role_id">fifo:role_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_leave_org-3">user_leave_org/3</a></h3>
+<div class="spec">
+<p><tt>user_leave_org(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {user, org, leave, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_list-1">user_list/1</a></h3>
+<div class="spec">
+<p><tt>user_list(Realm::binary()) -&gt; {user, list, Realm::binary()}</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="user_list-3">user_list/3</a></h3>
+<div class="spec">
+<p><tt>user_list(Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], Full::boolean()) -&gt; {user, list, Realm::binary(), Reqs::[<a href="fifo.html#type-matcher">fifo:matcher()</a>], boolean()}</tt><br></p>
+</div><p>Retrievs a list of all user id's.</p>
+
+<h3 class="function"><a name="user_lookup-2">user_lookup/2</a></h3>
+<div class="spec">
+<p><tt>user_lookup(Realm::binary(), Login::binary()) -&gt; {user, lookup, Realm::binary(), Login::binary()}</tt><br></p>
+</div><p>Retrieves user data from the server.</p>
+
+<h3 class="function"><a name="user_make_token-2">user_make_token/2</a></h3>
+<div class="spec">
+<p><tt>user_make_token(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>) -&gt; {user, token, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>}</tt><br></p>
+</div><p>Creates a token for a user.</p>
+
+<h3 class="function"><a name="user_passwd-3">user_passwd/3</a></h3>
+<div class="spec">
+<p><tt>user_passwd(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Pass::binary()) -&gt; {user, passwd, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Pass::binary()}</tt><br></p>
+</div><p>Changes the Password of a user.</p>
+
+<h3 class="function"><a name="user_revoke-3">user_revoke/3</a></h3>
+<div class="spec">
+<p><tt>user_revoke(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {user, revoke, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes a right of a user.</p>
+
+<h3 class="function"><a name="user_revoke_prefix-3">user_revoke_prefix/3</a></h3>
+<div class="spec">
+<p><tt>user_revoke_prefix(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Prefix::<a href="fifo.html#type-permission">fifo:permission()</a>) -&gt; {user, revoke_prefix, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Permission::<a href="fifo.html#type-permission">fifo:permission()</a>}</tt><br></p>
+</div><p>Revokes all right with a certain prefix from a user.</p>
+
+<h3 class="function"><a name="user_revoke_token-3">user_revoke_token/3</a></h3>
+<div class="spec">
+<p><tt>user_revoke_token(Reeam::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, TokenID::binary()) -&gt; {user, revoke_token, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, TokenID::binary()}</tt><br></p>
+</div><p>Revokes a token with a given tokenID (not by the token itself)</p>
+
+<h3 class="function"><a name="user_select_org-3">user_select_org/3</a></h3>
+<div class="spec">
+<p><tt>user_select_org(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>) -&gt; {user, org, select, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Org::<a href="fifo.html#type-org_id">fifo:org_id()</a>}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_set_metadata-3">user_set_metadata/3</a></h3>
+<div class="spec">
+<p><tt>user_set_metadata(Ream::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>) -&gt; {user, set_metadata, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Attrs::<a href="fifo.html#type-attr_list">fifo:attr_list()</a>}</tt><br></p>
+</div><p>Sets user metadata.</p>
+
+<h3 class="function"><a name="user_sign_csr-5">user_sign_csr/5</a></h3>
+<div class="spec">
+<p><tt>user_sign_csr(Ream::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary(), CSR::binary()) -&gt; {user, sign_csr, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, Scope::[binary()], Comment::binary(), CSR::binary()}</tt><br></p>
+</div><p>Signs a CSR requests and returns a certificate</p>
+
+<h3 class="function"><a name="user_yubikey_add-3">user_yubikey_add/3</a></h3>
+<div class="spec">
+<p><tt>user_yubikey_add(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()) -&gt; {user, yubikeys, add, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_yubikey_check-3">user_yubikey_check/3</a></h3>
+<div class="spec">
+<p><tt>user_yubikey_check(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, OTP::binary()) -&gt; {user, yubikeys, check, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, OTP::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="user_yubikey_remove-3">user_yubikey_remove/3</a></h3>
+<div class="spec">
+<p><tt>user_yubikey_remove(Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()) -&gt; {user, yubikeys, remove, Realm::binary(), User::<a href="fifo.html#type-user_id">fifo:user_id()</a>, KeyID::binary()}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="verify_access_code-2">verify_access_code/2</a></h3>
+<div class="spec">
+<p><tt>verify_access_code(Realm, AccessCode) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="verify_access_code-3">verify_access_code/3</a></h3>
+<div class="spec">
+<p><tt>verify_access_code(Realm, AccessCode, Client) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="verify_access_token-2">verify_access_token/2</a></h3>
+<div class="spec">
+<p><tt>verify_access_token(Realm, Token) -&gt; any()</tt></p>
+</div>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Dec 2 2015, 12:55:55.</i></p>
+</body>
+</html>
