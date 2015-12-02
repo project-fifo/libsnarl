@@ -29,8 +29,7 @@ gsed -r -f tmp/bin/markedoc.sed README.md >> doc/overview.edoc
 mv README.md.bak README.md
 
 # create edoc and cleanup
-./rebar clean compile
-./rebar doc skip_deps=true
+make docs
 rm -rf tmp
 
 # deploy to gh-pages
