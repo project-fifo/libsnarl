@@ -12,6 +12,13 @@ then
         exit 0
 fi
 
+CURRENT=`git branch | grep "*" | awk '{print $2}'`
+
+if [[ "${CURRENT}" == "gh-pages" ]]
+then
+	exit 0
+fi
+
 make pre-commit
 RETVAL=$?
 if [ $RETVAL -ne 0 ]
