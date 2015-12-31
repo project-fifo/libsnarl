@@ -12,7 +12,7 @@
  {<<"lager">>,{pkg,<<"lager">>,<<"3.0.2">>},0},
  {<<"libsnarlmatch">>,{pkg,<<"libsnarlmatch">>,<<"0.1.7">>},0},
  {<<"mdns_client">>,{pkg,<<"mdns_client">>,<<"0.1.7">>},1},
- {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.30">>},0},
+ {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.31">>},0},
  {<<"oauth2">>,
   {git,"https://github.com/project-fifo/oauth2.git",
        {ref,"7f88b8af3b09cad4eb83678cb2bdaed00fce6a76"}},
