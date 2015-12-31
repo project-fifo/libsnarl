@@ -8,7 +8,7 @@
    ├─ lager─3.0.2
    │  └─ goldrush─0.1.7
    ├─ libsnarlmatch─0.1.7
-   ├─ mdns_client_lib─0.1.32
+   ├─ mdns_client_lib─0.1.33
    │  ├─ mdns_client─0.1.7
    │  └─ pooler─1.4.0
    └─ oauth2─0.6.0
