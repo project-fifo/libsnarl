@@ -11,6 +11,7 @@
          leave/2,
          list/0,
          list/2,
+         stream/3,
          lookup/1,
          secret/2,
          revoke/2,
@@ -69,6 +70,24 @@ list() ->
 
 list(Reqs, Full) ->
     send(libsnarl_msg:client_list(r(), Reqs, Full)).
+
+%%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:client_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:client()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({client, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves client data from the server.

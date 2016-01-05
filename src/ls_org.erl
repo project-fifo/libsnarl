@@ -66,8 +66,8 @@ list(Reqs, Full) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
-                  {ok, [{Ranking::integer(), fifo:vm_id()}]} |
-                  {ok, [{Ranking::integer(), fifo:vm()}]} |
+                  {ok, [{Ranking::integer(), fifo:org_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:org()}]} |
                   {'error', 'no_servers'}.
 stream(Reqs, StreamFn, Acc0) ->
     case libsnarl_server:stream({org, stream, r(), Reqs}, StreamFn, Acc0) of
@@ -78,8 +78,6 @@ stream(Reqs, StreamFn, Acc0) ->
         E ->
             E
     end.
-
-
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
