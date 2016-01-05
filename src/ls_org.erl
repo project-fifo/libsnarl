@@ -7,6 +7,7 @@
          add_trigger/2,
          list/0,
          list/2,
+         stream/3,
          set_metadata/2,
          remove_trigger/2,
          execute_trigger/3,
@@ -59,6 +60,26 @@ list() ->
 
 list(Reqs, Full) ->
     send(libsnarl_msg:org_list(r(), Reqs, Full)).
+
+%%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:vm_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:vm()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({org, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
+
+
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.

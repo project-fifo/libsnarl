@@ -15,6 +15,7 @@
          call/1,
          call/2,
          cast/1,
+         stream/3,
          servers/0]).
 
 %% gen_server callbacks
@@ -65,6 +66,10 @@ call(Msg) ->
                   {reply, Reply :: term()}.
 call(Msg, Timeout) ->
     gen_server:call(?SERVER, {call, Msg, Timeout}).
+
+stream(Msg, StreamFn, Acc0) ->
+    gen_server:call(?SERVER, {stream, Msg, StreamFn, Acc0}).
+
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -130,6 +135,12 @@ handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
 
     Reply = mdns_client_lib:servers(Pid),
     {reply, Reply, State};
+
+handle_call({stream, Msg, StreamFn, Acc0}, _From,
+            #state{zmq_worker = Pid} = State) ->
+    Reply = mdns_client_lib:stream(Pid, Msg, StreamFn, Acc0, 60000),
+    {reply, Reply, State};
+
 
 handle_call({call, Msg}, From, #state{zmq_worker = Pid} = State) ->
     spawn(fun() ->
