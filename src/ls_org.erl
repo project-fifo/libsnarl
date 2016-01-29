@@ -11,6 +11,7 @@
          set_metadata/2,
          remove_trigger/2,
          execute_trigger/3,
+         reverse_trigger/3,
          resource_inc/3,
          resource_dec/3
         ]).
@@ -139,7 +140,7 @@ remove_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_remove_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes all rights matching a prefix from a org.
+%% @doc Executes the triggers on an org.
 %% @end
 %%--------------------------------------------------------------------
 -spec execute_trigger(Org::fifo:org_id(),
@@ -150,6 +151,19 @@ remove_trigger(Org, Trigger) ->
                              ok.
 execute_trigger(Org, Event, Payload) ->
     send(libsnarl_msg:org_execute_trigger(r(), Org, Event, Payload)).
+
+%%--------------------------------------------------------------------
+%% @doc Reverses the triggers on an org.
+%% @end
+%%--------------------------------------------------------------------
+-spec reverse_trigger(Org::fifo:org_id(),
+                      Event::fifo:event(),
+                      Payload::term()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+reverse_trigger(Org, Event, Payload) ->
+    send(libsnarl_msg:org_reverse_trigger(r(), Org, Event, Payload)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a value to a orgs resource.

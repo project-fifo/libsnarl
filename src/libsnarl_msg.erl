@@ -82,6 +82,7 @@
          org_list/3,
          org_remove_trigger/3,
          org_execute_trigger/4,
+         org_reverse_trigger/4,
          org_resource_inc/4,
          org_resource_dec/4,
          org_set_metadata/3
@@ -742,6 +743,18 @@ org_remove_trigger(Realm, ?ORG, Trigger) when
 org_execute_trigger(Realm, ?ORG, Event, Payload) when
       is_binary(Realm) ->
     {org, trigger, execute, Realm, Org, Event, Payload}.
+
+-spec org_reverse_trigger(Realm::binary(), Org::fifo:org_id(),
+                          Event::fifo:event(),
+                          Payload::term()) ->
+                                 {org, trigger, reverse, Realm::binary(),
+                                  Org::fifo:org_id(),
+                                  Trigger::fifo:trigger(),
+                                  Payload::term()}.
+
+org_reverse_trigger(Realm, ?ORG, Event, Payload) when
+      is_binary(Realm) ->
+    {org, trigger, reverse, Realm, Org, Event, Payload}.
 
 -spec org_resource_inc(Realm::binary(), Org::fifo:org_id(), Resource::binary(),
                        Delta::pos_integer()) ->
