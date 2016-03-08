@@ -1,14 +1,8 @@
-{application, libsnarl,
- [
-  {description, "snarl interface library"},
-  {vsn, "0.3.10"},
-  {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib,
-                  libsnarlmatch,
-                  mdns_client_lib
-                 ]},
-  {mod, { libsnarl_app, []}},
-  {env, [{domain, ".local"}, {realm, <<"default">>}]}
- ]}.
+{application,libsnarl,
+             [{description,"snarl interface library"},
+              {vsn,"0.3.40"},
+              {registered,[]},
+              {applications,[kernel,stdlib,libsnarlmatch,oauth2,
+                             mdns_client_lib]},
+              {mod,{libsnarl_app,[]}},
+              {env,[{domain,".local"},{realm,<<"default">>}]}]}.

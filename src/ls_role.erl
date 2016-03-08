@@ -8,6 +8,7 @@
          grant/2,
          list/0,
          list/2,
+         stream/3,
          revoke/2,
          revoke_prefix/2,
          set_metadata/2
@@ -24,6 +25,7 @@
               grant/2,
               list/0,
               list/2,
+              stream/3,
               revoke/2,
               revoke_prefix/2,
               set_metadata/2
@@ -46,8 +48,8 @@ set_metadata(Role, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                        {error, no_servers} |
-                        {ok, [fifo:role_id()]}.
+                  {error, no_servers} |
+                  {ok, [fifo:role_id()]}.
 list() ->
     send(libsnarl_msg:role_list(r())).
 
@@ -56,11 +58,29 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                        {error, timeout} |
-                        {ok, [{Rank::integer(), fifo:role_id()}]} |
-                        {ok, [{Rank::integer(), fifo:role()}]}.
+                  {error, no_servers} |
+                  {ok, [{Rank::integer(), fifo:role_id()}]} |
+                  {ok, [{Rank::integer(), fifo:role()}]}.
 list(Reqs, Full) ->
     send(libsnarl_msg:role_list(r(), Reqs, Full)).
+
+%%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:role_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:role()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({role, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves role data from the server.
@@ -69,9 +89,9 @@ list(Reqs, Full) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec get(Role::fifo:role_id()) ->
-                       not_found |
-                       {error, no_servers} |
-                       {ok, fifo:role()}.
+                 not_found |
+                 {error, no_servers} |
+                 {ok, fifo:role()}.
 get(Role) ->
     send(libsnarl_msg:role_get(r(), Role)).
 
@@ -82,9 +102,9 @@ get(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec add(Role::fifo:role_id()) ->
-                       {error, no_servers} |
-                       duplicate |
-                       ok.
+                 {error, no_servers} |
+                 duplicate |
+                 {ok, UUID :: fifo:role_id()}.
 add(Role) ->
     send(libsnarl_msg:role_add(r(), Role)).
 
@@ -95,9 +115,9 @@ add(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec delete(Role::fifo:role_id()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 delete(Role) ->
     send(libsnarl_msg:role_delete(r(), Role)).
 
@@ -109,10 +129,10 @@ delete(Role) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec grant(Role::fifo:role_id(),
-                  Permission::fifo:permission()) ->
-                         {error, no_servers} |
-                         not_found |
-                         ok.
+            Permission::fifo:permission()) ->
+                   {error, no_servers} |
+                   not_found |
+                   ok.
 grant(Role, Permission) ->
     send(libsnarl_msg:role_grant(r(), Role, Permission)).
 
@@ -124,25 +144,22 @@ grant(Role, Permission) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke(Role::fifo:role_id(),
-                   Permission::fifo:permission()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
+             Permission::fifo:permission()) ->
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 revoke(Role, Permission) ->
     send(libsnarl_msg:role_revoke(r(), Role, Permission)).
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all rights matching a prefix from a role.
-%% @spec revoke(Role::binary(),
-%%                    Prefix::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(Role::fifo:role_id(),
-                          Prefix::fifo:permission()) ->
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
+                    Prefix::fifo:permission()) ->
+                           {error, no_servers} |
+                           not_found |
+                           ok.
 revoke_prefix(Role, Prefix) ->
     send(libsnarl_msg:role_revoke_prefix(r(), Role, Prefix)).
 
@@ -158,9 +175,11 @@ revoke_prefix(Role, Prefix) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_role_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

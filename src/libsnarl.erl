@@ -15,11 +15,6 @@
          keystr_to_id/1
         ]).
 
--export([
-         token_delete/1
-        ]).
-
-
 %%%===================================================================
 %%% Ignore
 %%%===================================================================
@@ -39,9 +34,8 @@
               keystr_to_id/1
              ]).
 
--ignore_xref([
-              token_delete/1
-             ]).
+
+-define(SLOW_TIMEOUT, 3000).
 
 %%%===================================================================
 %%% Generatl Functions
@@ -51,7 +45,7 @@
 %% @doc Reads the overall cloud status.
 %% @end
 %%--------------------------------------------------------------------
--spec status() -> {'error','no_servers'} |
+-spec status() -> {'error', 'no_servers'} |
                   {ok, {Resources::fifo:object(),
                         Warnings::fifo:object()}}.
 status() ->
@@ -66,13 +60,15 @@ status() ->
 -spec start() ->
                    ok.
 start() ->
-    application:start(libsnarlmatch),
-    application:start(mdns_client_lib),
+    ok = application:start(libsnarlmatch),
+    ok = application:start(mdns_client_lib),
     application:start(libsnarl).
 
 
 keystr_to_id(S) ->
-    << <<D:8>> || {ok, [D], []} <- [io_lib:fread("~16u", P) || P <- re:split(S, ":", [{return, list}])]>>.
+    << <<D:8>> || {ok, [D], []} <-
+                      [io_lib:fread("~16u", P) ||
+                          P <- re:split(S, ":", [{return, list}])]>>.
 
 %%--------------------------------------------------------------------
 %% @doc Tests cached permissions.
@@ -103,8 +99,7 @@ servers() ->
 -spec version() -> {ok, binary()} |
                    {error, no_servers}.
 version() ->
-    ServerVersion = send(version),
-    ServerVersion.
+    send(version).
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
@@ -113,10 +108,10 @@ version() ->
 %%--------------------------------------------------------------------
 -spec auth(User::fifo:user_id(), Pass::binary()) ->
                   not_found |
-                  {ok, {token, fifo:user_id()}} |
+                  {ok, fifo:user_id()} |
                   {error, no_servers}.
 auth(User, Pass) ->
-    send(libsnarl_msg:auth(r(), User, Pass)).
+    send_slow(libsnarl_msg:auth(r(), User, Pass)).
 
 %%--------------------------------------------------------------------
 %% @doc Authenticates a user and returns a token that can be used for
@@ -128,7 +123,7 @@ auth(User, Pass) ->
                   {ok, {token, fifo:user_id()}} |
                   {error, no_servers}.
 auth(User, Pass, OTP) ->
-    send(libsnarl_msg:auth(r(), User, Pass, OTP)).
+    send_slow(libsnarl_msg:auth(r(), User, Pass, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Checks if the user has the given permission.
@@ -142,25 +137,6 @@ auth(User, Pass, OTP) ->
                      false.
 allowed(User, Permission) ->
     send(libsnarl_msg:allowed(r(), User, Permission)).
-
-%%%===================================================================
-%%% Token Functions
-%%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc Deletes a user.
-%% @spec token_delete(Token::binary()) ->
-%%                    {error, not_found|no_servers} | ok
-%% @end
-%%--------------------------------------------------------------------
-
--spec token_delete(Token::fifo:token()) ->
-                          {error, no_servers} |
-                          not_found |
-                          ok.
-token_delete(Token) ->
-    send(libsnarl_msg:token_delete(r(), Token)).
-
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
@@ -171,11 +147,15 @@ token_delete(Token) ->
 %% @spec send(Msg::term()) -> {ok, Reply::term()} | {error, no_server}
 %% @end
 %%--------------------------------------------------------------------
+-type message() ::
+        fifo:snarl_message().
 
--spec send(Msg::fifo:snarl_message()) ->
-                  atom() |
+-spec send(Msg::message()) ->
+                  not_found |
+                  true |
+                  false |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->
@@ -183,6 +163,15 @@ send(Msg) ->
         E ->
             E
     end.
+
+send_slow(Msg) ->
+    case libsnarl_server:call(Msg, ?SLOW_TIMEOUT) of
+        {reply, Reply} ->
+            Reply;
+        E ->
+            E
+    end.
+
 
 r() ->
     application:get_env(libsnarl, realm, <<"default">>).

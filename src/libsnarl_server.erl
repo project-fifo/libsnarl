@@ -12,17 +12,19 @@
 
 %% API
 -export([start_link/0,
-	 call/1,
-	 cast/1,
-	 servers/0]).
+         call/1,
+         call/2,
+         cast/1,
+         stream/3,
+         servers/0]).
 
 %% gen_server callbacks
 -export([init/1,
-	 handle_call/3,
-	 handle_cast/2,
-	 handle_info/2,
-	 terminate/2,
-	 code_change/3]).
+         handle_call/3,
+         handle_cast/2,
+         handle_info/2,
+         terminate/2,
+         code_change/3]).
 
 -define(SERVER, ?MODULE).
 
@@ -51,8 +53,23 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 
+-spec call(Msg :: tuple() | atom()) ->
+                  {error, no_servers} |
+                  {error, term()} |
+                  {reply, Reply :: term()}.
 call(Msg) ->
     gen_server:call(?SERVER, {call, Msg}).
+
+-spec call(Msg :: tuple() | atom(), Timeout :: pos_integer()) ->
+                  {error, no_servers} |
+                  {error, term()} |
+                  {reply, Reply :: term()}.
+call(Msg, Timeout) ->
+    gen_server:call(?SERVER, {call, Msg, Timeout}).
+
+stream(Msg, StreamFn, Acc0) ->
+    gen_server:call(?SERVER, {stream, Msg, StreamFn, Acc0}).
+
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -78,7 +95,7 @@ cast(Msg) ->
 
 servers() ->
     gen_server:call(?SERVER, servers).
- 
+
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -119,11 +136,24 @@ handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
     Reply = mdns_client_lib:servers(Pid),
     {reply, Reply, State};
 
+handle_call({stream, Msg, StreamFn, Acc0}, _From,
+            #state{zmq_worker = Pid} = State) ->
+    Reply = mdns_client_lib:stream(Pid, Msg, StreamFn, Acc0, 60000),
+    {reply, Reply, State};
+
+
 handle_call({call, Msg}, From, #state{zmq_worker = Pid} = State) ->
     spawn(fun() ->
-		  Reply = mdns_client_lib:call(Pid, Msg),
-		  gen_server:reply(From, Reply)
-	  end),
+                  Reply = mdns_client_lib:call(Pid, Msg),
+                  gen_server:reply(From, Reply)
+          end),
+    {noreply, State};
+
+handle_call({call, Msg, Timeout}, From, #state{zmq_worker = Pid} = State) ->
+    spawn(fun() ->
+                  Reply = mdns_client_lib:call(Pid, Msg, Timeout),
+                  gen_server:reply(From, Reply)
+          end),
     {noreply, State};
 
 handle_call(_Request, _From, State) ->
