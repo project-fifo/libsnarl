@@ -1,0 +1,4 @@
+%% encoding: UTF-8
+{application,libsnarl}.
+{modules,[libsnarl,libsnarl_app,libsnarl_msg,libsnarl_server,libsnarl_sup,
+          ls_acc,ls_client,ls_oauth,ls_org,ls_role,ls_token,ls_user]}.

@@ -7,10 +7,13 @@
          add_trigger/2,
          list/0,
          list/2,
-         resource_action/5,
+         stream/3,
          set_metadata/2,
          remove_trigger/2,
-         execute_trigger/3
+         execute_trigger/3,
+         reverse_trigger/3,
+         resource_inc/3,
+         resource_dec/3
         ]).
 
 -ignore_xref([
@@ -21,9 +24,10 @@
               list/0,
               list/2,
               remove_trigger/2,
-              resource_action/5,
               execute_trigger/3,
-              set_metadata/2
+              set_metadata/2,
+              resource_inc/3,
+              resource_dec/3
              ]).
 
 %%%===================================================================
@@ -41,8 +45,8 @@ set_metadata(Org, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                      {error, no_servers} |
-                      {ok, [fifo:org_id()]}.
+                  {error, no_servers} |
+                  {ok, [fifo:org_id()]}.
 list() ->
     send(libsnarl_msg:org_list(r())).
 
@@ -51,36 +55,50 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                      {error, timeout} |
-                      {ok, [{Rank::integer(), fifo:org_id()}]} |
-                      {ok, [{Rank::integer(), fifo:org()}]}.
+                  {error, no_servers} |
+                  {ok, [{Rank::integer(), fifo:org_id()}]} |
+                  {ok, [{Rank::integer(), fifo:org()}]}.
 
 list(Reqs, Full) ->
     send(libsnarl_msg:org_list(r(), Reqs, Full)).
 
 %%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:org_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:org()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({org, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
+
+%%--------------------------------------------------------------------
 %% @doc Retrieves org data from the server.
-%% @spec get(Org::binary()) ->
-%%                 {error, not_found|no_servers} | term()
 %% @end
 %%--------------------------------------------------------------------
 -spec get(Org::fifo:org_id()) ->
-                     not_found |
-                     {error, no_servers} |
-                     {ok, fifo:org()}.
+                 not_found |
+                 {error, no_servers} |
+                 {ok, fifo:org()}.
 get(Org) ->
     send(libsnarl_msg:org_get(r(), Org)).
 
 %%--------------------------------------------------------------------
 %% @doc Adds a new org.
-%% @spec add(Org::binary()) ->
-%%                 {error, duplicate} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec add(Org::fifo:org_id()) ->
-                     {error, no_servers} |
-                     duplicate |
-                     ok.
+                 {error, no_servers} |
+                 duplicate |
+                 {ok, UUID :: fifo:org_id()}.
 add(Org) ->
     send(libsnarl_msg:org_add(r(), Org)).
 
@@ -91,70 +109,87 @@ add(Org) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec delete(Org::fifo:org_id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        ok.
+                    {error, no_servers} |
+                    not_found |
+                    ok.
 delete(Org) ->
     send(libsnarl_msg:org_delete(r(), Org)).
 
 %%--------------------------------------------------------------------
-%% @doc Grants a right of a org.
-%% @spec grant(Org::binary(),
-%%                   Permission::[atom()|binary()|string()]) ->
-%%                   {error, not_found|no_servers} | ok
+%% @doc Adds a trigger to an organisation.
 %% @end
 %%--------------------------------------------------------------------
 -spec add_trigger(Org::fifo:org_id(),
-                      Trigger::fifo:trigger()) ->
-                             {error, no_servers} |
-                             not_found |
-                             ok.
+                  Trigger::fifo:trigger()) ->
+                         {error, no_servers} |
+                         not_found |
+                         ok.
 add_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_add_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes a right of a org.
-%% @spec revoke(Org::binary(),
-%%                    Permission::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
+%% @doc Removes a trigger from an organisation.
 %% @end
 %%--------------------------------------------------------------------
 -spec remove_trigger(Org::fifo:org_id(),
-                         Trigger::fifo:trigger()) ->
-                                {error, no_servers} |
-                                not_found |
-                                ok.
+                     Trigger::fifo:trigger()) ->
+                            {error, no_servers} |
+                            not_found |
+                            ok.
 remove_trigger(Org, Trigger) ->
     send(libsnarl_msg:org_remove_trigger(r(), Org, Trigger)).
 
 %%--------------------------------------------------------------------
-%% @doc Revokes all rights matching a prefix from a org.
-%% @spec revoke(Org::binary(),
-%%                    Prefix::fifo:permission()) ->
-%%                    {error, not_found|no_servers} | ok
+%% @doc Executes the triggers on an org.
 %% @end
 %%--------------------------------------------------------------------
 -spec execute_trigger(Org::fifo:org_id(),
-                          Event::fifo:event(),
-                          Payload::term()) ->
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
+                      Event::fifo:event(),
+                      Payload::term()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
 execute_trigger(Org, Event, Payload) ->
     send(libsnarl_msg:org_execute_trigger(r(), Org, Event, Payload)).
 
+%%--------------------------------------------------------------------
+%% @doc Reverses the triggers on an org.
+%% @end
+%%--------------------------------------------------------------------
+-spec reverse_trigger(Org::fifo:org_id(),
+                      Event::fifo:event(),
+                      Payload::term()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+reverse_trigger(Org, Event, Payload) ->
+    send(libsnarl_msg:org_reverse_trigger(r(), Org, Event, Payload)).
 
--spec resource_action(Org::fifo:org_id(), Resource::binary(),
-                      TimeStamp::pos_integer(), Action::atom(),
-                      Opts::proplists:proplist()) -> 
-                                 {error, no_servers} |
-                                 not_found |
-                                 ok.
+%%--------------------------------------------------------------------
+%% @doc Adds a value to a orgs resource.
+%% @end
+%%--------------------------------------------------------------------
+-spec resource_inc(Org::fifo:org_id(),
+                   Resource::binary(),
+                   Delta::pos_integer()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+resource_inc(Org, Res, Delta) ->
+    send(libsnarl_msg:org_resource_inc(r(), Org, Res, Delta)).
 
-resource_action(Org, Resource, TimeStamp, Action, Opts) ->
-        send(libsnarl_msg:org_resource_action(r(), Org, Resource, TimeStamp,
-                                              Action, Opts)).
-
+%%--------------------------------------------------------------------
+%% @doc Substracts a value to a orgs resource.
+%% @end
+%%--------------------------------------------------------------------
+-spec resource_dec(Org::fifo:org_id(),
+                   Resource::binary(),
+                   Delta::pos_integer()) ->
+                             {error, no_servers} |
+                             not_found |
+                             ok.
+resource_dec(Org, Res, Delta) ->
+    send(libsnarl_msg:org_resource_dec(r(), Org, Res, Delta)).
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
@@ -167,9 +202,11 @@ resource_action(Org, Resource, TimeStamp, Action, Opts) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_org_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

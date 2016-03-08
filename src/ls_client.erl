@@ -11,6 +11,7 @@
          leave/2,
          list/0,
          list/2,
+         stream/3,
          lookup/1,
          secret/2,
          revoke/2,
@@ -53,7 +54,7 @@ set_metadata(Client, Attrs) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list() ->
-                  {error, timeout} |
+                  {error, no_servers} |
                   {ok, [fifo:client_id()]}.
 list() ->
     send(libsnarl_msg:client_list(r())).
@@ -63,12 +64,30 @@ list() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec list(Reqs::[fifo:matcher()], boolean()) ->
-                  {error, timeout} |
+                  {error, no_servers} |
                   {ok, [{integer(), fifo:client_id()}]} |
                   {ok, [{integer(), fifo:client()}]}.
 
 list(Reqs, Full) ->
     send(libsnarl_msg:client_list(r(), Reqs, Full)).
+
+%%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:client_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:client()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({client, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves client data from the server.
@@ -169,9 +188,6 @@ revoke(Client, Permission) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a client.
-%% @spec revoke(Client::binary(),
-%%                   Prefix::fifo:permission()) ->
-%%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(Client::fifo:client_id(),
@@ -184,9 +200,6 @@ revoke_prefix(Client, Prefix) ->
 
 %%--------------------------------------------------------------------
 %% @doc Changes the Password of a client.
-%% @spec passwd(Client::binary(), Pass::binary()) ->
-%%           ok |
-%%           {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec secret(Client::fifo:client_id(), Secret::binary()) ->
@@ -231,9 +244,6 @@ uri_remove(Client, KeyID) ->
 
 %%--------------------------------------------------------------------
 %% @doc Removes a client from a role.
-%% @spec leave(Client::binary()(Role::binary()) ->
-%%          ok |
-%%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec leave(Client::fifo:client_id(), Role::fifo:role_id()) ->
@@ -255,9 +265,11 @@ leave(Client, Role) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_client_message()) ->
-                  atom() |
+                  ok |
+                  not_found |
+                  duplicate |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_servers}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

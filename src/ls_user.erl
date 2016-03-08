@@ -11,23 +11,24 @@
          key_find/1,
          key_add/3,
          key_revoke/2,
-         keys/1,
          yubikey_add/2,
+         yubikey_check/2,
          yubikey_remove/2,
-         yubikeys/1,
          leave/2,
          list/0,
          list/2,
+         stream/3,
          lookup/1,
          passwd/2,
          revoke/2,
          revoke_prefix/2,
-         active_org/1,
-         orgs/1,
          join_org/2,
          leave_org/2,
          select_org/2,
-         set_metadata/2
+         set_metadata/2,
+         api_token/3,
+         sign_csr/4,
+         revoke_token/2
         ]).
 
 -ignore_xref([
@@ -41,23 +42,24 @@
               key_find/1,
               key_add/3,
               key_revoke/2,
-              keys/1,
               yubikey_add/2,
+              yubikey_check/2,
               yubikey_remove/2,
-              yubikeys/1,
               leave/2,
               list/0,
               list/2,
+              stream/3,
               lookup/1,
               passwd/2,
               revoke/2,
               revoke_prefix/2,
-              active_org/1,
-              orgs/1,
               join_org/2,
               leave_org/2,
               select_org/2,
-              set_metadata/2
+              set_metadata/2,
+              api_token/3,
+              ssl_cert_token/4,
+              revoke_token/2
              ]).
 
 %%%===================================================================
@@ -93,6 +95,24 @@ list() ->
 
 list(Reqs, Full) ->
     send(libsnarl_msg:user_list(r(), Reqs, Full)).
+
+%%--------------------------------------------------------------------
+%% @doc Streams the VM's in chunks.
+%% @end
+%%--------------------------------------------------------------------
+-spec stream(Reqs::[fifo:matcher()], mdns_client_lib:stream_fun(), term()) ->
+                  {ok, [{Ranking::integer(), fifo:user_id()}]} |
+                  {ok, [{Ranking::integer(), fifo:user()}]} |
+                  {'error', 'no_servers'}.
+stream(Reqs, StreamFn, Acc0) ->
+    case libsnarl_server:stream({user, stream, r(), Reqs}, StreamFn, Acc0) of
+        {reply, Reply} ->
+            Reply;
+        noreply ->
+            ok;
+        E ->
+            E
+    end.
 
 %%--------------------------------------------------------------------
 %% @doc Retrieves user data from the server.
@@ -216,9 +236,6 @@ revoke(User, Permission) ->
 
 %%--------------------------------------------------------------------
 %% @doc Revokes all right with a certain prefix from a user.
-%% @spec revoke(User::binary(),
-%%                   Prefix::fifo:permission()) ->
-%%                   {error, not_found|no_servers} | ok
 %% @end
 %%--------------------------------------------------------------------
 -spec revoke_prefix(User::fifo:user_id(),
@@ -267,6 +284,7 @@ key_find(KeyID) ->
 %%--------------------------------------------------------------------
 -spec key_add(User::fifo:user_id(), KeyID::binary(), Key::binary()) ->
                      {error, no_servers} |
+                     duplicate |
                      not_found |
                      ok.
 key_add(User, KeyID, Key) ->
@@ -284,18 +302,6 @@ key_revoke(User, KeyID) ->
     send(libsnarl_msg:user_key_revoke(r(), User, KeyID)).
 
 %%--------------------------------------------------------------------
-%% @doc Returns a list of all SSH keys for a user.
-%% @end
-%%--------------------------------------------------------------------
--spec keys(User::fifo:user_id()) ->
-                  {error, no_servers} |
-                  not_found |
-                  {ok, [{KeyID::binary(), Key::binary()}]}.
-keys(User) ->
-    send(libsnarl_msg:user_keys(r(), User)).
-
-
-%%--------------------------------------------------------------------
 %% @doc Adds a key to the users SSH keys.
 %% @end
 %%--------------------------------------------------------------------
@@ -305,6 +311,18 @@ keys(User) ->
                          ok.
 yubikey_add(User, OTP) ->
     send(libsnarl_msg:user_yubikey_add(r(), User, OTP)).
+
+%%--------------------------------------------------------------------
+%% @doc Checks a Yubikey OTP.
+%% @end
+%%--------------------------------------------------------------------
+-spec yubikey_check(User::fifo:user_id(), OTP::binary()) ->
+                           {error, no_servers} |
+                           not_found |
+                           {otp_required, yubikey, UUID :: fifo:user_id()} |
+                           {ok, UUID :: fifo:user_id()}.
+yubikey_check(User, OTP) ->
+    send(libsnarl_msg:user_yubikey_check(r(), User, OTP)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a key from the users SSH keys.
@@ -317,22 +335,9 @@ yubikey_add(User, OTP) ->
 yubikey_remove(User, KeyID) ->
     send(libsnarl_msg:user_yubikey_remove(r(), User, KeyID)).
 
-%%--------------------------------------------------------------------
-%% @doc Returns a list of all SSH keys for a user.
-%% @end
-%%--------------------------------------------------------------------
--spec yubikeys(User::fifo:user_id()) ->
-                      {error, no_servers} |
-                      not_found |
-                      {ok, [KeyID::binary()]}.
-yubikeys(User) ->
-    send(libsnarl_msg:user_yubikeys(r(), User)).
 
 %%--------------------------------------------------------------------
 %% @doc Removes a user from a role.
-%% @spec leave(User::binary()(Role::binary()) ->
-%%          ok |
-%%          {error, not_found|no_servers}
 %% @end
 %%--------------------------------------------------------------------
 -spec leave(User::fifo:user_id(), Role::fifo:role_id()) ->
@@ -376,26 +381,42 @@ select_org(User, Org) ->
     send(libsnarl_msg:user_select_org(r(), User, Org)).
 
 %%--------------------------------------------------------------------
-%% @doc Fetches the active org.
+%% @doc Generates an API token for a user.
 %% @end
 %%--------------------------------------------------------------------
--spec active_org(User::fifo:user_id()) ->
-                        {error, no_servers} |
-                        not_found |
-                        {ok, Org::fifo:org_id() | binary()}.
-active_org(User) ->
-    send(libsnarl_msg:user_active_org(r(), User)).
+-spec api_token(User::fifo:user_id(), Scope::[binary()], Comment::binary()) ->
+                       {error, no_servers} |
+                       {error, bad_scope} |
+                       not_found |
+                       {ok, {TokenID::binary(), Token::binary()}}.
+api_token(User, Scope, Comment) ->
+
+    send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
 
 %%--------------------------------------------------------------------
-%% @doc Fetches all orgs.
+%% @doc Generates a Certificate for a CSR.
 %% @end
 %%--------------------------------------------------------------------
--spec orgs(User::fifo:user_id()) ->
-                  {error, no_servers} |
-                  not_found |
-                  {ok, [Org::fifo:org_id() | binary()]}.
-orgs(User) ->
-    send(libsnarl_msg:user_orgs(r(), User)).
+-spec sign_csr(User::fifo:user_id(), Scope::[binary()], Comment::binary(),
+                CSR::binary()) ->
+                       {error, no_servers} |
+                       {error, bad_scope} |
+                       not_found |
+                       {ok, {TokenID::binary(), Certificate::binary()}}.
+
+sign_csr(User, Scope, Comment, CSR) ->
+    send(libsnarl_msg:user_sign_csr(r(), User, Scope, Comment, CSR)).
+
+%%--------------------------------------------------------------------
+%% @doc Revokes a token from  a user from a TokenID
+%% @end
+%%--------------------------------------------------------------------
+-spec revoke_token(User::fifo:user_id(), TokenID::binary()) ->
+                          {error, no_servers} |
+                          not_found |
+                          ok.
+revoke_token(User, TokenID) ->
+    send(libsnarl_msg:user_revoke_token(r(), User, TokenID)).
 
 %%%===================================================================
 %%% Internal Functions
@@ -409,9 +430,12 @@ orgs(User) ->
 %%--------------------------------------------------------------------
 
 -spec send(Msg::fifo:snarl_user_message()) ->
-                  atom() |
+                  duplicate |
+                  ok |
+                  not_found |
                   {ok, Reply::term()} |
-                  {error, no_server}.
+                  {error, no_server} |
+                  {error, Reason::term()}.
 send(Msg) ->
     case libsnarl_server:call(Msg) of
         {reply, Reply} ->

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module ls_oauth</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module ls_oauth</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#authorize_client_credentials-2">authorize_client_credentials/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_code_grant-3">authorize_code_grant/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_code_request-4">authorize_code_request/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-2">authorize_password/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-3">authorize_password/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#authorize_password-4">authorize_password/4</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_code-1">issue_code/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_token-1">issue_token/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#issue_token_and_refresh-1">issue_token_and_refresh/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#refresh_access_token-3">refresh_access_token/3</a></td><td></td></tr>
+<tr><td valign="top"><a href="#scope-0">scope/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#scope-1">scope/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_code-1">verify_access_code/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_code-2">verify_access_code/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_access_token-1">verify_access_token/1</a></td><td></td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="authorize_client_credentials-2">authorize_client_credentials/2</a></h3>
+<div class="spec">
+<p><tt>authorize_client_credentials(Client, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_code_grant-3">authorize_code_grant/3</a></h3>
+<div class="spec">
+<p><tt>authorize_code_grant(Client, Code, RedirUri) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_code_request-4">authorize_code_request/4</a></h3>
+<div class="spec">
+<p><tt>authorize_code_request(User, Client, RedirUri, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-2">authorize_password/2</a></h3>
+<div class="spec">
+<p><tt>authorize_password(User, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-3">authorize_password/3</a></h3>
+<div class="spec">
+<p><tt>authorize_password(User, Client, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="authorize_password-4">authorize_password/4</a></h3>
+<div class="spec">
+<p><tt>authorize_password(User, Client, RedirUri, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="issue_code-1">issue_code/1</a></h3>
+<div class="spec">
+<p><tt>issue_code(Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="issue_token-1">issue_token/1</a></h3>
+<div class="spec">
+<p><tt>issue_token(Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="issue_token_and_refresh-1">issue_token_and_refresh/1</a></h3>
+<div class="spec">
+<p><tt>issue_token_and_refresh(Auth) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="refresh_access_token-3">refresh_access_token/3</a></h3>
+<div class="spec">
+<p><tt>refresh_access_token(Client, RefreshToken, Scope) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="scope-0">scope/0</a></h3>
+<div class="spec">
+<p><tt>scope() -&gt; {ok, [<a href="fifo.html#type-scope_map">fifo:scope_map()</a>]} | {error, no_servers}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="scope-1">scope/1</a></h3>
+<div class="spec">
+<p><tt>scope(Subscope::binary() | <a href="fifo.html#type-scope_list">fifo:scope_list()</a>) -&gt; {ok, [<a href="fifo.html#type-scope_map">fifo:scope_map()</a>]} | {error, no_servers}</tt><br></p>
+</div>
+
+<h3 class="function"><a name="verify_access_code-1">verify_access_code/1</a></h3>
+<div class="spec">
+<p><tt>verify_access_code(AccessCode) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="verify_access_code-2">verify_access_code/2</a></h3>
+<div class="spec">
+<p><tt>verify_access_code(AccessCode, Client) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="verify_access_token-1">verify_access_token/1</a></h3>
+<div class="spec">
+<p><tt>verify_access_token(Token::binary()) -&gt; {ok, Context::<a href="proplists.html#type-proplist">proplists:proplist()</a>} | not_found | {error, no_servers}</tt><br></p>
+</div>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Dec 2 2015, 12:48:35.</i></p>
+</body>
+</html>
