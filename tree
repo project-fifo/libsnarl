@@ -1,4 +1,4 @@
-[0m└─ libsnarl─0.3.41
+[0m└─ libsnarl─0.3.43
    ├─ fifo_spec─0.1.27
    │  └─ fifo_dt─0.1.66
    │     ├─ fifo_utils─0.1.20
@@ -10,7 +10,7 @@
    ├─ lager─2.1.1
    │  └─ goldrush─0.1.7
    ├─ libsnarlmatch─0.1.7
-   ├─ mdns_client_lib─0.1.35
+   ├─ mdns_client_lib─0.1.38
    │  ├─ mdns_client─0.1.7
-   │  └─ pooler─1.4.0
+   │  └─ pooler─1.5.0
    └─ oauth2─0.6.1

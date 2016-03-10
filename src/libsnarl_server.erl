@@ -68,7 +68,7 @@ call(Msg, Timeout) ->
     gen_server:call(?SERVER, {call, Msg, Timeout}).
 
 stream(Msg, StreamFn, Acc0) ->
-    gen_server:call(?SERVER, {stream, Msg, StreamFn, Acc0}).
+    gen_server:call(?SERVER, {stream, Msg, StreamFn, Acc0}, 60000).
 
 
 %%--------------------------------------------------------------------
@@ -136,10 +136,14 @@ handle_call(servers, _From, #state{zmq_worker = Pid} = State) ->
     Reply = mdns_client_lib:servers(Pid),
     {reply, Reply, State};
 
-handle_call({stream, Msg, StreamFn, Acc0}, _From,
+handle_call({stream, Msg, StreamFn, Acc0}, From,
             #state{zmq_worker = Pid} = State) ->
-    Reply = mdns_client_lib:stream(Pid, Msg, StreamFn, Acc0, 60000),
-    {reply, Reply, State};
+    spawn(fun() ->
+                  Reply = mdns_client_lib:stream(Pid, Msg, StreamFn, Acc0,
+                                                 60000),
+                  gen_server:reply(From, Reply)
+          end),
+    {noreply, State};
 
 
 handle_call({call, Msg}, From, #state{zmq_worker = Pid} = State) ->
