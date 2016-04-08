@@ -7,7 +7,7 @@
  {<<"lager">>,{pkg,<<"lager">>,<<"2.1.1">>},0},
  {<<"libsnarlmatch">>,{pkg,<<"libsnarlmatch">>,<<"0.1.7">>},0},
  {<<"mdns_client">>,{pkg,<<"mdns_client">>,<<"0.1.7">>},1},
- {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.38">>},0},
+ {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.39">>},0},
  {<<"oauth2">>,{pkg,<<"oauth2_erlang">>,<<"0.6.1">>},0},
  {<<"pooler">>,{pkg,<<"pooler">>,<<"1.5.0">>},1},
  {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.5.1">>},4},
