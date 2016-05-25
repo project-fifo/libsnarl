@@ -495,11 +495,12 @@ user_api_token(Realm, User, Scope, Comment) when
 %% @end
 %%--------------------------------------------------------------------
 
-%-spec user_manual_token(Realm::binary(), User::fifo:user_id(),
-%                        Scope::[binary()], Comment::binary(),
-%                        Token::binary()) ->
-%                             {user
-
+-spec user_manual_token(Ream::binary(), User::fifo:user_id(),
+                    Scope::[binary()], Comment::binary(),
+                    Token::binary()) ->
+                           {user, manual_token, Realm::binary(),
+                            User::fifo:user_id(), Scope::[binary()],
+                            Comment::binary(), Token::binary()}.
 user_manual_token(Realm, User, Scope, Comment, Token) when
       is_binary(Realm),
       is_binary(User),
