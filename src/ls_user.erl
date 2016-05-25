@@ -27,6 +27,7 @@
          select_org/2,
          set_metadata/2,
          api_token/3,
+         manual_token/4,
          sign_csr/4,
          revoke_token/2
         ]).
@@ -58,6 +59,7 @@
               select_org/2,
               set_metadata/2,
               api_token/3,
+              manual_token/4,
               ssl_cert_token/4,
               revoke_token/2
              ]).
@@ -390,10 +392,23 @@ select_org(User, Org) ->
                        not_found |
                        {ok, {TokenID::binary(), Token::binary()}}.
 api_token(User, Scope, Comment) ->
-
     send(libsnarl_msg:user_api_token(r(), User, Scope, Comment)).
 
 %%--------------------------------------------------------------------
+%% @doc Adds a manually defined API token for a user.
+%% @end
+%%--------------------------------------------------------------------
+-spec manual_token(User::fifo:user_id(), Scope::[binary()],
+                     Comment::binary(), Token::binary()) ->
+                       {error, no_servers} |
+                       {error, bad_scope} |
+                       not_found |
+                       {ok, {TokenID::binary(), Token::binary()}}.
+
+manual_token(User, Scope, Comment, Token) ->
+    send(libsnarl_msg:user_manual_token(r(), User, Scope, Comment, Token)).
+
+%%-------------------------------------------------------------------r
 %% @doc Generates a Certificate for a CSR.
 %% @end
 %%--------------------------------------------------------------------
