@@ -39,6 +39,7 @@
          user_select_org/3,
          user_set_metadata/3,
          user_api_token/4,
+         user_manual_token/5,
          user_sign_csr/5,
          user_revoke_token/3
         ]).
@@ -488,6 +489,24 @@ user_api_token(Realm, User, Scope, Comment) when
       is_list(Scope),
       is_binary(Comment) ->
     {user, api_token, Realm, User, Scope, Comment}.
+
+%%--------------------------------------------------------------------
+%% @doc Adds a mnually defined token
+%% @end
+%%--------------------------------------------------------------------
+
+%-spec user_manual_token(Realm::binary(), User::fifo:user_id(),
+%                        Scope::[binary()], Comment::binary(),
+%                        Token::binary()) ->
+%                             {user
+
+user_manual_token(Realm, User, Scope, Comment, Token) when
+      is_binary(Realm),
+      is_binary(User),
+      is_list(Scope),
+      is_binary(Comment),
+      is_binary(Token) ->
+    {user, manual_token, Realm, User, Scope, Comment, Token}.
 
 %%--------------------------------------------------------------------
 %% @doc Signs a CSR requests and returns a certificate
