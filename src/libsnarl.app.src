@@ -5,4 +5,8 @@
               {applications,[kernel,stdlib,libsnarlmatch,oauth2,
                              mdns_client_lib]},
               {mod,{libsnarl_app,[]}},
-              {env,[{domain,".local"},{realm,<<"default">>}]}]}.
+              {env,[{domain,".local"},{realm,<<"default">>}]},
+              {maintainers,["Heinz N. Gies"]},
+              {licenses,["CDDL"]},
+              {links,[{"Github",
+                       "https://github.com/project-fifo/libsnarl"}]}]}.
