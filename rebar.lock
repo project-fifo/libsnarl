@@ -1,7 +1,7 @@
 {"1.1.0",
-[{<<"fifo_dt">>,{pkg,<<"fifo_dt">>,<<"0.2.3">>},1},
- {<<"fifo_spec">>,{pkg,<<"fifo_spec">>,<<"0.1.29">>},0},
- {<<"fifo_utils">>,{pkg,<<"fifo_utils">>,<<"0.1.24">>},2},
+[{<<"fifo_dt">>,{pkg,<<"fifo_dt">>,<<"0.2.4">>},1},
+ {<<"fifo_spec">>,{pkg,<<"fifo_spec">>,<<"0.1.30">>},0},
+ {<<"fifo_utils">>,{pkg,<<"fifo_utils">>,<<"0.1.25">>},2},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.8">>},1},
  {<<"jsxd">>,{pkg,<<"jsxd">>,<<"0.2.3">>},2},
  {<<"lager">>,{pkg,<<"lager">>,<<"3.2.1">>},0},
@@ -10,14 +10,14 @@
  {<<"mdns_client_lib">>,{pkg,<<"mdns_client_lib">>,<<"0.1.41">>},0},
  {<<"oauth2">>,{pkg,<<"oauth2_erlang">>,<<"0.6.1">>},0},
  {<<"pooler">>,{pkg,<<"pooler">>,<<"1.5.0">>},1},
- {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.5.3">>},4},
+ {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.5.4">>},4},
  {<<"riak_dt">>,{pkg,<<"riak_dt">>,<<"2.1.1">>},2},
- {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.3">>},3}]}.
+ {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.4">>},3}]}.
 [
 {pkg_hash,[
- {<<"fifo_dt">>, <<"5B9F774D35E4E0926D136A7BCAE7344DD3468799DDB7B3D4D3BBE69D5AE498EB">>},
- {<<"fifo_spec">>, <<"10B18FA48E79E02DB0328443E757C3DCC43A9F82DC003FC5A50FFDE870F575BF">>},
- {<<"fifo_utils">>, <<"279CAEF8AADBF54F28B0B4FFF850C09E50B4E13B60F73C6E73176AC45EF42EC0">>},
+ {<<"fifo_dt">>, <<"571F333701DB0D9FA92D86350A0C7F5AFCF499B11219CF97CBE5BE0C69F90F0B">>},
+ {<<"fifo_spec">>, <<"6761472C9EE5C1A3B1F6C104CEC9B96309C54CF3CE6030C9F00FF92AD51C3A8D">>},
+ {<<"fifo_utils">>, <<"687B8D9E75F43621777579F7A231321D3D6EFAE4289951859DE8A87BD44E8328">>},
  {<<"goldrush">>, <<"2024BA375CEEA47E27EA70E14D2C483B2D8610101B4E852EF7F89163CDB6E649">>},
  {<<"jsxd">>, <<"B2DBBB24A91536C50F75372FB8E28CD16691707AB53BE9449C59A8A611A581A2">>},
  {<<"lager">>, <<"EEF4E18B39E4195D37606D9088EA05BF1B745986CF8EC84F01D332456FE88D17">>},
@@ -26,7 +26,7 @@
  {<<"mdns_client_lib">>, <<"F5E5BCD8D848CBA81C4E88901010E65D6A0B7159787237FAA200A11874F73D1C">>},
  {<<"oauth2">>, <<"42E449E17F1DFB05B483C38F2DA2504F1CDFFC06F0ACF23773562A6824E8C903">>},
  {<<"pooler">>, <<"0FD4BE5D2976E6A2E9A1617623031758C26F200C1FCA89E4A3C542747BEC6371">>},
- {<<"quickrand">>, <<"233F755B20F723A8E0A4EEBC568D90D28AB50880BBB13B5A864E05B3851CB42E">>},
+ {<<"quickrand">>, <<"47ADD4755CC5F209CBEFFD6F47C84061196CD7FAD99FD8FD12418EB0D06B939D">>},
  {<<"riak_dt">>, <<"56B1898A543C561994F5D052FDEA972525CA98F46FDB3DCDB7366E4F92EE8F54">>},
- {<<"uuid">>, <<"5A0A49C3F1576E13B71336B1DAB41B361391DCEEFE59C1AA08C96EED47342B93">>}]}
+ {<<"uuid">>, <<"06240EFF3EAF013CC22274689B0C1FF6345645EE5D47A9E4ED7545EEB7698B23">>}]}
 ].
