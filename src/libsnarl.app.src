@@ -1,6 +1,6 @@
 {application,libsnarl,
              [{description,"snarl interface library"},
-              {vsn,"0.3.52"},
+              {vsn, git},
               {registered,[]},
               {applications,[kernel,stdlib,libsnarlmatch,oauth2,
                              mdns_client_lib]},
